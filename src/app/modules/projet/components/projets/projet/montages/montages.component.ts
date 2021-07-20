@@ -4,7 +4,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angu
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
-import { ProjetService } from '../projet.service';
 import { ProjetRepository, Projet, Charge } from '../../../../repository/projet.repository';
 import { Task } from '../../../../repository/task.repository';
 
@@ -42,10 +41,6 @@ export class MontagesProjectComponent implements OnInit, OnDestroy {
   get totalsUsed(): number {
     return this.charges.map(item => (item.quantity-item.quantityUsed) * item.unitCostApplied).reduce((prev, next) => prev + next, 0);
   };
-
-  get tasks(){
-    return this.projetTasksS.tasks.getValue();
-  }
 
   get loading(): boolean {
     return this.projetMontagesS.loading;

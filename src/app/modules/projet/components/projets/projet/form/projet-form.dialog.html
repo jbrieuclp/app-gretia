@@ -3,7 +3,6 @@
 	autocomplete="off"
 	[style.fontSize.px]="14"
 >
-  
   <mat-form-field appearance="outline">
   	<mat-label>Intitulé</mat-label>
     <input 
@@ -11,12 +10,15 @@
 	    placeholder="Intitulé"  
 			required
 			formControlName="intitule">
+		<mat-error *ngIf="form.get('intitule').errors">{{ form.get('intitule').errors.message }}</mat-error>
   </mat-form-field>
 
   <div class="row">
 	  <app-project-control-antenne 
 	  	class="col-md-6"
 			[form]="form.get('localAttachment')" 
+			[required]="true"
+			appearance="outline"
 		>
 		</app-project-control-antenne>
 
@@ -24,6 +26,8 @@
 			class="col-md-6"
 			[form]="form.get('projectType')" 
 			[dateFilter]="form.get('dateDebut')"
+			[required]="true"
+			appearance="outline"
 		>
 		</app-projet-control-project-type>
 	</div>

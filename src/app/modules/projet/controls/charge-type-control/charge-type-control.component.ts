@@ -19,6 +19,7 @@ export class ChargeTypeControlComponent implements OnInit {
   @Input() dateFilter: Date;
   @Input() projectFilter: BehaviorSubject<Projet> = new BehaviorSubject(null);
   @Input() label: string = 'Charge';
+  @Input() isPerDay: boolean = null;
   
   chargeTypes: ChargeType[] = [];
   loading: boolean;
@@ -53,6 +54,9 @@ export class ChargeTypeControlComponent implements OnInit {
           }
         }),
         map((data: any): ChargeType[]=>data["hydra:member"]),
+        map((chargeTypes:ChargeType[]): ChargeType[] => {
+          return chargeTypes.filter(c => this.isPerDay !== null ? c.chargeTypeRef.isPerDay === this.isPerDay : true)
+        }),
         tap(() => this.loading = false)
       )
       .subscribe((chargeTypes:ChargeType[]) => this.chargeTypes = chargeTypes);

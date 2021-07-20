@@ -31,7 +31,8 @@ export interface Personne {
   "nom"?: string;
   "prenom"?: string;
   "alias"?: string;
-  "compte_id"?: number;
+  "compteId"?: number;
+  "recup"?: number;
   "salaries"?: Salarie[]|number[];
   "workIn"?: Salarie|number;
 }

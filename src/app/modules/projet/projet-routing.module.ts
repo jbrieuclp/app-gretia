@@ -25,6 +25,7 @@ import { AvancementsComponent } from './components/admin/admin-projet/avancement
 import { ProjetAccueilComponent } from './components/accueil/accueil.component';
 import { ConventionsComponent } from './components/conventions/conventions.component';
 import { ConventionComponent } from './components/conventions/convention/convention.component';
+import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
 
 // routes definition
 const routes: Routes = [
@@ -33,12 +34,17 @@ const routes: Routes = [
 		component: ProjetInitComponent,
 		canActivate: [AuthGuard],
 		children: [
-			{ path: '', component: ProjetAccueilComponent, pathMatch: 'full' },
-			// { path: 'dashboard', component: DashboardComponent, pathMatch: 'full'},
+			{ path: '', redirectTo: 'plan-de-charges', pathMatch: 'full' },
+			// { path: '', component: ProjetAccueilComponent, pathMatch: 'full' },
 			{ path: 'projets', children: [
 				{ path: '', component: ProjetsComponent, pathMatch: 'full'},
 				{ path: ':projet', redirectTo: ':projet/', pathMatch: 'full' },
 				{ path: ':projet/:onglet', component: ProjetComponent, pathMatch: 'full' },
+			]},
+			{ path: 'plan-de-charges', children: [
+				{ path: '', component: PlansChargesComponent, pathMatch: 'full' },
+				{ path: ':person', component: PlansChargesComponent, pathMatch: 'full' },
+				{ path: ':person/:year', component: PlansChargesComponent, pathMatch: 'full' },
 			]},
 			// { path: 'mission', children: [
 			// //	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail

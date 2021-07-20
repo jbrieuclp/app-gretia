@@ -25,4 +25,5 @@
 		    </mat-option>
 		  </ng-container>
   </mat-select>
+  <mat-error *ngIf="form.errors">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
 </mat-form-field>

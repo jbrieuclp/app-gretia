@@ -26,6 +26,7 @@ export interface Projet {
   "milieu"?: string;
   "projectType"?: any;
   "localisations"?: any[];
+  "localAttachement"?: any;
   "responsables"?: any[];
   "tasks"?: Task[];
   "fundings"?: ProjectFunding[];
@@ -123,9 +124,21 @@ export class ProjetRepository extends ApiProjectRepository {
   //  PROJET  //
   //////////////
   /** GET list of Localisation **/
-  projets(): Observable<Projet[]> {
+  projets(params = {}): Observable<Projet[]> {
     const url = `${this.httpUrlBase}/projets`;
-    const options = {};
+    const options = {params: params};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Projet[]) => res), 
+        retry(3)
+      );
+  }
+
+  /** GET list of Localisation **/
+  projects_progression(params = {}): Observable<Projet[]> {
+    const url = `${this.httpUrlBase}/projets/progression`;
+    const options = {params: params};
     return this.http
       .get(url, options)
       .pipe(

@@ -18,6 +18,7 @@ export class ProjectTypeControlComponent implements OnInit, OnDestroy {
 	@Input() form: FormControl;
   @Input() required: boolean = false;
   @Input() dateFilter: FormControl;
+  @Input() appearance: string = 'legacy';
   
   projectTypes: ProjectType[] = [];
   _subscription: Subscription;

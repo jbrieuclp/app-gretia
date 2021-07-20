@@ -1,0 +1,48 @@
+<ng-container *ngIf="unfundedTasks.length">
+	<mat-card>
+		<mat-card-title>Actions auto-financées</mat-card-title>
+		<mat-card-content>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Intitulé</th>
+						<th>Coût unitaire</th>
+						<th>Quantité prévue</th>
+						<th>Quantité consommée <small>(actuel)</small></th>
+						<th>Total</th>
+						<th>Gain/perte <small>(actuel)</small></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-container *ngFor="let task of unfundedTasks; let last = last">
+						<tr >
+							<td>{{ task.intitule }}</td>
+							<td>{{ projet?.projectType?.coutJour }}</td>
+							<td>{{ task.nbJours }}</td>
+							<td>{{ task.numberDaysDone }}</td>
+							<td>{{ ((projet?.projectType?.coutJour)||0) * task.nbJours }}</td>
+							<td>
+								{{ ((projet?.projectType?.coutJour)||0) * task.nbJours - ((projet?.projectType?.coutJour)||0) * task.numberDaysDone >=0 ? '+' : '-' }}
+								{{ ((projet?.projectType?.coutJour)||0) * task.nbJours - ((projet?.projectType?.coutJour)||0) * task.numberDaysDone }}
+							</td>
+							<td>
+								<button 
+									mat-flat-button 
+									color="primary"
+									type="button"
+									(click)="funder(task)"
+								>
+									<span class="material-icons-outlined"> euro_symbol </span>
+									Financer cette action
+								</button>
+								
+							</td>
+						</tr>
+					</ng-container>
+				</tbody>
+
+			</table>
+		</mat-card-content>
+	</mat-card>
+</ng-container>

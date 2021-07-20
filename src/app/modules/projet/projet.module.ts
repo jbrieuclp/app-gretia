@@ -152,6 +152,11 @@ import { DeadlineComponent } from './components/conventions/convention/deadlines
 import { DeadlineFormComponent } from './components/conventions/convention/deadlines/deadline/deadline-form.component';
 import { AntenneControlComponent } from './controls/antenne-control/antenne-control.component';
 import { TaskComponent } from './components/projets/projet/tasks/task/task.component';
+import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
+import { PlanChargesComponent } from './components/plans-charges/plan-charges/plan-charges.component';
+import { GlobalStatsComponent } from './components/plans-charges/plan-charges/global-stats.component';
+import { PDCPersonInfoComponent } from './components/plans-charges/plan-charges/person-info/person-info.component';
+import { UnfundedTasksComponent, TaskFunderDialog } from './components/projets/projet/montages/unfunded-tasks.component';
 
 
 export const MY_FORMATS = {
@@ -266,6 +271,12 @@ export const MY_FORMATS = {
     ProjectLocalisationsComponent,
     ProjectResponsablesComponent,
     TaskComponent,
+    PlansChargesComponent,
+    PlanChargesComponent,
+    GlobalStatsComponent,
+    PDCPersonInfoComponent,
+    UnfundedTasksComponent,
+    TaskFunderDialog,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -276,6 +287,7 @@ export const MY_FORMATS = {
     TaskAttributionFormDialog,
     TaskFormDialog,
     ProjetFormDialog,
+    TaskFunderDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},

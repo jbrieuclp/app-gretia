@@ -39,7 +39,7 @@ export class ProjetFormDialog implements OnInit {
       dateFin: [null],
       groupeTaxo: [null],
       milieu: [null],
-      projectType: [null, []/*, [dateProjectTypeAsyncValidator('dateDebut', this.projectTypeR)]*/],
+      projectType: [null, Validators.required/*, [dateProjectTypeAsyncValidator('dateDebut', this.projectTypeR)]*/],
       // localisations: this.fb.array([], Validators.required),
       // responsables: this.fb.array([], Validators.required),
     });
@@ -77,7 +77,12 @@ export class ProjetFormDialog implements OnInit {
       (projet: Projet) => {console.log("ici");this.projetS.projet.next(projet)},
       (err) => {
         this.waiting = false;
-        //this._commonService.translateToaster("error", "ErrorMessage");
+        if ( err.status = 422) {
+          err.error.violations.forEach(e => {
+            if ( this.form.get(e.propertyPath) !== null)
+              this.form.get(e.propertyPath).setErrors({invalide: true, message: e.message});
+          });
+        }
       },
       (projet) => this.dialogRef.close(projet)
     );

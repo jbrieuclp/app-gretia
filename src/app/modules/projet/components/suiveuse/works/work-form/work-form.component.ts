@@ -45,11 +45,11 @@ export class WorkFormComponent implements OnInit, OnDestroy {
   	this.setObservables()
   }
 
-  private get initialValues(): Work {
+  private get initialValues(): any {
     const values = {
 			    	estNuit: false,
       			estWe: false,
-            dateTravail: moment(this.suiveuseS.selectedDate.getValue()).toDate(),
+            dateTravail: moment(this.suiveuseS.selectedDate.getValue()).format('YYYY-MM-DD'),
       		};
     return values;
   }

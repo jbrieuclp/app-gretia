@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
-import { Personne, Travailleur } from './person.repository';
+import { Travailleur } from './person.repository';
+import { Personne } from './salarie.repository';
 
 const httpOptions = {
   headers: new HttpHeaders({

@@ -1,0 +1,37 @@
+<div class="row">
+	<div class="col-md-3">
+		<app-projet-pdc-global-stats></app-projet-pdc-global-stats>
+	</div>
+
+	<div 
+		 *ngIf="person|async"
+		class="col-md-3"
+	>
+		<mat-card>
+			Recup : {{ (person | async).recup / 60 | number: '1.0-2' }} heure(s)
+		</mat-card>
+	</div>
+</div>
+
+<div>
+	<mat-card>
+		<table class="table table-sm">
+			<thead>
+				<tr>
+					<th> Projet </th>
+					<th> jours prévus </th>
+					<th> jours réalisé </th>
+					<th> jours restant </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let project of projects">
+					<td> {{ project.intitule }} </td>
+					<td> {{ getScheduledDays(project) }} </td>
+					<td> {{ getUsedDays(project) | number: '1.0-2'}} </td>
+					<td> {{ getScheduledDays(project) - getUsedDays(project) | number: '1.0-2' }} </td>
+				</tr>
+			</tbody>
+		</table>
+	</mat-card>
+</div>

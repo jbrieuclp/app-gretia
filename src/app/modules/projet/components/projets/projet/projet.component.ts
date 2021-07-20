@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { ProjetService } from './projet.service';
 
@@ -23,12 +23,12 @@ export class ProjetComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log("init")
     this._subscriptions.push(
       this.route.params
         .pipe(
           filter((params) => params.projet),
           map((params): number => params.projet),
+          distinctUntilChanged(),
         )
         .subscribe((id) => this.projetS.project_id.next(Number(id)))
     );

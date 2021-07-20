@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Personne, PersonRepository } from '../../../repository/person.repository';
+import { PersonRepository } from '../../../repository/person.repository';
+import { Personne } from '../../../repository/salarie.repository';
 
 @Component({
   selector: 'app-s-list-user',

@@ -4,7 +4,7 @@ import { catchError, retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { Personne } from './person.repository';
+import { Personne } from './salarie.repository';
 import { Mission } from './mission.repository';
 
 import { AppConfig } from '../../../shared/app.config';

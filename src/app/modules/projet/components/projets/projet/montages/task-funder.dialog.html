@@ -1,0 +1,66 @@
+<h6> Rattacher la ligne à un type d'action </h6>
+
+<ng-container *ngIf="charges.length; else noChargeTmp">
+  <mat-form-field>
+    <mat-label>
+      <mat-spinner 
+        *ngIf="loading"
+        diameter="20"
+        strokeWidth="2"
+      >
+      </mat-spinner> {{ label }}
+    </mat-label>
+    <mat-select 
+      [formControl]="chargeControl"
+      required
+    >
+
+        <mat-option *ngIf="loading">
+          Chargement...
+        </mat-option>
+
+        <ng-container *ngFor="let charge of charges|sortBy:'asc':'label';">
+          <mat-option [value]="charge['@id']">
+            {{ charge.label }} ({{ charge.chargeType.chargeTypeRef.label }})
+          </mat-option>
+        </ng-container>
+    </mat-select>
+    <mat-error *ngIf="chargeControl.errors">{{ chargeControl.errors?.message || 'Erreur pour ce champs' }}</mat-error>
+  </mat-form-field>
+
+  <div>
+    <app-submit-btn
+      [disabled]="chargeControl.invalid"
+      [waiting]="waiting"
+      (click)="submit()"
+    >
+      Valider
+    </app-submit-btn>
+    <button 
+      *ngIf="!waiting"
+      style="margin-left: 10px;"
+      type="button"
+      (click)="cancel()"
+      mat-raised-button 
+    >
+      Annuler
+    </button>
+  </div>
+</ng-container>
+<ng-template #noChargeTmp>
+  <p> 
+    <span class="material-icons-outlined"> error </span>
+    Aucune action de mission n'a été renseignée pour le moment. 
+  <p>
+  <p> Il est nécessaire d'en créer une au préalable avant de pouvoir rattacher d'une action auto-financée. <p>
+
+  <div>
+    <button 
+      type="button"
+      (click)="cancel()"
+      mat-raised-button 
+    >
+      Fermer
+    </button>
+  </div>
+</ng-template>

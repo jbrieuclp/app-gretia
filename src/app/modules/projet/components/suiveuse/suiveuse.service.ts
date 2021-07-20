@@ -6,7 +6,8 @@ import { filter, map, distinctUntilChanged, tap, switchMap } from 'rxjs/operator
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { Personne, PersonRepository } from '../../repository/person.repository';
+import { PersonRepository } from '../../repository/person.repository';
+import { Personne } from '../../repository/salarie.repository';
 import { SuiveuseRepository } from '../../repository/suiveuse.repository';
 import { Work } from '../../repository/works.repository';
 

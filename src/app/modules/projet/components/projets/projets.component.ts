@@ -21,6 +21,7 @@ export class ProjetsComponent implements OnInit {
   public displayedColumns: string[] = ['code', 'intitule', 'dateDebut', 'dateFin', 'clos'];
   public filterInput: FormControl;
   public totalItems: number = 0;
+  public loading: boolean = false;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -54,8 +55,10 @@ export class ProjetsComponent implements OnInit {
   }
 
   getProjets(): Observable<Projet[]> {
+    this.loading = true;
     return this.projetR.projets()
       .pipe(
+        tap(()=>this.loading = false),
         tap((data: any) => this.totalItems = data["hydra:totalItems"]),
         map((data: any): Projet[]=>data["hydra:member"])
       );

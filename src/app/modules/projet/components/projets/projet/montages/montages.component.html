@@ -114,80 +114,53 @@
 	<mat-progress-bar mode="query"></mat-progress-bar>
 </ng-template>
 
-<!-- <ng-container *ngIf="unfinancedActions.length">
-	<h5>Actions auto-financées</h5>
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<th>Intitulé</th>
-				<th>Coût unitaire</th>
-				<th>Quantité prévue</th>
-				<th>Quantité consommée <small>(actuel)</small></th>
-				<th>Total</th>
-				<th>Gain/perte <small>(actuel)</small></th>
-			</tr>
-		</thead>
-		<tbody>
-			<ng-container *ngFor="let task of unfinancedActions; let last = last">
-				<tr >
-					<td>{{ task.intitule }}</td>
-					<td></td>
-					<td>{{ task.nbJours }}</td>
-					<td>{{ task.numberDaysDone }}</td>
-					<td>{{ ((projet?.projectType?.coutJour)||0) * task.nbJours }}</td>
-					<td>
-						{{ ((projet?.projectType?.coutJour)||0) * task.nbJours - ((projet?.projectType?.coutJour)||0) * task.numberDaysDone >=0 ? '+' : '-' }}
-						{{ ((projet?.projectType?.coutJour)||0) * task.nbJours - ((projet?.projectType?.coutJour)||0) * task.numberDaysDone }}
-					</td>
-				</tr>
-			</ng-container>
-		</tbody>
 
-	</table> -->
+<app-projet-projet-unfunded-tasks></app-projet-projet-unfunded-tasks>
 
-	<!-- <div class="row">
-		<div class="col-md-4">
-			<mat-selection-list #actionsList>
-			  <mat-list-option 
-			  	*ngFor="let task of unfinancedActions; let last = last"
-			  	[value]="task['@id']"
-			  >
-			  	<h4 mat-line>{{ task.intitule }}</h4>
-	    		<p mat-line> {{ task.nbJours }} jour{{ task.nbJours > 1 ? 's' : '' }} </p>
-			  </mat-list-option>
-			  <mat-divider *ngIf="!last"></mat-divider>
-			</mat-selection-list>
-		</div>
-		<div 
-			*ngIf="actionsList.selectedOptions.selected.length"
-			class="col-md-4"
-		>
-			<mat-form-field>
-			  <mat-label>Associer à</mat-label>
-			  <mat-select
-			  	[formControl]="associateChargeForm"
-			  	required
-			  >
-					<mat-option 
-						*ngFor="let charge of actionCharges"
-						[value]="charge['@id']"
-					>
-			      {{ charge.label }}
-			    </mat-option>
-			  </mat-select>
-			</mat-form-field>
-			<div>
-				<button 
-					mat-raised-button color="primary"
-					(click)="associateChargeTasks()"
-					[disabled]="!(associateChargeForm.valid && actionsList.selectedOptions.selected.length)"
+
+
+<!-- 	<div class="row">
+	<div class="col-md-4">
+		<mat-selection-list #actionsList>
+		  <mat-list-option 
+		  	*ngFor="let task of unfundedTasks; let last = last"
+		  	[value]="task['@id']"
+		  >
+		  	<h4 mat-line>{{ task.intitule }}</h4>
+    		<p mat-line> {{ task.nbJours }} jour{{ task.nbJours > 1 ? 's' : '' }} </p>
+		  </mat-list-option>
+		  <mat-divider *ngIf="!last"></mat-divider>
+		</mat-selection-list>
+	</div>
+	<div 
+		*ngIf="actionsList.selectedOptions.selected.length"
+		class="col-md-4"
+	>
+		<mat-form-field>
+		  <mat-label>Associer à</mat-label>
+		  <mat-select
+		  	[formControl]="associateChargeForm"
+		  	required
+		  >
+				<mat-option 
+					*ngFor="let charge of actionCharges"
+					[value]="charge['@id']"
 				>
-					Associer
-				</button>
-				{{(associateChargeForm.valid|json)}}
-				{{(actionsList.selectedOptions.selected.length|json)}}
-				{{!(associateChargeForm.valid && actionsList.selectedOptions.selected.length)|json}}
-			</div>
+		      {{ charge.label }}
+		    </mat-option>
+		  </mat-select>
+		</mat-form-field>
+		<div>
+			<button 
+				mat-raised-button color="primary"
+				(click)="associateChargeTasks()"
+				[disabled]="!(associateChargeForm.valid && actionsList.selectedOptions.selected.length)"
+			>
+				Associer
+			</button>
+			{{(associateChargeForm.valid|json)}}
+			{{(actionsList.selectedOptions.selected.length|json)}}
+			{{!(associateChargeForm.valid && actionsList.selectedOptions.selected.length)|json}}
 		</div>
-	</div> -->
-<!-- </ng-container> -->
+	</div>
+</div> -->

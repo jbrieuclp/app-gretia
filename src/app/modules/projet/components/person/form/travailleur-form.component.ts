@@ -2,7 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from "@angular/forms";
 import { Observable } from 'rxjs';
 
-import { Personne, PersonRepository } from '../../../repository/person.repository';
+import { PersonRepository } from '../../../repository/person.repository';
+import { Personne } from '../../../repository/salarie.repository';
 
 @Component({
   selector: 'app-projet-travailleur-form',

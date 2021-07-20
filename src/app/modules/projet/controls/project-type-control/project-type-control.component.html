@@ -1,4 +1,4 @@
-<mat-form-field>
+<mat-form-field [appearance]="appearance">
   <mat-label>Type de projet</mat-label>
   <mat-select 
   	[formControl]="form"
@@ -21,6 +21,7 @@
 		  </ng-template>
 	  </ng-template>
   </mat-select>
+  <mat-error *ngIf="form.errors">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
   <mat-error *ngIf="form.errors && form.hasError('dateProjectTypeError')">
 		La valeur ne correspond pas à la date du projet
 	</mat-error>

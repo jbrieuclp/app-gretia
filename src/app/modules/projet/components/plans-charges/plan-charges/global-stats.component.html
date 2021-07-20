@@ -1,0 +1,23 @@
+<mat-card>
+	<ng-container *ngIf="!loading; else loadingTemplate">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td> Jours ouvrés </td>
+					<td> {{ stats.openDays }} </td>
+				</tr>
+				<tr>
+					<td> Jours fériés </td>
+					<td> {{ stats.notWorked }} </td>
+				</tr>
+				<tr>
+					<td> Week-end </td>
+					<td> {{ stats.weekends }} </td>
+				</tr>
+			</tbody>
+		</table>
+	</ng-container>
+	<ng-template #loadingTemplate>
+    <app-loader message="Chargement en cours"></app-loader>
+  </ng-template>
+</mat-card>

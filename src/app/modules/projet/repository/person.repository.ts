@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { Mission } from './mission.repository';
+import { Personne } from './salarie.repository';
 
 import { AppConfig } from '../../../shared/app.config';
 import { Projet } from './projet.repository';
@@ -16,14 +17,6 @@ const httpOptions = {
     'Authorization': 'my-auth-token'
   })
 };
-
-export interface Personne {
-  id?: number,
-  nom?: string,
-  prenom?: string,
-  surnom?: string
-  compte?: any
-}
 
 export interface Travailleur {
   projet?: Projet,
@@ -147,5 +140,11 @@ export class PersonRepository {
         })
         , retry(3)
        );
+  }
+
+  getYearDaysInfo(year: number): Observable<any> {
+    const url = `${this.httpUrlBase}/days-worked/${year}`;
+    return this.http.get(url)
+      .pipe(retry(3));
   }
 }

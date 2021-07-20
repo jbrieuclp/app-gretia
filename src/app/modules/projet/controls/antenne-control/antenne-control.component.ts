@@ -14,6 +14,8 @@ import { SalarieRepository, Antenne } from '../../repository/salarie.repository'
 export class AntenneControlComponent implements OnInit {
 
   @Input() form: FormControl = new FormControl();
+  @Input() required: boolean = false;
+  @Input() appearance: string = 'legacy';
   options: Antenne[] = [];
   loading: boolean = false;
 
