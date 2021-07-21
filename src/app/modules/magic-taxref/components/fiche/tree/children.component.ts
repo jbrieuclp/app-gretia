@@ -39,7 +39,6 @@ export class TreeChildrenComponent {
         map((data: any): any[]=>data["hydra:member"])
       )
       .subscribe( (childrens: any) => {
-        console.log(childrens);
         this.treeS.setChildrens(cd_ref, childrens);
       });
   }

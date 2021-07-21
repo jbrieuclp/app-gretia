@@ -14,7 +14,7 @@ import { ConfirmationDialogComponent } from '../../../../../../../shared/compone
 export class FonctionComponent implements OnInit {
 	
 	private _subscriptions: Subscription[] = [];
-	private fonction: Fonction = null;
+	public fonction: Fonction = null;
 	public loading: boolean = false;
 
   constructor(

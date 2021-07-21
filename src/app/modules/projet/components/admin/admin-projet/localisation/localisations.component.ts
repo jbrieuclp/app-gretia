@@ -15,14 +15,10 @@ import { LocalisationService } from './localisation.service';
 })
 export class LocalisationsComponent implements OnInit {
 
-	get localisations(): Localisation[] {
-    return this.localisationS.localisations;
-  }
+	get localisations(): Localisation[] { return this.localisationS.localisations; }
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
-  get localisation() {
-    return this.localisationS.localisationSelect.getValue();
-  }
+  get localisation() { return this.localisationS.localisationSelect.getValue(); }
 
   constructor(
   	private localisationS: LocalisationService,

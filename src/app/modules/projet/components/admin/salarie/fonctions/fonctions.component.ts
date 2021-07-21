@@ -11,9 +11,8 @@ import { FonctionService } from './fonction.service'
 })
 export class FonctionsComponent implements OnInit {
 
-	get fonctions(): Fonction[] {
-    return this.fonctionS.fonctions;
-  }
+	get fonctions(): Fonction[] { return this.fonctionS.fonctions; }
+  get loadingList(): boolean { return this.fonctionS.loadingList; }
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(

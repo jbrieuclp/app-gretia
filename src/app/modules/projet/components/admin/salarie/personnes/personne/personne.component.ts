@@ -18,7 +18,7 @@ import { ConfirmationDialogComponent } from '../../../../../../../shared/compone
 export class PersonneComponent implements OnInit, AfterViewChecked {
 
   private _subscriptions: Subscription[] = [];
-	private personne: Personne = null;
+	public personne: Personne = null;
 	public loading: boolean = false;
   public displayForm: boolean = false;
 

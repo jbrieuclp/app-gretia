@@ -18,7 +18,7 @@
 				<mat-horizontal-stepper #stepper>
 
 					<mat-step>
-						<ng-container *ngIf="!fonctionS.loadingList; else loadingTemplate">
+						<ng-container *ngIf="!loadingList; else loadingTemplate">
 							<mat-list>
 								<ng-container *ngIf="(fonctions||[]).length; else noFonction">
 

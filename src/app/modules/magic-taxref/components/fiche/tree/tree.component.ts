@@ -17,6 +17,7 @@ export class TreeComponent implements OnInit {
 
 
   get parents(): any { return this.treeS.tree; }
+  get depth(): any { return this.treeS.depth; }
 
   separator: string = '-';
   get indentation(): number { 

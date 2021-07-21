@@ -14,11 +14,10 @@ export class PDCPersonInfoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("ici")
     this.planChargesS.person.asObservable()
       .pipe(
 
-      ).subscribe(res => console.log(res));
+      ).subscribe(res => {return;});
   }
 
 }

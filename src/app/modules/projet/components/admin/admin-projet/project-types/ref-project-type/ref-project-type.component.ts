@@ -18,7 +18,7 @@ import { ConfirmationDialogComponent } from '../../../../../../../shared/compone
 export class RefProjectTypeComponent implements OnInit, AfterViewChecked {
 
   private _subscriptions: Subscription[] = [];
-	private refProjectType: RefProjectType = null;
+	public refProjectType: RefProjectType = null;
 	public loading: boolean = false;
   public displayForm: boolean = false;
 

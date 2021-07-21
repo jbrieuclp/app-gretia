@@ -7,16 +7,16 @@
 </a>
 
 
-<nav mat-tab-nav-bar *ngIf="(route.params|async).projet">
+<nav mat-tab-nav-bar *ngIf="(routeParams|async).projet">
   <a 
   	mat-tab-link 
   	*ngFor="let tab of tabs; let index = index;"
   	[routerLink]="['/projet/projets', (route.params|async).projet, tab.url]"
-  	[active]="(route.params|async).onglet == tab.url || ((route.params|async).onglet === '' && index == 0)"
+  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
   > {{ tab.label }} </a>
 </nav>
 
-<ng-container [ngSwitch]="(route.params|async).onglet">
+<ng-container [ngSwitch]="(routeParams|async).onglet">
 
 	<app-projet-projet-display *ngSwitchCase="''"></app-projet-projet-display>
 	<app-projet-projet-display *ngSwitchCase="'details'"></app-projet-projet-display>

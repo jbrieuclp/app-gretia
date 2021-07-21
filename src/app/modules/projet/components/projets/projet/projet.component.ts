@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { filter, map, tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { ProjetService } from './projet.service';
@@ -15,6 +15,7 @@ export class ProjetComponent implements OnInit, OnDestroy {
 
   tabs: any[] = [{url: "details", label: "Détails"}, {url: "montage", label: "Montage"}, {url: "financement", label: "Financement"}, {url: "taches", label: "Tâches"}];
   private _subscriptions: Subscription[] = [];
+  get routeParams(): Observable <any> { return this.route.params; };
 
   constructor(
   	private route: ActivatedRoute,

@@ -29,12 +29,9 @@ export class TasksComponent implements OnInit, OnDestroy {
 
 	public dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 	public displayedColumns: string[] = ['intitule', 'nbJours', 'numberDaysDone', 'charge', 'removable'];
-  get tasks(): Task[] {
-    return this.projetTasksS.tasks.getValue();
-  }
-	get loading(): boolean {
-    return this.projetTasksS.loading;
-  }
+  
+  get tasks(): Task[] { return this.projetTasksS.tasks.getValue(); }
+	get loading(): boolean { return this.projetTasksS.loading; }
 
   get selectedTask(): Task | null { return this.taskS.task.getValue(); };
   get displayForm(): boolean { return this.taskS.displayTaskForm; };

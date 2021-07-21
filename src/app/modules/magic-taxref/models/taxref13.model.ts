@@ -1,7 +1,7 @@
 import { Deserializable } from "../../../shared/models/deserializable.model";
 export class Taxref13 {
   
-  cdNom: string;  
+  cdNom: number;  
   nomComplet: string;  
   nomCompletHtml: string;  
   regne: string;  
@@ -39,6 +39,8 @@ export class Taxref13 {
   pf: string;  
   cli: string;  
   url: string;
+  childrens: any;
+  parent: any;
 
 	deserialize(input: any) {
     Object.assign(this, input);

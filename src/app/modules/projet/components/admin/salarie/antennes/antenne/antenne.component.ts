@@ -14,7 +14,7 @@ import { ConfirmationDialogComponent } from '../../../../../../../shared/compone
 export class AntenneComponent implements OnInit {
 
 	private _subscriptions: Subscription[] = [];
-	private antenne: Antenne = null;
+	public antenne: Antenne = null;
 	public loading: boolean = false;
 
   constructor(
