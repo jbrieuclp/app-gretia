@@ -16,7 +16,7 @@ export class GlobalStatsComponent implements OnInit {
 
   constructor(
     private personR: PersonRepository,
-    private planChargesS: PlanChargesService, 
+    public planChargesS: PlanChargesService, 
   ) { }
 
   ngOnInit() {
@@ -28,10 +28,14 @@ export class GlobalStatsComponent implements OnInit {
       .pipe(
         distinctUntilChanged(),
         tap(() => this.loading = true),
-        switchMap(year=>this.personR.getYearDaysInfo(year)),
+        switchMap(year=>this.personR.getYearDaysInfo({'year': year})),
         tap(() => this.loading = false),
       )
-      .subscribe(stats => this.stats = stats);
+      .subscribe(stats => {
+        this.planChargesS.openDays.next(stats.openDays);
+        this.planChargesS.notWorked.next(stats.notWorked);
+        this.planChargesS.weekends.next(stats.weekends);
+      });
   }
 
 }

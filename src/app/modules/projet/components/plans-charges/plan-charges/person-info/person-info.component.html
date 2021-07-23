@@ -1,1 +1,56 @@
-<mat-card></mat-card>
+<mat-card *ngIf="workedRepartition.length">
+	<ng-container *ngIf="!loading; else loadingTemplate">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th></th>
+					<th 
+						*ngFor="let salarie of workedRepartition"
+						class="text-center"
+						colspan="3"
+					>
+						<small> {{ salarie.label }} ({{ salarie.taux }}%) </small>
+						<br>
+						<small> {{salarie.date_debut | date:'dd/MM/yyyy'}}  - {{ salarie.date_fin ? (salarie.date_fin | date:'dd/MM/yyyy') : 'en cours'}} </small>
+					</th>
+				</tr>
+				<tr>
+					<th></th>
+					<ng-container *ngFor="let salarie of workedRepartition">
+						<th class="text-center"> {{ salarie.taux }}% </th>
+						<th class="text-center"> Jours dispo. </th>
+						<th class="text-center"> Jours conso. </th>
+					</ng-container>
+					<th><b> TOTAL </b></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let param of workedRepartition[0]['params']">
+					<td><small> {{ param.name }} </small></td>
+					<ng-container *ngFor="let salarie of workedRepartition">
+						<td class="text-center">
+							{{ findParam(salarie.params, param.code).value * 100 }}%
+						</td>
+						<td class="text-right"> {{ getNbJours(salarie, param.code) }} </td>
+						<td class="text-right"> {{ getUsedDaysByParam(salarie, param.code) }} </td>
+					</ng-container>
+					<td><b> {{ getSumByParam(param.code) }} </b></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td><b> TOTAL </b></td>
+					<ng-container *ngFor="let salarie of workedRepartition">
+						<td class="text-center"><b> {{ getSumParamPercent(salarie) }}% </b></td>
+						<td class="text-right"><b> {{ getSumDays(salarie) }} </b></td>
+						<td class="text-right"><b> ? </b></td>
+					</ng-container>
+					<td><b> {{ getTotalDays() }} </b></td>
+				</tr>
+			</tfoot>
+		</table>
+	</ng-container>
+	<ng-template #loadingTemplate>
+    <app-loader message="Chargement en cours"></app-loader>
+  </ng-template>
+</mat-card>

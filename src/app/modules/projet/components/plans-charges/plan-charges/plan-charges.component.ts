@@ -14,8 +14,8 @@ import { PlanChargesService } from './plan-charges.service';
 })
 export class PlanChargesComponent implements OnInit {
 
-  projects: Projet[] = [];
-  person: Observable<Personne>;
+  get projects(): Projet[] { return this.planChargesS.projects.getValue(); };
+  get person(): Personne { return this.planChargesS.person.getValue(); };
   loading: boolean = false;
 
   constructor(
@@ -29,10 +29,9 @@ export class PlanChargesComponent implements OnInit {
       .pipe(
         filter((params) => params.person),
         switchMap((params) => this.getProjects(params.person)),
+        tap((params) => console.log(params)),
       )
-      .subscribe((projects) => this.projects = projects);
-
-    this.person = this.planChargesS.person.asObservable();
+      .subscribe((projects) => this.planChargesS.projects.next(projects));
   }
 
   getPDC(person_id): Observable<any> {
@@ -43,8 +42,8 @@ export class PlanChargesComponent implements OnInit {
     this.loading = true;
     return this.projetR.projects_progression({
       'tasks.attributions.salarie.personne.id': person_id, 
-      'dateDebut[after]': `this.planChargesS.year.getValue()-01-01`,
-      'dateDebut[before]': `this.planChargesS.year.getValue()-12-31`,
+      'dateDebut[after]': `${this.planChargesS.year.getValue()}-01-01`,
+      'dateDebut[before]': `${this.planChargesS.year.getValue()}-12-31`,
     })
       .pipe(
         map((res): Projet[] => Object.values(res['hydra:member'])),

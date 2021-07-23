@@ -23,6 +23,7 @@ export interface Task {
   "periods"?: any[];
   "attributions"?: TaskAttribution[];
   "travaux"?: string;
+  "works"?: any[];
 }
 
 export interface Action {

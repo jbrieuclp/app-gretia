@@ -142,8 +142,15 @@ export class PersonRepository {
        );
   }
 
-  getYearDaysInfo(year: number): Observable<any> {
-    const url = `${this.httpUrlBase}/days-worked/${year}`;
+  getYearDaysInfo(params = {}): Observable<any> {
+    const url = `${this.httpUrlBase}/days-worked`;
+    const options = {params: params};
+    return this.http.get(url, options)
+      .pipe(retry(3));
+  }
+
+  getWorkedDaysRepartition(person: number, year: number): Observable<any> {
+    const url = `${this.httpUrlBase}/worked-days-repartition/${person}/${year}`;
     return this.http.get(url)
       .pipe(retry(3));
   }

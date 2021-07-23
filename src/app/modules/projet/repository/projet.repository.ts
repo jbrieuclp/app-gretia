@@ -33,6 +33,7 @@ export interface Projet {
   "parent"?: Projet;
   "charges"?: Charge[];
   "childrens"?: Projet[];
+  "type"?: string;
   "createdAt"?: Date;
   "createdBy"?: any;
   "updatedAt"?: Date;

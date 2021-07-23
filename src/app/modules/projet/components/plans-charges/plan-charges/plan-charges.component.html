@@ -1,15 +1,31 @@
 <div class="row">
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<app-projet-pdc-global-stats></app-projet-pdc-global-stats>
 	</div>
 
-	<div 
-		 *ngIf="person|async"
-		class="col-md-3"
-	>
-		<mat-card>
-			Recup : {{ (person | async).recup / 60 | number: '1.0-2' }} heure(s)
+	<div class="col-md-2">
+		<mat-card *ngIf="person">
+			<table class="table">
+				<tr>
+					<td>Recup</td>
+					<td>{{ person.recup / 60 | number: '1.0-2' }} heure(s)</td>
+				</tr>
+				<tr>
+					<td>Congés N</td>
+					<td>{{ person.cpYear }} jour(s)</td>
+				</tr>
+				<tr>
+					<td>Congés N-1</td>
+					<td>{{ person.cpPrevYear }} jour(s)</td>
+				</tr>
+			</table>
 		</mat-card>
+	</div>
+
+
+
+	<div class="col-md-8">
+		<app-project-pdc-person-info></app-project-pdc-person-info>
 	</div>
 </div>
 
