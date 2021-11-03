@@ -1,0 +1,82 @@
+<div class="row">
+	<ng-container *ngIf="!timeFormDisplay;else timeFormBlock">
+		<mat-form-field class="col-sm-5">
+			<mat-label>Durée</mat-label>
+	    <input 
+	    	id="durationForm"
+	    	matInput 
+		    placeholder="Ex : 1.25 pour 1h15"
+		    autocomplete="off"
+		    [formControl]="durationForm">
+		  <mat-error>Renseignez au quart d'heure (0.25, 0.5 ou 0.75)</mat-error>
+	  </mat-form-field>
+	</ng-container>
+
+  <ng-template #timeFormBlock>
+		<div class="col-sm-6">
+			<form 
+				[formGroup]="timeForm" 
+				class="row"
+			>
+				<mat-form-field class="col-6">
+					<mat-label>Heure(s)</mat-label>
+			    <input 
+			    	id="hour"
+			    	matInput 
+				    placeholder="Ex: 1" 
+				    formControlName="hour" 
+				    [matAutocomplete]="autoHour"
+				  >
+			    <mat-autocomplete #autoHour>
+			      <mat-option 
+			      	*ngFor="let option of optionsHour" 
+			      	[value]="option"
+			      >
+			        {{ option }}
+			      </mat-option>
+			    </mat-autocomplete>
+			  </mat-form-field>
+			  <mat-form-field class="col-6">
+					<mat-label>Minutes</mat-label>
+			    <input 
+			    	id="minute"
+			    	matInput 
+				    placeholder="Ex: 15" 
+				    formControlName="minute" 
+				    [matAutocomplete]="autoMinute"
+				  >
+			    <mat-autocomplete #autoMinute>
+			      <mat-option 
+			      	*ngFor="let option of optionsMinute" 
+			      	[value]="option"
+			      >
+			        {{ option }}
+			      </mat-option>
+			    </mat-autocomplete>
+
+			  </mat-form-field>
+			</form>
+			<div 
+				*ngIf="(timeForm.get('hour').errors && timeForm.get('hour').errors.inArrayError) || (timeForm.get('minute').errors && timeForm.get('minute').errors.inArrayError)"
+				class="error"
+			>
+				Veuillez choisir une valeur dans la liste
+			</div>
+		</div>
+	</ng-template>
+
+	<mat-radio-group 
+		[ngClass]="{'offset-sm-1': !timeFormDisplay, 'col-sm-2': true}"
+		(change)="timeFormDisplay=!timeFormDisplay">
+	  <mat-radio-button 
+	  	value="1" 
+	  	color="primary"
+	  	[checked]="!timeFormDisplay"
+	  >Heure décimal</mat-radio-button>
+	  <mat-radio-button 
+	  	value="2" 
+	  	color="primary"
+	  	[checked]="timeFormDisplay"
+	  >Heure minutes</mat-radio-button>
+	</mat-radio-group>
+</div>

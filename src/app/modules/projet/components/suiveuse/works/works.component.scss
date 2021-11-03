@@ -1,0 +1,29 @@
+th:nth-child(1),
+td:nth-child(1) {
+  width: 120px;
+  text-align: center;
+}
+
+td:nth-child(1) > .mat-icon {
+  cursor: pointer;
+}
+
+th:nth-child(3),
+td:nth-child(3),
+th:nth-child(4),
+td:nth-child(4),
+th:nth-child(5),
+td:nth-child(5),
+th:nth-child(6),
+td:nth-child(6) {
+  width: 80px;
+  text-align: center;
+}
+
+td {
+	vertical-align: middle;
+}
+
+td mat-icon{
+	vertical-align: middle;
+}

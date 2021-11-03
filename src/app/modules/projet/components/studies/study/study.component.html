@@ -1,0 +1,37 @@
+<a mat-raised-button 
+	routerLink="/projet/projets?project="
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Retourner aux projets"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<mat-card>
+	<mat-card-title>
+		<h5> {{ study?.label }} </h5>
+	</mat-card-title>
+
+	<mat-card-content>
+
+		<nav mat-tab-nav-bar *ngIf="(routeParams|async).study">
+		  <a 
+		  	mat-tab-link 
+		  	*ngFor="let tab of tabs; let index = index;"
+		  	[routerLink]="['/projet/etudes', (route.params|async).study, tab.url]"
+		  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
+		  > {{ tab.label }} </a>
+		</nav>
+
+		<div style="padding: 10px 15px 5px 15px;">
+			<ng-container [ngSwitch]="(routeParams|async).onglet">
+
+				<app-projet-study-display *ngSwitchCase="''"></app-projet-study-display>
+				<app-projet-study-display *ngSwitchCase="'details'"></app-projet-study-display>
+				<app-projet-study-financement *ngSwitchCase="'financement'"></app-projet-study-financement>
+				<app-project-study-montages *ngSwitchCase="'montage'"></app-project-study-montages>
+				<app-projet-study-actions *ngSwitchCase="'actions'"></app-projet-study-actions>
+
+			</ng-container>
+		</div>
+	</mat-card-content>
+</mat-card>

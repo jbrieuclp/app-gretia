@@ -4,9 +4,9 @@ import { map, filter } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { ProjetRepository, Projet } from '../../repository/projet.repository';
-import { Week } from '../../repository/task.repository';
-import { WeeksService } from '../projets/projet/tasks/task/weeks/weeks.service';
+import { StudiesRepository } from '../../repository/studies.repository';
+import { Week, Study } from '../../repository/project.interface';
+import { WeeksService } from '../studies/study/actions/action/weeks/weeks.service';
 
 @Component({
   selector: 'app-accueil',
@@ -15,23 +15,23 @@ import { WeeksService } from '../projets/projet/tasks/task/weeks/weeks.service';
 })
 export class ProjetAccueilComponent implements OnInit, OnDestroy {
 
-	projets: Projet[] = [];
+	projets: Study[] = [];
   year: number = moment().year();
 
   _subscriptions: Subscription[] = []
 
   constructor(
-    private projetR: ProjetRepository,
+    private projetR: StudiesRepository,
     private weeksS: WeeksService,
   ) { }
 
   ngOnInit() {
     this._subscriptions.push(
-    	this.projetR.myProjets()
+    	this.projetR.myStudies()
     		.pipe(
-    			map((res): Projet[] => Object.values(res['hydra:member']))
+    			map((res): Study[] => Object.values(res['hydra:member']))
     		)
-        .subscribe((projets: Projet[])=>this.projets = projets)
+        .subscribe((projets: Study[])=>this.projets = projets)
     );
 
     this._subscriptions.push(
@@ -47,29 +47,29 @@ export class ProjetAccueilComponent implements OnInit, OnDestroy {
     this._subscriptions.forEach(s => s.unsubscribe());
   }
 
-  tasksDay(projet) {
+  actionsDay(projet) {
     let days = 0;
-    projet.tasks.forEach(t => { days += t.nbJours; });
+    projet.actions.forEach(t => { days += t.nbJours; });
     return days;
   }
 
-  tasksDayDone(projet) {
+  actionsDayDone(projet) {
     let days = 0;
-    projet.tasks.forEach(t => { days += t.numberDaysDone; });
+    projet.actions.forEach(t => { days += t.numberDaysDone; });
     return days;
   }
 
   getWeekTooltip(week) {
-    // let tooltip: {projet: {'@id': string, label: string, tasks: string[]}}[] = [];
+    // let tooltip: {projet: {'@id': string, label: string, actions: string[]}}[] = [];
 
     // let projet = this.projets.filter(projet => 
-    //               projet.tasks.filter(task => 
-    //                 task.periods.findIndex(period => period['@id'] === week['@id']) !== -1
+    //               projet.actions.filter(action => 
+    //                 action.periods.findIndex(period => period['@id'] === week['@id']) !== -1
     //               )
     //             )
     // this.projets.forEach(projet => {
-    //   projet.tasks.forEach(task => { 
-    //     if (task.periods.findIndex(p => p['@id'] === week['@id']) !== -1) {
+    //   projet.actions.forEach(action => { 
+    //     if (action.periods.findIndex(p => p['@id'] === week['@id']) !== -1) {
     //       if
 
 

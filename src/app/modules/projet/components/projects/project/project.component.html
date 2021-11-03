@@ -1,0 +1,50 @@
+<a mat-raised-button 
+	routerLink="/projet/projets"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir à la liste des projects"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<mat-card>
+	<mat-card-title> <h5> {{ project?.label }} </h5> </mat-card-title>
+	<mat-card-content>
+
+		<nav mat-tab-nav-bar *ngIf="(routeParams|async).project">
+		  <a 
+		  	mat-tab-link 
+		  	*ngFor="let tab of tabs; let index = index;"
+		  	[routerLink]="['/projet/projets', (route.params|async).project, tab.url]"
+		  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
+		  > 
+		  	{{ tab.label }} 
+		  	<mat-spinner 
+					*ngIf="tab.loader()"
+					diameter="25"
+					strokeWidth="2">
+				</mat-spinner>
+
+			</a>
+		</nav>
+
+		<div style="padding: 10px 15px 5px 15px;">
+			<ng-container [ngSwitch]="(routeParams|async).onglet">
+
+				<app-projet-project-display *ngSwitchCase="''"></app-projet-project-display>
+				<app-projet-project-display *ngSwitchCase="'details'"></app-projet-project-display>
+				<app-projet-project-funders *ngSwitchCase="'financeurs'"></app-projet-project-funders>
+				<app-projet-project-signatories *ngSwitchCase="'signataires'"></app-projet-project-signatories>
+				<app-projet-project-studies-fundings *ngSwitchCase="'etudes'"></app-projet-project-studies-fundings>
+				<app-projet-project-deadlines *ngSwitchCase="'echeances'"></app-projet-project-deadlines>
+				<ng-container *ngSwitchCase="'versements'">
+					<mat-card>
+						<div>Date demande</div>
+						<div>Date realisation</div>
+						<div>Justificatif (doc)</div>
+					</mat-card>
+				</ng-container>
+
+			</ng-container>
+		</div>
+	</mat-card-content>
+</mat-card>

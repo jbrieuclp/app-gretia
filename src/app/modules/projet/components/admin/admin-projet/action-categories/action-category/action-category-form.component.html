@@ -1,0 +1,51 @@
+<form [formGroup]="form">
+
+  <div class="row">
+    <mat-form-field class="col-md-6">
+      <input 
+        id="label"
+        matInput 
+        placeholder="Libelle"  
+        required
+        formControlName="label">
+    </mat-form-field>
+    <mat-form-field class="col-md-6">
+      <input 
+        id="orderBy"
+        matInput 
+        type="number"
+        placeholder="Ordre"  
+        required
+        formControlName="orderBy">
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <textarea  
+        id="description"
+        matInput 
+        placeholder="Description"  
+        formControlName="description">
+      </textarea>
+    </mat-form-field>
+    
+  </div>
+
+	<div>
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+  	<button 
+  		mat-raised-button 
+  		style="min-width: 0; margin-top: 20px;" 
+  		color="primary" 
+  		[disabled]="!form.valid"
+  		(click)="save()">
+  		<mat-icon>done</mat-icon> {{ category?.id ? 'Modifier' : 'Ajouter' }}
+  	</button>
+  </div>
+</form>

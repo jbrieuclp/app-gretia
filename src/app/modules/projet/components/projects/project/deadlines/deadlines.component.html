@@ -1,0 +1,20 @@
+<ng-container *ngIf="!loadingList; else loadingTemplate">
+
+	<ng-container *ngIf="deadlines.length; else noDeadlines">
+		<ng-container *ngFor="let deadline of deadlines">
+			<app-projet-deadline 
+				[deadline]="deadline"
+				(deadlineChange)="deadlineChange($event)"
+			></app-projet-deadline>
+		</ng-container>
+	</ng-container>
+	<ng-template #noDeadlines>
+		<div>Pas d'échéance pour le moment</div>
+	</ng-template>
+
+	<app-projet-project-deadline-form (onCreate)="deadlineCreate($event)"></app-projet-project-deadline-form>
+
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Chargement en cours"></app-loader>
+</ng-template>

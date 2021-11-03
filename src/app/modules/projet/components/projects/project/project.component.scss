@@ -1,0 +1,12 @@
+::ng-deep .mat-tab-body-content {
+  padding: 20px 15px;
+}
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  /*stroke: #fff !important;*/
+}
+
+.mat-progress-spinner, .mat-spinner {
+  display: inline-block;
+  margin-left: 10px;
+}

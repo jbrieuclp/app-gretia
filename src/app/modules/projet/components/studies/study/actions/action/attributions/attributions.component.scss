@@ -1,0 +1,19 @@
+table {
+	background-color: #fff;
+}
+
+table th:nth-child(3),
+table td:nth-child(3){
+	width: 120px;
+}
+
+table td{
+	vertical-align: middle;
+}
+
+.mat-icon-button {
+	height: 30px;
+	width: 30px;
+	line-height: 30px;
+	margin: 0px 5px;
+}

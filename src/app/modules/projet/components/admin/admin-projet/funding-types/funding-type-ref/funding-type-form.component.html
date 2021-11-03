@@ -1,0 +1,22 @@
+<h6>Ajouter un contrat</h6>
+
+<app-projet-funding-type-form-template [form]="form"></app-projet-funding-type-form-template>
+
+<div>
+  <button 
+  	type="button"
+    mat-raised-button
+    style="margin-right: 10px;"
+    (click)="cancel()">
+    Annuler
+  </button>
+	<button 
+		mat-raised-button 
+		type="button"
+		style="min-width: 0; margin-top: 20px;" 
+		color="primary" 
+		[disabled]="!form.valid"
+		(click)="save()">
+		<mat-icon>done</mat-icon> {{ isEdit() ? 'Modifier' : 'Ajouter' }}
+	</button>
+</div>

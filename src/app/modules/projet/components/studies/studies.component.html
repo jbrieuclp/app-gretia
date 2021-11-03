@@ -1,0 +1,99 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir à la gestion des salariés"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<h4> Listing des études </h4>
+
+<mat-card>
+
+  <div style="margin-bottom: 10px;">
+    <button 
+      (click)="createStudy()"
+      type="button"
+      mat-raised-button 
+      color="primary">
+      <mat-icon>add</mat-icon> Déposer une étude
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading; else loadingTemplate">
+    <table 
+      mat-table 
+      [dataSource]="dataSource" 
+      matSort
+      class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Cost Description Column -->
+      <ng-container matColumnDef="searcher">
+        <th mat-header-cell *matHeaderCellDef colspan="5">
+          <mat-form-field style="width: 50%;">
+            <input matInput 
+              placeholder="Rechercher..." 
+              [formControl]="filterInput">
+          </mat-form-field>
+        </th>
+      </ng-container>
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
+        <td mat-cell *matCellDef="let element"> {{ element.code }} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="label">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé </th>
+        <td mat-cell *matCellDef="let element"> 
+        	<a [routerLink]="[element.id]" 
+        		matTooltip="Ouvrir le study {{ element.label }}"
+        	><b>{{ element.label }}</b></a>
+        </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="dateStart">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Commencement </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dateStart | date:'dd/MM/y' }} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="dateEnd">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fin </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dateEnd | date:'dd/MM/y' }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="clos">
+        <th mat-header-cell *matHeaderCellDef> Cloturé </th>
+        <td mat-cell *matCellDef="let element"> 
+        	<button 
+          mat-icon-button 
+          color="primary" 
+          aria-label="bouton icone avec une croix ou un V"
+          (click)="changeStatus(element)">
+        		<span [ngClass]="element.clos ? 'done' : 'pending'">
+        			<mat-icon>{{ element.clos ? 'done' : 'clear' }}</mat-icon>
+        		</span>
+    		  </button>
+    		 </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="['searcher']"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+    </table>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <table class="table">
+      <tr><td><mat-progress-bar mode="query"></mat-progress-bar></td></tr>
+    </table>
+  </ng-template>
+</mat-card>

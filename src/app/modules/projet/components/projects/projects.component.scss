@@ -1,0 +1,67 @@
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: #efefef;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+tr.example-expanded-row {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-detail-row > td {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: block;
+}
+
+.example-element-detail.expanded {
+  border-left: 8px solid #f2f2f2;
+  border-bottom: 3px solid #f2f2f2;
+  padding: 10px 32px 5px 24px;
+}
+
+.example-element-detail .description {
+  margin-bottom: 30px;
+  background-color: #efefef;
+  padding: 15px 20px;
+  border-radius: 5px;
+}
+
+.example-element-detail table.table th:nth-child(1),
+.example-element-detail table.table td:nth-child(1) {
+  width: 70%;
+}
+
+.example-element-detail table.table th:nth-child(2),
+.example-element-detail table.table td:nth-child(2),
+.example-element-detail table.table th:nth-child(3),
+.example-element-detail table.table td:nth-child(3) {
+  width: 15%;
+}

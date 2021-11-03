@@ -1,0 +1,90 @@
+<a mat-raised-button 
+	routerLink="/projet/admin/projets"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir à la gestion des salariés"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+
+	<div class="col-md-6">
+		<mat-card>
+			<mat-horizontal-stepper #stepper>
+
+				<mat-step>
+					<mat-card-title>Gestion des types de financement</mat-card-title>
+
+					<mat-card-subtitle>Liste des valeurs enregistrées</mat-card-subtitle>
+
+					<mat-card-content>
+						<ng-container *ngIf="!fundingTypeRefS.loadingList; else loadingTemplate">
+							<mat-list>
+								<ng-container *ngIf="(fundingTypeRefs||[]).length; else noRefProjectType">
+
+									<ng-container *ngFor="let fundingTypeRef of fundingTypeRefs|sortBy:'asc':'orderBy'; let last = last;">
+
+									  <mat-list-item 
+									  	displayMouseOver 
+									  	displayMouseOverSelector=".button"
+									  	(click)="selected(fundingTypeRef)"
+									  >
+									  	<span class="button d-none">
+										  	<button 
+										  		mat-icon-button 
+										  		color="primary"
+										  		(click)="edit()">
+											    <mat-icon>edit</mat-icon>
+											  </button>
+											</span>
+									  	<span class="value"><small>{{ fundingTypeRef.orderBy }} - </small>{{ fundingTypeRef.label }}</span>
+									  </mat-list-item>
+									  <mat-divider *ngIf="!last"></mat-divider>
+
+									</ng-container>
+
+								</ng-container>
+
+								<ng-template #noRefProjectType>
+									<mat-list-item>Aucune valeur enregistrée</mat-list-item>
+								</ng-template>
+
+								<button 
+									mat-raised-button 
+									color="primary"
+									(click)="create()"
+								>
+									<mat-icon>add</mat-icon> Ajouter
+								</button>
+							</mat-list>
+						</ng-container>
+						<ng-template #loadingTemplate>
+							<app-loader message="Chargement en cours"></app-loader>
+						</ng-template>
+
+					</mat-card-content>
+				</mat-step>
+
+				<mat-step>
+					<mat-card-title>
+						<ng-container *ngIf="(fundingTypeRefS.fundingTypeRef | async) !== null; else createForm">
+							Modification de {{ (fundingTypeRefS.fundingTypeRef | async).alias }}
+						</ng-container>
+						<ng-template #createForm>
+							Ajout d'une valeur
+						</ng-template>
+					</mat-card-title>
+					<mat-card-subtitle>Veuillez compléter ces informations</mat-card-subtitle>
+					<mat-card-content>
+						<app-projet-admin-funding-type-ref-form></app-projet-admin-funding-type-ref-form>
+					</mat-card-content>
+				</mat-step>
+			</mat-horizontal-stepper>
+
+		</mat-card>
+	</div>
+
+	<div class="col-6">
+		<app-projet-admin-funding-type-ref></app-projet-admin-funding-type-ref>
+	</div>
+</div>

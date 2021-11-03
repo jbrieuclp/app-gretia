@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { Observable } from 'rxjs';
 
 import { PersonRepository } from '../../../repository/person.repository';
-import { Personne } from '../../../repository/salarie.repository';
+import { Person } from '../../../repository/project.interface';
 
 @Component({
   selector: 'app-projet-travailleur-form',
@@ -14,7 +14,7 @@ export class TravailleurFormComponent implements OnInit {
 
 	@Input('travailleurForm')
 	travailleurForm: FormGroup;
-	persons: Observable<Personne[]>;
+	persons: Observable<Person[]>;
 
   constructor( private personR: PersonRepository ) {}
 

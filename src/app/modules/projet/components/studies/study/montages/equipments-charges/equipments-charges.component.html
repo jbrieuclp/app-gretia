@@ -1,0 +1,83 @@
+<mat-card>
+	<mat-card-title> <h5> Matériel et frais </h5> </mat-card-title>
+	<mat-card-content>
+		<ng-container *ngIf="!loading; else loadingTemplate">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Catégorie</th>
+						<th>Intitulé</th>
+						<th>Coût unitaire</th>
+						<th>Quantité prévue</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-container *ngIf="(charges||[]).length; else noData">
+						<tr *ngFor="let charge of charges">
+							<td>
+								<div class="float-left">
+									<button 
+										*ngIf="charge.removable"
+										mat-icon-button 
+										color="warn"
+										type="button"
+										(click)="delete(charge)">
+								    <mat-icon>delete</mat-icon>
+								  </button>
+								</div>
+								<div class="float-right">
+									<button 
+										mat-icon-button 
+										color="primary"
+										type="button"
+										(click)="openFormMontage(charge)"
+									>
+								    <mat-icon>edit</mat-icon>
+								  </button>
+								</div>
+							</td>
+							<td>{{ charge.chargeType?.chargeTypeRef?.label || '-' }}</td>
+							<td>
+								{{ charge.label }} 
+								<mat-icon 
+									*ngIf="charge.description"
+									[matTooltip]="charge.description"
+									position="below"
+								>info</mat-icon>
+							</td>
+							<td>{{ charge.unitCostApplied }}</td>
+							<td>{{ charge.quantity }}</td>
+							<td>{{ charge.unitCostApplied * charge.quantity }}</td>
+						</tr>
+					</ng-container>
+					<ng-template #noData>
+						<tr><td colspan="8">Aucune ligne enregistrée</td></tr>
+					</ng-template>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th colspan="5" class="table-dark">Total</th>
+						<td class="table-dark font-weight-bold">{{ totals }}</td>
+					</tr>
+				</tfoot>
+			</table>
+
+			<div class="text-left">
+				<button 
+					mat-mini-fab
+					color="primary"
+					matTooltip="Ajouter une action"
+					(click)="openFormMontage()"
+				>
+			    <mat-icon>add</mat-icon>
+			  </button>		  	
+			</div>
+		</ng-container>
+	<ng-template #loadingTemplate>
+		<app-loader message="Chargement en cours"></app-loader>
+	</ng-template>
+		
+	</mat-card-content>
+</mat-card>

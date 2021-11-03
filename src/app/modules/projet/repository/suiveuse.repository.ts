@@ -4,55 +4,20 @@ import { catchError, retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { Personne } from './salarie.repository';
-import { Mission } from './mission.repository';
 
 import { AppConfig } from '../../../shared/app.config';
-
-export interface Travail {
-  id?: number,
-  mission?: any,
-  personne?: any,
-  date?: Date,
-  categorie?: any,
-  duree?: number,
-  detail?: string
-}
-
-export interface TravailCategorie {
-  id?: number,
-  libelle?: string,
-  ordre?: number
-}
-
-export interface TRAVAIL_OPTIONS {
-  startAt?: string,
-  endAt?: string,
-  limit?: number
-}
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    'Authorization': 'my-auth-token'
-  })
-};
+import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
+import { Work, Recup, LoadPlan } from './project.interface';
 
 @Injectable()
-export class SuiveuseRepository {
-
-	httpUrlBase: string;
-  // constructeur ...
-  constructor(private http: HttpClient) {
-    this.httpUrlBase = AppConfig.URL_PROJET;
-  }
+export class SuiveuseRepository extends ApiProjectRepository {
 
   /** GET personnes par ID (cd_nom) **/
   dashboard(user?: string): Observable<any> {
     user = user||null
   	const url = `${this.httpUrlBase}/suiveuse/personne/${user}`;
     return this.http
-    	.get(url, httpOptions)
+    	.get(url, HTTP_OPTIONS)
     	.pipe(
         map(res => { 
           return res;
@@ -62,40 +27,13 @@ export class SuiveuseRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
-  getCategories(limit?: number): Observable<TravailCategorie[]> {
-    const url = `${this.httpUrlBase}/suiveuse/categories`;
-    return this.http
-      .get(url, httpOptions)
-      .pipe(
-        map((res: TravailCategorie[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
-  }
-
-  /** GET personnes par ID (cd_nom) **/
-  getSynthese(user: number, options: TRAVAIL_OPTIONS): Observable<any[]> {
-    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
-    const url = `${this.httpUrlBase}/personne/${user}/synthese?${params}`;
-    return this.http
-      .get(url, httpOptions)
-      .pipe(
-        map((res: Travail[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
-  }
-
-  /** GET personnes par ID (cd_nom) **/
-  getMySynthese(options: TRAVAIL_OPTIONS): Observable<any[]> {
+  getMySynthese(options: any): Observable<any[]> {
     const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
     const url = `${this.httpUrlBase}/works/me?${params}`;
     return this.http
-      .get(url, httpOptions)
+      .get(url, HTTP_OPTIONS)
       .pipe(
-        map((res: Travail[]) => { 
+        map((res: Work[]) => { 
           return res;
         })
         , retry(3)
@@ -103,13 +41,13 @@ export class SuiveuseRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
-  getTravaux(user: number, options: TRAVAIL_OPTIONS): Observable<Travail[]> {
+  getMyRecup(options: any): Observable<Recup[]> {
     const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
-    const url = `${this.httpUrlBase}/personne/${user}/travaux?${params}`;
+    const url = `${this.httpUrlBase}/recups/me?${params}`;
     return this.http
-      .get(url, httpOptions)
+      .get(url, HTTP_OPTIONS)
       .pipe(
-        map((res: Travail[]) => { 
+        map((res: Recup[]) => { 
           return res;
         })
         , retry(3)
@@ -117,54 +55,48 @@ export class SuiveuseRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
-  getTravail(id_travail: number): Observable<Travail> {
-    const url = `${this.httpUrlBase}/travail/${id_travail}`;
+  getMyParameters(params: any): Observable<any[]> {
+    const url = `${this.httpUrlBase}/employee-parameters/me?${params}`;
+    HTTP_OPTIONS['params'] =  params;
     return this.http
-      .get(url, httpOptions)
+      .get(url, HTTP_OPTIONS)
       .pipe(
-        map((res: Travail) => { 
+        map((res: any[]) => { 
           return res;
         })
         , retry(3)
        );
   }
 
-  /** POST personnes par ID (cd_nom) **/
-  postTravail(data: any): Observable<Travail> {
-    const url = `${this.httpUrlBase}/travail`;
-    const sources = JSON.stringify(data);
+  /** GET list of Work **/
+  calculateRecup(params = {}): Observable<any[]> {
+    const url = `${this.httpUrlBase}/suiveuses/calculate`;
+    HTTP_OPTIONS['params'] =  params;
     return this.http
-      .post(url, sources, httpOptions)
+      .get(url, HTTP_OPTIONS)
       .pipe(
-        map((travail: Travail) => { 
-          return travail;
-        })
-       );
+        map((res: any[]) => res), 
+        retry(3)
+      );
   }
 
-  /** PUT personnes par ID (cd_nom) **/
-  putTravail(travail: Travail, data: any): Observable<Travail> {
-    const url = `${this.httpUrlBase}/travail/${travail.id}`;
-    const sources = JSON.stringify(data);
+  /** GET list of Work **/
+  cumulative(params = {}): Observable<any[]> {
+    const url = `${this.httpUrlBase}/suiveuses/cumulative`;
+    HTTP_OPTIONS['params'] =  params;
     return this.http
-      .put(url, sources, httpOptions)
+      .get(url, HTTP_OPTIONS)
       .pipe(
-        map((travail: Travail) => { 
-          return travail;
-        })
-       );
+        map((res: any[]) => res), 
+        retry(3)
+      );
   }
 
-  /** DELETE personnes par ID (cd_nom) **/
-  deleteTravail(travail: Travail): Observable<Boolean> {
-    const url = `${this.httpUrlBase}/travail/${travail.id}`;
-    return this.http
-      .delete(url, httpOptions)
-      .pipe( 
-        map((res: Boolean) => { 
-          return res;
-        })
-        , retry(3)/*, catchError(this.handleError('deleteHero'))*/ );
+  /** POST create new LoadPlan **/
+  postLoadPlan(data: LoadPlan): Observable<LoadPlan> {
+    const url = `${this.httpUrlBase}/load-plans`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
   }
 
 }

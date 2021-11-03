@@ -1,0 +1,33 @@
+<mat-form-field
+	appearance="outline"
+	[style.fontSize.px]="14"
+>
+  <input 
+  	id="form"
+    matInput 
+    placeholder="Coût jour du projet"  
+    type="number"
+		required
+		[formControl]="form">
+	<mat-icon matSuffix>euro_symbol</mat-icon>
+</mat-form-field>
+
+<div>
+	<app-submit-btn
+  	[disabled]="!form.valid"
+  	[waiting]="waiting"
+  	matTooltip="Enregistrer"
+  	(click)="submit()"
+  >
+  	<mat-icon>check</mat-icon> Modifier
+  </app-submit-btn>
+	<button
+		style="margin-left: 10px;"
+		mat-raised-button
+		type="button"
+		matTooltip="Annuler"
+		(click)="cancel()"
+	>
+	  Annuler
+	</button>
+</div>

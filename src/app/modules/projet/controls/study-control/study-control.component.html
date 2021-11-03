@@ -1,0 +1,33 @@
+<mat-form-field>
+	<mat-label>
+		Étude
+	</mat-label>
+	<mat-spinner 
+		*ngIf="loading"
+		matSuffix
+		diameter="20"
+		strokeWidth="2"
+	>
+	</mat-spinner>
+  <input 
+	  type="text" 
+	  placeholder="Rechercher une étude" 
+	  matInput 
+	  [formControl]="form" 
+	  [matAutocomplete]="auto"
+	>
+  <mat-autocomplete 
+  	#auto="matAutocomplete"
+  	[displayWith]="displayFn.bind(this)"
+  >
+    <mat-option 
+    	*ngFor="let study of (filteredOptions | async)" 
+    	[value]="study['@id']"
+    	[disabled]="isDisabled(study)"
+    >
+      {{ study.label }}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="form.errors && form.hasError('required')"> Ce champ est obligatoire </mat-error>
+  <mat-error *ngIf="form.errors && form.hasError('pattern')"> Veuillez choisir une valeur dans la liste </mat-error>
+</mat-form-field>

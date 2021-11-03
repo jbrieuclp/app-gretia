@@ -1,0 +1,17 @@
+<mat-card>
+	<mat-card-title>Plan de charge</mat-card-title>
+	<mat-card-content>
+		<div *ngIf="user.id === selectedPerson?.compteId">
+			<button 
+				mat-raised-button
+				color="primary"
+				(click)="openPDCEditor()"
+			> Editer le PDC </button>
+		</div>
+
+		<app-projects-study-action-weeks
+			displayYear="false"
+			[data]="[]"
+		></app-projects-study-action-weeks>
+	</mat-card-content>
+</mat-card>

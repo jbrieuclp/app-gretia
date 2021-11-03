@@ -1,5 +1,11 @@
-<mat-card>
-	<ng-container *ngIf="!loading; else loadingTemplate">
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Répartition annuelle
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-container *ngIf="!loading; else loadingTemplate">
 		<table class="table">
 			<tbody>
 				<tr>
@@ -20,4 +26,5 @@
 	<ng-template #loadingTemplate>
     <app-loader message="Chargement en cours"></app-loader>
   </ng-template>
-</mat-card>
+  </mat-expansion-panel>
+</mat-accordion>

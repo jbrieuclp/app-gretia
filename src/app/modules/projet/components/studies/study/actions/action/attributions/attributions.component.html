@@ -1,0 +1,75 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Salarié</th>
+      <th>Jour(s) affecté(s)</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="!loading; else loadingTemplate">
+      <ng-container *ngIf="action.attributions.length; else noDataTmp">
+        <tr 
+          *ngFor="let attribution of action.attributions"
+        >
+          <ng-container *ngIf="attribution.employee.person; else updateTmp">
+            <td>
+              {{ attribution.employee.person.name }} {{ attribution.employee.person.firstName }}
+            </td>
+            <td>{{ attribution.nbOfDays }}</td>
+            <td>
+              <button 
+                mat-icon-button
+                color="primary"
+                (click)="openActionForm(attribution)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button 
+                mat-icon-button
+                color="warn"
+                (click)="delete(attribution)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-template #updateTmp>
+            <td 
+              *ngIf="!attribution.employee.person"
+              colspan="4"
+            ><mat-progress-bar mode="query"></mat-progress-bar></td>
+          </ng-template>
+        </tr>
+      </ng-container>
+      <ng-template #noDataTmp>
+        <tr>
+          <td colspan="4">Aucun salarié n'est affecté à cette action pour le moment</td>
+        </tr>
+      </ng-template>
+    </ng-container>
+    <ng-template #loadingTemplate>
+      <tr>
+        <td colspan="4"><mat-progress-bar mode="query"></mat-progress-bar></td>
+      </tr>
+    </ng-template>
+  </tbody>
+  <tfoot *ngIf="!loading">
+    <tr>
+      <td 
+        colspan="4" 
+        class="text-left"
+      >
+        <button 
+          type="button"
+          mat-mini-fab
+          color="primary"
+          (click)="openActionForm()"
+          matTooltip="Ajouter une personne pour cette action"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </tfoot>
+</table>

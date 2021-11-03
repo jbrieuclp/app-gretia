@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { SuiveuseService } from './suiveuse.service';
+import { SuiveuseRepository } from '../../repository/suiveuse.repository';
 
 @Component({
   selector: 'app-projet-suiveuses',
   templateUrl: './suiveuses.component.html',
   styleUrls: ['./suiveuses.component.scss']
 })
-export class SuiveusesComponent implements OnInit {
+export class SuiveusesComponent {
 
 	/* Date selectionnée sur le calendrier */
   get selectedDate() {
@@ -16,9 +17,9 @@ export class SuiveusesComponent implements OnInit {
 
   constructor(
   	private suiveuseS: SuiveuseService,
-  ) { }
-
-  ngOnInit() {
+    private suiveuseR: SuiveuseRepository,
+  ) { 
+    this.suiveuseR.calculateRecup()
+      .subscribe(res => console.log(res));
   }
-
 }

@@ -1,0 +1,62 @@
+<h5> {{ travel?.id ? 'Modifier' : 'Ajouter' }} un déplacement </h5>
+<form 
+	[formGroup]="form"
+	[style.fontSize.px]="14"
+>
+	<div class="row">
+		<mat-form-field class="col-sm-6">
+			<mat-label> Trajet </mat-label>
+		  <input 
+		  	id="travel"
+		  	matInput 
+		    placeholder="Depart > étape(s) > arrivée"
+		    autocomplete="off"
+		    formControlName="travel">
+		</mat-form-field>
+
+		<div class="col-sm-6">
+			<app-projet-time-control [form]="this.form.get('duration')"></app-projet-time-control>
+		</div>
+	</div>
+
+	<div class="row">
+		<mat-form-field class="col-sm-4">
+			<mat-label> Distance </mat-label>
+		  <input 
+		  	id="distance"
+		  	type="number"
+		  	matInput 
+		    placeholder="En kilomètres"
+		    autocomplete="off"
+		    formControlName="distance"
+		  >
+		</mat-form-field>
+
+		<div class="col-sm-4">
+			<mat-checkbox
+		  	color="primary"
+		    formControlName="carpool"
+		  >
+		  	Covoiturage
+		  	<div>(Ne conduisait pas)</div>
+		  </mat-checkbox>
+		</div>
+	</div>
+
+	<div style="margin-top: 10px;">
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="!form.valid"
+    	[text]="travel?.id ? 'Modifier' : 'Ajouter'"
+    	[waiting]="waiting"
+    	(click)="ajouter()"
+    >
+    	<mat-icon>done</mat-icon> <span>{{ travel?.id ? 'Modifier' : 'Ajouter' }}</span>
+    </app-submit-btn>
+  </div>
+</form>

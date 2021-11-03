@@ -33,4 +33,8 @@ export class ChargeTypeRefFormComponent implements OnInit {
     return (this.form.get("chargeTypes") as FormArray)
       .controls;
   }
+
+  console() {
+    console.log(this.form)
+  }
 }

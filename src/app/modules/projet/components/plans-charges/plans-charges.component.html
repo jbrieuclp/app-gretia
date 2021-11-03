@@ -6,7 +6,7 @@
 	  	[formControl]="personControl"
 	  >
 	    <mat-option *ngFor="let person of (persons|async)" [value]="person['@id']">
-	      {{ person.prenom }} {{ person.nom }}
+	      {{ person.firstname }} {{ person.name }}
 	    </mat-option>
 	  </mat-select>
 	</mat-form-field>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { PersonRepository } from '../../../repository/person.repository';
-import { Personne } from '../../../repository/salarie.repository';
+import { Person } from '../../../repository/project.interface';
 
 @Component({
   selector: 'app-s-list-user',
@@ -11,7 +11,7 @@ import { Personne } from '../../../repository/salarie.repository';
 })
 export class SListUserComponent implements OnInit {
 
-	persons: Observable<Personne[]>;
+	persons: Observable<Person[]>;
 
   constructor(private personR: PersonRepository) { }
 

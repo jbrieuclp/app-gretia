@@ -1,0 +1,90 @@
+<a mat-raised-button 
+	routerLink="/projet/admin/salaries"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir à la gestion des salariés"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+
+	<div class="col-md-6">
+		<mat-card>
+			<mat-horizontal-stepper #stepper>
+
+				<mat-step>
+					<mat-card-title>Gestion des salariés</mat-card-title>
+
+					<mat-card-subtitle>Liste des personnes enregistrées</mat-card-subtitle>
+
+					<mat-card-content>
+						<ng-container *ngIf="!personS.loadingList; else loadingTemplate">
+							<mat-list>
+								<ng-container *ngIf="(persons||[]).length; else noPerson">
+
+									<ng-container *ngFor="let person of persons|sortBy:'asc':'id'; let last = last;">
+
+									  <mat-list-item 
+									  	displayMouseOver 
+									  	displayMouseOverSelector=".button"
+									  	(click)="selected(person)"
+									  >
+									  	<span class="button d-none">
+										  	<button 
+										  		mat-icon-button 
+										  		color="primary"
+										  		(click)="edit()">
+											    <mat-icon>edit</mat-icon>
+											  </button>
+											</span>
+									  	<span class="value">{{ person.name }} {{ person.firstName }} ({{ person.alias }})</span>
+									  </mat-list-item>
+									  <mat-divider *ngIf="!last"></mat-divider>
+
+									</ng-container>
+
+								</ng-container>
+
+								<ng-template #noPerson>
+									<mat-list-item>Aucune person enregistrée</mat-list-item>
+								</ng-template>
+
+								<button 
+									mat-raised-button 
+									color="primary"
+									(click)="create()"
+								>
+									<mat-icon>add</mat-icon> Ajouter
+								</button>
+							</mat-list>
+						</ng-container>
+						<ng-template #loadingTemplate>
+							<app-loader message="Chargement en cours"></app-loader>
+						</ng-template>
+
+					</mat-card-content>
+				</mat-step>
+
+				<mat-step>
+					<mat-card-title>
+						<ng-container *ngIf="(personS.person | async) !== null; else createForm">
+							Modification de {{ (personS.person | async).alias }}
+						</ng-container>
+						<ng-template #createForm>
+							Ajout d'une person
+						</ng-template>
+					</mat-card-title>
+					<mat-card-subtitle>Veuillez compléter ces informations</mat-card-subtitle>
+					<mat-card-content>
+						<app-projet-person-form></app-projet-person-form>
+					</mat-card-content>
+				</mat-step>
+			</mat-horizontal-stepper>
+
+		</mat-card>
+	</div>
+
+	<div class="col-6">
+		<app-projet-admin-person></app-projet-admin-person>
+	</div>
+</div>

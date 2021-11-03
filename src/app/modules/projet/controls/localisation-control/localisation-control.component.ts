@@ -3,10 +3,11 @@ import { FormControl } from "@angular/forms";
 import { Observable, of, combineLatest, BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map, startWith, tap, mergeMap, distinctUntilChanged } from 'rxjs/operators';
 
-import { ProjetRepository, Localisation } from '../../repository/projet.repository';
+import { StudiesRepository } from '../../repository/studies.repository';
+import { Localisation } from '../../repository/project.interface';
 
 @Component({
-  selector: 'app-projet-control-localisation',
+  selector: 'app-study-control-localisation',
   templateUrl: './localisation-control.component.html',
   styleUrls: ['./localisation-control.component.scss']
 })
@@ -23,14 +24,14 @@ export class LocalisationControlComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-  	private projetR: ProjetRepository
+  	private studyR: StudiesRepository
   ) { }
 
   ngOnInit() {  
   	this.loading = true;
   	
   	this._subscriptions.push(
-  		this.projetR.localisations()
+  		this.studyR.localisations()
 	  		.pipe(
 	        map((data: any): Localisation[]=>data["hydra:member"]),
 	        tap(() => this.loading = false)
@@ -61,7 +62,7 @@ export class LocalisationControlComponent implements OnInit, OnDestroy {
 		  )
 	  	.pipe(
 	  		map(([value, localisations])=> {
-					const idx = localisations.findIndex(loc=>this._removeAccent(loc.nom) === this._removeAccent(value));
+					const idx = localisations.findIndex(loc=>this._removeAccent(loc.name) === this._removeAccent(value));
 					return idx > -1 ? localisations[idx]['@id'] : null;
 				}),
 				filter(value=> value !== null)
@@ -74,7 +75,7 @@ export class LocalisationControlComponent implements OnInit, OnDestroy {
   private _filter(value: string): Localisation[] {
     const filterValue = this._removeAccent(value);
 
-    return this.localisations.filter(loc => this._removeAccent(loc.nom).includes(this._removeAccent(value)));
+    return this.localisations.filter(loc => this._removeAccent(loc.name).includes(this._removeAccent(value)));
   }
 
   private _removeAccent(value): string {
@@ -84,7 +85,7 @@ export class LocalisationControlComponent implements OnInit, OnDestroy {
   displayFn(id) {
   	if (id) {
   		const idx = this.localisations.find(loc => loc['@id'] === id);
-  		return idx !== undefined ? idx.nom : '';
+  		return idx !== undefined ? idx.name : '';
   	}
 	}
 
@@ -104,11 +105,11 @@ export class LocalisationControlComponent implements OnInit, OnDestroy {
 
 	addLocalisation() {
 		if (this.form.valid) {
-			this.projetR
-	      .createLocalisation({nom: this.form.value})
+			this.studyR
+	      .createLocalisation({name: this.form.value})
 	      .pipe(
 	      	mergeMap(
-	      		localisation=> this.projetR.localisations(),
+	      		localisation=> this.studyR.localisations(),
 	      		(localisation, localisations) => {
 	      			return [localisation, localisations["hydra:member"]];
 	      		}

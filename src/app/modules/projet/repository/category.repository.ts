@@ -5,8 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
-
 import { AppConfig } from '../../../shared/app.config';
+import { Category } from './project.interface';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,12 +14,6 @@ const httpOptions = {
     'Authorization': 'my-auth-token'
   })
 };
-
-export interface Category {
-  id?: number,
-  libelle?: string,
-  ordre?: string
-}
 
 @Injectable()
 export class CategoryRepository {

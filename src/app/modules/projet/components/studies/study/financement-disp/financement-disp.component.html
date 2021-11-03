@@ -1,0 +1,25 @@
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Intitulé</th>
+			<th>Part financée</th>
+		</tr>
+	</thead>
+	<tbody>
+		<ng-container *ngIf="!loading; else loadingTmp">
+			<tr *ngFor="let funding of fundings">
+				<td>{{ funding.project?.label || '-' }}</td>
+				<td>
+					{{ funding.eligibleFunding }} 
+				</td>
+			</tr>
+		</ng-container>
+		<ng-template #loadingTmp>
+			<tr>
+				<td colspan="3" class="waiting">
+					<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+				</td>
+			</tr>
+		</ng-template>
+	</tbody>
+</table>

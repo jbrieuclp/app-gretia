@@ -1,0 +1,108 @@
+<mat-card>
+	<mat-card-title> Cumul des suiveuses </mat-card-title>
+	<mat-card-content>
+		
+		<form [formGroup]="form">
+			
+			<div class="row">
+			  <mat-form-field class="col-md-2">
+			  	<mat-label>Date de début</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="startP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="start"
+				  	required>
+				  <mat-datepicker-toggle matSuffix [for]="startP"></mat-datepicker-toggle>
+				  <mat-datepicker #startP></mat-datepicker>
+				</mat-form-field>
+
+			  <mat-form-field class="col-md-2">
+			  	<mat-label>Date de fin</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="endP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="end">
+				  <mat-datepicker-toggle matSuffix [for]="endP"></mat-datepicker-toggle>
+				  <mat-datepicker #endP></mat-datepicker>
+				</mat-form-field>
+			</div>
+
+			<button 
+				mat-raised-button 
+				color="primary"
+				[disabled]="form.invalid || waiting"
+				(click)="getWorks()"
+			> {{ waiting ? 'Ca arrive...' : 'Afficher'}} </button>
+
+		</form>
+
+		<ng-container *ngIf="data !== undefined">
+
+			<mat-divider 
+				inset="true"
+				style="margin: 20px 0px;"
+			></mat-divider>
+
+			<table class="table table-bordered table-responsive table-sm">
+				<thead>
+					<tr>
+						<th>NOM</th>
+						<th>type</th>
+							<!-- [ngClass]="{'is-we': day.we, 'is-not-worked': day.notWorked}" -->
+						<th *ngFor="let date of dates"> 
+							{{ date | date:'EEE' }} <br> 
+							{{ date | date:'dd/MM/yy' }} 
+						</th>
+						<th class="separator"></th>
+						<th *ngFor="let week of weeks"> {{ week }} </th>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-container *ngFor="let person of persons">
+						<tr *ngFor="let category of displayCategories; let first = first">
+							<td 
+								*ngIf="first"
+								rowspan="6"
+							> {{ person.first_name }}<br>{{ person.name }} </td>
+							<td> {{ category }} </td>
+							<td 
+								*ngFor="let date of dates"
+								[ngClass]="{'not-worked': isWorked(date)}"
+							>
+								{{ getTimeValue(person, date, category) }}
+							</td>
+
+							<td class="separator"></td>
+							<td *ngFor="let week of weeks"> 
+								{{ getWeekCumulTime(person, week, category) }} 
+							</td>
+
+						</tr>
+					</ng-container>
+				</tbody>
+				
+			</table>
+		</ng-container>
+
+	</mat-card-content>
+</mat-card>
+
+
+<!-- <ul>
+    <li *ngFor='let link of links'>
+        <ng-container 
+             [ngTemplateOutlet]="link.type == 'complex' ?complexLink : simpleLink" 
+             [ngTemplateOutletContext]="{link:link}">
+        </ng-container>
+    </li>
+</ul>
+
+<ng-template #simpleLink let-link='link'>
+    Simple : {{ link.name }}
+</ng-template>
+
+<ng-template #complexLink let-link='link'>
+    Complex : {{ link.name }}
+</ng-template> -->

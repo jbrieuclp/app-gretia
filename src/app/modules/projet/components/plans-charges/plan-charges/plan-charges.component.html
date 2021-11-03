@@ -4,28 +4,41 @@
 	</div>
 
 	<div class="col-md-2">
-		<mat-card *ngIf="person">
-			<table class="table">
-				<tr>
-					<td>Recup</td>
-					<td>{{ person.recup / 60 | number: '1.0-2' }} heure(s)</td>
-				</tr>
-				<tr>
-					<td>Congés N</td>
-					<td>{{ person.cpYear }} jour(s)</td>
-				</tr>
-				<tr>
-					<td>Congés N-1</td>
-					<td>{{ person.cpPrevYear }} jour(s)</td>
-				</tr>
-			</table>
-		</mat-card>
+		<mat-accordion *ngIf="person">
+		  <mat-expansion-panel>
+		    <mat-expansion-panel-header>
+		      <mat-panel-title>
+		        État congés - récups
+		      </mat-panel-title>
+		    </mat-expansion-panel-header>
+		    <ng-container *ngIf="!loading; else loadingTemplate">
+					<table class="table">
+						<tr>
+							<td>Congés N</td>
+							<td>{{ person.cpYear }} jour(s)</td>
+						</tr>
+						<tr>
+							<td>Congés N-1</td>
+							<td>{{ person.cpPrevYear }} jour(s)</td>
+						</tr>
+						<tr>
+							<td>Recup</td>
+							<td>{{ person.recup / 60 | number: '1.0-2' }} heure(s)</td>
+						</tr>
+					</table>
+				</ng-container>
+				<ng-template #loadingTemplate>
+			    <app-loader message="Chargement en cours"></app-loader>
+			  </ng-template>
+		  </mat-expansion-panel>
+		</mat-accordion>
+			
 	</div>
 
 
 
 	<div class="col-md-8">
-		<app-project-pdc-person-info></app-project-pdc-person-info>
+		<app-projet-pdc-person-info></app-projet-pdc-person-info>
 	</div>
 </div>
 
@@ -34,20 +47,22 @@
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th> Projet </th>
+					<th> Études </th>
 					<th> jours prévus </th>
 					<th> jours réalisé </th>
 					<th> jours restant </th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let project of projects">
-					<td> {{ project.intitule }} </td>
-					<td> {{ getScheduledDays(project) }} </td>
-					<td> {{ getUsedDays(project) | number: '1.0-2'}} </td>
-					<td> {{ getScheduledDays(project) - getUsedDays(project) | number: '1.0-2' }} </td>
+				<tr *ngFor="let study of studies">
+					<td> {{ study.label }} </td>
+					<td> {{ getScheduledDays(study) }} </td>
+					<td> {{ getUsedDays(study) | number: '1.0-2'}} </td>
+					<td> {{ getScheduledDays(study) - getUsedDays(study) | number: '1.0-2' }} </td>
 				</tr>
 			</tbody>
 		</table>
 	</mat-card>
 </div>
+
+<app-projet-plans-prov-schedule *ngIf="person"></app-projet-plans-prov-schedule>

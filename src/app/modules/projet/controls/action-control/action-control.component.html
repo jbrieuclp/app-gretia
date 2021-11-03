@@ -1,0 +1,29 @@
+<mat-form-field>
+	<mat-label>
+		<mat-spinner 
+			*ngIf="loading"
+			diameter="20"
+			strokeWidth="2"
+		>
+		</mat-spinner>
+		{{ label }}
+	</mat-label>
+  <input 
+	  type="text" 
+	  placeholder="Rechercher une action" 
+	  matInput 
+	  [required]="required" 
+	  [formControl]="inputTerm" 
+	  [matAutocomplete]="auto">
+  <mat-autocomplete 
+  	#auto="matAutocomplete"
+  	[displayWith]="displayFn.bind(this)">
+  	<mat-optgroup 
+  		*ngFor="let study of (studies | async)" 
+  		label="{{ study.code }} {{ study.label }}">
+	    <mat-option *ngFor="let action of study.actions" [value]="action['@id']">
+	      <small>{{ action.category.label }}</small>
+	    </mat-option>
+	  </mat-optgroup>
+  </mat-autocomplete>
+</mat-form-field>

@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ConfirmationDialogComponent } from '../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { Localisation } from '../../../../repository/projet.repository';
+import { Localisation } from '../../../../repository/project.interface';
 import { LocalisationService } from './localisation.service';
 
 @Component({

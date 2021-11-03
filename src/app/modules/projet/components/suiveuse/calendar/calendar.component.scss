@@ -1,0 +1,153 @@
+.calendar {
+	margin: auto;
+	width: 90%;
+}
+
+.calendar-navbar {
+
+}
+
+.calendar .title {
+	font-size: 1.2em;
+  vertical-align: middle;
+  font-weight: 400;
+}
+
+.days-name {
+	display: table;
+	height: 30px;
+	width: 100%;
+}
+
+.days-name > span {
+	display: table-cell;
+	vertical-align: middle;
+	width: 14.28%;
+	text-align: center;
+} 
+
+.weeks {
+  position: relative;
+}
+
+.week {
+	display: table;
+	height: 95px;
+	width: 100%;
+	position: relative;
+}
+
+.week-number {
+	position: absolute;
+	left: -20px;
+  top: 5px;
+	height: 100%;
+	font-size: 0.9em;
+}
+
+.day {
+	display: table-cell;
+	vertical-align: middle;
+	width: 14.28%;
+	border: 1px solid #ccc;
+	text-align: center;
+	color: #000;
+	cursor: pointer;
+	position: inherit;
+}
+
+.day:hover {
+	text-decoration: none;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+  -webkit-box-shadow: 0px 0px 5px rgba(0,0,0,.4);
+  box-shadow: 0px 0px 5px rgba(0,0,0,.4);
+}
+
+.day .day-number {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 25px;
+}
+
+.day.other-month {
+	color: #ccc!important;
+}
+
+.day.weekend {
+	background-color: #eee;
+	color: #555;
+}
+
+.day.today span.day-number {
+  font-weight: 500;
+  color: #fff;
+  background-color: rgb(103, 58, 183);
+}
+
+.day.selectedDate span.day-number {
+  font-weight: 500;
+  color: #fff;
+  background-color: #4146e2!important;
+}
+
+.day div.day-time {
+  display: none;
+}
+
+.day.selectedDate div.day-time,
+.day.today div.day-time {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 40px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.day div.day-time mat-icon {
+  vertical-align: middle;
+}
+
+.day div.day-time span {
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.day div.recup-time {
+  position: absolute;
+  bottom: 2px;
+  left: 5px;
+  color: #d20000;
+}
+
+.day div.working-time {
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
+  color: #1421b9;
+  font-weight: 500;
+}
+
+div.loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #f5f5f5;
+  opacity: 0.9;
+  text-align: center;
+}
+
+div.loader > div {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+}

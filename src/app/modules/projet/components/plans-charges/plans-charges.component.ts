@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { tap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
 import { AuthService } from '../../../../shared/auth/authentication.service';
-import { PersonRepository } from '../../repository/person.repository';
-import { Personne } from '../../repository/salarie.repository';
+import { EmployeeRepository } from '../../repository/employee.repository';
+import { Person } from '../../repository/project.interface';
 import { PlanChargesService } from './plan-charges/plan-charges.service';
 
 @Component({
@@ -17,19 +17,20 @@ import { PlanChargesService } from './plan-charges/plan-charges.service';
   templateUrl: './plans-charges.component.html',
   styleUrls: ['./plans-charges.component.scss']
 })
-export class PlansChargesComponent implements OnInit {
+export class PlansChargesComponent implements OnInit, OnDestroy {
 
   years: number[] = [];
   yearsControl = new FormControl('', [Validators.required]);
-  persons: BehaviorSubject<Personne[]> = new BehaviorSubject([]);
+  persons: BehaviorSubject<Person[]> = new BehaviorSubject([]);
   personControl = new FormControl('', [Validators.required]);
   loading: boolean = false;
+  _subscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private personR: PersonRepository,
+    private employeeR: EmployeeRepository,
     private authService: AuthService, 
     private planChargesS: PlanChargesService, 
   ) { }
@@ -38,46 +39,50 @@ export class PlansChargesComponent implements OnInit {
     this.getYears();
     this.getPersons();
 
-    combineLatest(
-      this.route.params.pipe(distinctUntilChanged()),
-      this.persons.asObservable(),
-      this.authService.getUser().asObservable()
-        .pipe(
-          filter(user=>user.id !== null)
-        )
-    )
-      .pipe(
-        map(([params, persons, user])=>{
-          let person;
-          if (params.person) {
-            person = persons.find(p=>p.id === Number(params.person));
-          } else {
-            person = persons.find(p=>p.compteId === user.id);
-          }
-
-          return [person, params.year ? Number(params.year) : Number(moment().year())]
-        }),
-        filter(([person, year])=>person !== undefined),
-        distinctUntilChanged(),
-        tap(([person, year])=>{
-          this.planChargesS.year.next(year);
-          this.planChargesS.person.next(person);
-        }),
+    this._subscriptions.push(
+      combineLatest(
+        this.route.params.pipe(distinctUntilChanged()),
+        this.persons.asObservable(),
+        this.authService.getUser().asObservable()
+          .pipe(
+            filter(user=>user.id !== null)
+          )
       )
-      .subscribe(([person, year])=>{
-        this.yearsControl.setValue(year);
-        this.personControl.setValue(person['@id']);
-      });
-
-    combineLatest(
-      this.personControl.valueChanges
         .pipe(
-          map((id: string)=>this.persons.getValue().find(p=>p['@id'] === id)),
-          filter((person: Personne)=>person !== undefined),
-        ),
-      this.yearsControl.valueChanges
-    )
-      .subscribe(([person, year])=>this.router.navigate(['/projet/plan-de-charges/', person.id, year]));
+          map(([params, persons, user])=>{
+            let person;
+            if (params.person) {
+              person = persons.find(p=>p.id === Number(params.person));
+            } else {
+              person = persons.find(p=>p.compteId === user.id);
+            }
+
+            return [person, params.year ? Number(params.year) : Number(moment().year())]
+          }),
+          filter(([person, year])=>person !== undefined),
+          distinctUntilChanged(),
+          tap(([person, year])=>{
+            this.planChargesS.year.next(year);
+            this.planChargesS.person.next(person);
+          }),
+        )
+        .subscribe(([person, year])=>{
+          this.yearsControl.setValue(year);
+          this.personControl.setValue(person['@id']);
+        })
+    );
+
+    this._subscriptions.push(
+      combineLatest(
+        this.personControl.valueChanges
+          .pipe(
+            map((id: string)=>this.persons.getValue().find(p=>p['@id'] === id)),
+            filter((person: Person)=>person !== undefined),
+          ),
+        this.yearsControl.valueChanges
+      )
+        .subscribe(([person, year])=>this.router.navigate(['/projet/plan-de-charges/', person.id, year]))
+    );
   }
 
   getYears() {
@@ -89,14 +94,16 @@ export class PlansChargesComponent implements OnInit {
 
   getPersons() {
     this.loading = true;
-    this.personR.personnes()
+    this.employeeR.persons()
       .pipe(
         tap(()=>this.loading = false),
-        map((data: any): Personne[]=>data["hydra:member"])
+        map((data: any): Person[]=>data["hydra:member"])
       )
-      .subscribe((persons: Personne[])=>this.persons.next(persons));
+      .subscribe((persons: Person[])=>this.persons.next(persons));
   }
 
-
+  ngOnDestroy() {
+    this._subscriptions.forEach(s => s.unsubscribe());
+  }
 
 }

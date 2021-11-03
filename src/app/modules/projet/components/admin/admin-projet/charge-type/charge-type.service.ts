@@ -4,7 +4,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { BehaviorSubject, Subject, of } from 'rxjs';
 import { filter, tap, map } from 'rxjs/operators';
 
-import { ChargeType } from '../../../../repository/charge-type.repository'
+import { ChargeType } from '../../../../repository/project.interface'
 
 @Injectable()
 export class ChargeTypeService {
@@ -25,7 +25,8 @@ export class ChargeTypeService {
     //FORM
     const form: FormGroup = this.fb.group({
       applicationStart: [null, Validators.required],
-      applicationEnd: null
+      applicationEnd: null,
+      unit_cost: [null, Validators.required]
     });
 
     form.patchValue(this.initialValues);

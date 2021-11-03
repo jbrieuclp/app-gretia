@@ -1,0 +1,45 @@
+<div class="employee-form">
+	<mat-form-field>
+	  <mat-label>
+	  	<mat-spinner 
+				*ngIf="loading"
+				diameter="20"
+				strokeWidth="2"
+			>
+			</mat-spinner>
+	  	Salariés
+	  </mat-label>
+	  <mat-select 
+	  	[formControl]="form"
+	  	required>
+
+	  	<ng-container *ngIf="historique; else withoutGroup">
+		  	<mat-optgroup 
+		  		*ngFor="let person of persons" 
+		  		label="{{ person.firstName }} {{ person.name }}">
+			    <mat-option *ngFor="let employee of person.employees" [value]="employee['@id']">
+			      {{ displayLabel(person, employee) }}
+			    </mat-option>
+			  </mat-optgroup>
+			</ng-container>
+			<ng-template #withoutGroup>
+
+				<ng-container *ngFor="let person of persons">
+					<mat-option *ngIf="person.workIn" [value]="person.workIn['@id']">
+			      {{ displayLabel(person) }}
+			    </mat-option>
+			  </ng-container>
+
+			</ng-template>
+	  </mat-select>
+	</mat-form-field>
+
+	<div class="checkbox">
+		<mat-checkbox 
+			color="primary"
+			matTooltip="Afficher l'historique par personne"
+			[(ngModel)]="historique">
+			Historique
+		</mat-checkbox>
+	</div>
+</div>

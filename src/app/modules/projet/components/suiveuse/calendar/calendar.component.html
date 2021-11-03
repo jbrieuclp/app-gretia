@@ -36,9 +36,43 @@
 							{{ date|date:'d' }}
 						</span>
 
-						<span class="day-working-time">
-							{{ getWorkingTimeByDate(date) }}
-						</span>
+						<div class="day-time">
+							<div matTooltip="Temps de travail en journée">
+								<mat-icon inline="true"> light_mode </mat-icon>
+								<span> {{ displayTime(getWorkByDate(date)?.work_day) }}</span>
+							</div>
+
+							<div 
+								*ngIf="getWorkByDate(date)?.work_night"
+								[matTooltip]="'Coefficient appliqué la nuit : x' + getWorkByDate(date).coeff_night"
+							>
+								<mat-icon inline="true"> nightlight </mat-icon>
+								<span> {{ displayTime(getWorkByDate(date)?.work_night) }}</span>
+							</div>
+
+							<div 
+								*ngIf="getWorkByDate(date)?.travel"
+								matTooltip="Temps en déplacement"
+							>
+								<mat-icon inline="true"> directions_car </mat-icon>
+								<span> {{ displayTime(getWorkByDate(date)?.travel) }}</span>
+							</div>
+						</div>
+
+						<div 
+							class="recup-time"
+							matTooltip="Heures supplémentaires"
+						>
+							<span> {{ getWorkByDate(date)?.recup > 0 ? '+' : ''}}{{ displayTime(getWorkByDate(date)?.recup) }}</span>
+						</div>
+
+						<div 
+							class="working-time"
+							matTooltip="Temps total compté pour la journé"
+						>
+							<span> {{ displayTime(getWorkByDate(date)?.workingTime) }}</span>
+						</div>
+
 
 					</div>
 				</ng-container>

@@ -1,0 +1,85 @@
+<a mat-raised-button 
+	routerLink="/projet/admin/salaries"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir à la gestion des salariés"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+
+	<div class="col-6">
+		<mat-card>
+			<mat-card-title>Gestion des fonctions occupées</mat-card-title>
+
+			<mat-card-subtitle>Liste des fonctions enregistrées</mat-card-subtitle>
+
+			<mat-card-content>
+				<mat-horizontal-stepper #stepper>
+
+					<mat-step>
+						<ng-container *ngIf="!loadingList; else loadingTemplate">
+							<mat-list>
+								<ng-container *ngIf="(functions||[]).length; else noFunction">
+
+									<ng-container *ngFor="let eFunction of functions|sortBy:'asc':'id'; let last = last">
+
+									  <mat-list-item 
+									  	displayMouseOver 
+									  	displayMouseOverSelector=".button"
+									  	(click)="selected(eFunction)"
+									  >
+									  	<span class="button d-none">
+										  	<button 
+										  		mat-icon-button 
+										  		color="primary"
+										  		(click)="edit()">
+											    <mat-icon>edit</mat-icon>
+											  </button>
+											</span>
+									  	<span class="value">{{ eFunction.label }}</span>
+									  </mat-list-item>
+									  <mat-divider *ngIf="!last"></mat-divider>
+
+									</ng-container>
+
+								</ng-container>
+
+								<ng-template #noFunction>
+									<mat-list-item>Aucune fonction enregistrée</mat-list-item>
+								</ng-template>
+
+								<button 
+									mat-raised-button 
+									color="primary"
+									(click)="create()"
+								>
+									<mat-icon>add</mat-icon> Ajouter
+								</button>
+							</mat-list>
+						</ng-container>
+						<ng-template #loadingTemplate>
+							<app-loader message="Chargement en cours"></app-loader>
+						</ng-template>
+					</mat-step>
+
+					<mat-step>
+						<div class="row">
+							<div class="col-md-4">
+				    		<app-projet-employee-function-form></app-projet-employee-function-form>
+				    	</div>
+				    </div>
+				  </mat-step>
+				</mat-horizontal-stepper>
+
+
+			</mat-card-content>
+			<mat-card-actions>
+				
+			</mat-card-actions>
+		</mat-card>
+	</div>
+	<div class="col-6">
+		<app-projet-admin-function></app-projet-admin-function>
+	</div>
+</div>

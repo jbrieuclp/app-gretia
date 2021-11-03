@@ -1,0 +1,36 @@
+<div>
+	<app-projet-control-employee [form]="form.get('employee')"></app-projet-control-employee>
+</div>
+
+<div class="row">
+  <mat-form-field class="col-6">
+    <input 
+      matInput 
+      type="number"
+      placeholder="Nombre de jours"  
+      required
+      autocomplete="false" 
+      [formControl]="form.get('nbOfDays')">
+    <mat-hint>{{ getMaxDay() }} jours disp.</mat-hint>
+    <mat-error *ngIf="form.get('nbOfDays').errors && form.get('nbOfDays').errors.max">
+      Max. {{ form.get('nbOfDays').errors.max.max }} jours
+    </mat-error>
+  </mat-form-field>
+</div>
+
+<div class="col-md-4 btn-place">
+	<app-submit-btn
+  	[disabled]="form.invalid"
+  	[waiting]="waiting"
+  	(click)="submit()"
+  >
+  	{{ !attribution['@id'] ? 'Ajouter' : 'Modifier' }}
+  </app-submit-btn>
+	<button 
+		type="button"
+		(click)="cancel()"
+		mat-raised-button 
+	>
+		Annuler
+	</button>
+</div>

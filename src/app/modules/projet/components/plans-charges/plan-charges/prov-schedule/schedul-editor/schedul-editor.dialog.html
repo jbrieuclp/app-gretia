@@ -1,0 +1,75 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+  <div class="table-responsive">
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th colspan="3"></th>
+    			<th
+    				*ngFor="let month of months"
+    				[attr.colspan]="getWeekNumberFromMonth(month.month)"
+    			> 
+    				{{ month.label }}
+    			</th>
+    		</tr>
+    		<tr>
+    			<th> Action </th>
+    			<th> Jours attribués </th>
+    			<th> Jours placés </th>
+    			<th *ngFor="let week of weeks"> {{ week.year }}-{{ week.month }} </th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr *ngFor="let action of actions">
+    			<td> 
+    				{{ action.category.label }} <br>
+    				<small> {{ action.study.label }} </small>
+    			</td>
+    			<td> {{ getMyAttribution(action) }} </td>
+    			<td> {{ getLoadPlanDaysForAction(action) }} </td>
+    			<td  *ngFor="let week of weeks">
+
+    				<input 
+    					*ngIf="isActionsWeekPeriod(action, week)"
+    					type="number"
+    					min="0"
+    					[attr.max]="getMyAttribution(action) - getLoadPlanDaysForAction(action) + getLoadPlanValue(action, week)"
+				    	placeholder="Indiquez un nombre de jour" 
+				    	[value]="getLoadPlanValue(action, week)"
+				    	(change)="loadPlanSubmit($event, action, week)"
+              [disabled]="disableInput"
+				    >
+    			</td>
+    		</tr>
+    	</tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Cumul</td>
+          <td 
+            *ngFor="let week of weeks"
+            [className]="getWeekCumul(week) < 4 ? 'lp-ok' : (getWeekCumul(week) < 5 ? 'lp-middle' : (getWeekCumul(week) < 6 ? 'lp-hot' : 'lp-dead'))"
+          > {{ getWeekCumul(week) }} </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Récupération des actions de l'année"></app-loader>
+</ng-template>
+
+<div>
+  <button 
+    mat-raised-button
+    type="button"
+    style="margin-right: 10px;"
+    (click)="close()">
+    Fermer
+  </button>
+<!--   <app-submit-btn
+  	[disabled]="form.invalid"
+  	[waiting]="waiting"
+  	(click)="submit()"
+  >
+  	{{ action?.id ? 'Modifier' : 'Ajouter' }}
+  </app-submit-btn> -->
+</div>

@@ -11,7 +11,7 @@ import { SuiveuseService } from '../suiveuse.service';
 @Component({
   selector: 'app-projet-suiveuse-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy  {
 
@@ -21,9 +21,7 @@ export class CalendarComponent implements OnInit, OnDestroy  {
   dates: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   months: Array<string> = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
   today: Date = moment().toDate();
-
-  worksOfTheDay: {day: Date, works: any[], totalTime: number} = null;
-  
+ 
   _subscriptions: Subscription[] = [];
 
   /* Date selectionnée sur le calendrier */
@@ -91,17 +89,16 @@ export class CalendarComponent implements OnInit, OnDestroy  {
     this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonth.getValue()).add(1, 'month').toDate();
   }
 
-  getWorkingTimeByDate(date) {
-    const work = this.suiveuseS.workByDay.find(w => moment(w.date).isSame(moment(date), 'day'));
-    return work !== undefined ? this.displayTime(work.time) : "-";
+  getWorkByDate(date) {
+    return this.suiveuseS.workByDay.find(w => moment(w.date).isSame(moment(date), 'day'));
   }
 
   dateSelect(date): void {
     this.suiveuseS.selectedDate.next(moment(date).toDate());
   }
 
-  private displayTime(time) {
-    return time !== undefined ? Math.trunc(time/60) + "h" + (time%60 !== 0 ? time%60 :'') : "-";
+  displayTime(duration) {
+    return duration !== null ? Math.trunc(duration/60) + "h" + (duration%60 !== 0 ? duration%60 :'') : "-";
   }
 
   /**

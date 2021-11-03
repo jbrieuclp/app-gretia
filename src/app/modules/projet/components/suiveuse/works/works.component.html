@@ -13,32 +13,54 @@
 		<table class="table">
 			<thead>
 				<tr>
+					<th></th>
 					<th>Tache</th>
 					<th>Temps</th>
 					<th>Nuit</th>
 					<th>WE</th>
-					<th></th>
+					<th>Déplacement</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr *ngFor="let work of works">
 					<td>
-						<div>{{ work.tache.projet.intitule || '-' }}</div>
-						<div>{{ work.tache.intitule || '-' }}</div>
+						<button 
+							mat-icon-button 
+							style="color: red;margin-right: 10px;"
+							(click)="deleteWork(work)"
+						>
+							<mat-icon>delete_outline</mat-icon>
+						</button>
+						<button 
+							mat-icon-button 
+							color="primary"
+							(click)="editWork(work)"
+						>
+							<mat-icon>mode_edit_outline</mat-icon>
+						</button>
 					</td>
-					<td>{{ displayTime(work.temps) }}</td>
 					<td>
-						<mat-icon>{{ work.estNuit ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+						<div>{{ work.action.study.label || '-' }}</div>
+						<div>{{ work.action.label || '-' }}</div>
+					</td>
+					<td>{{ displayDuration(work.duration) }}</td>
+					<td>
+						<mat-icon>{{ work.isNight ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
 					</td>
 					<td>
-						<mat-icon>{{ work.estWe ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+						<mat-icon>{{ work.isWe ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
 					</td>
-					<td></td>
+					<td>
+						<mat-icon 
+							[matBadge]="work.travels.length" 
+							matBadgeColor="primary"
+						> drive_eta </mat-icon>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 	</ng-template>
 </ng-container>
 <ng-template #loadingTemplate>
-	<app-loader message="Récupération des tâches réalisées"></app-loader>
+	<app-loader message="Récupération des actions réalisées"></app-loader>
 </ng-template>

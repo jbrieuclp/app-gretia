@@ -1,106 +1,75 @@
 <form [formGroup]="form">
 	<div>
-		<app-projet-task-control 
-			[form]="form.get('tache')"
+		<app-projet-action-control 
+			[form]="form.get('action')"
 			required="true"
-		></app-projet-task-control>
+		></app-projet-action-control>
 	</div>
 
 	<div class="row">
 		<div class="col-8">
-			<div class="row">
-				<ng-container *ngIf="!timeFormDisplay;else timeFormBlock">
-					<mat-form-field class="col-sm-5">
-						<mat-label>Durée</mat-label>
-				    <input matInput 
-					    placeholder="Ex : 1.25 pour 1h15"
-					    autocomplete="off"
-					    [formControl]="dureeForm">
-					  <mat-error>Renseignez au quart d'heure (0.25, 0.5 ou 0.75)</mat-error>
-				  </mat-form-field>
-				</ng-container>
-
-			  <ng-template #timeFormBlock>
-					<div class="col-sm-6">
-						<form 
-							[formGroup]="timeForm" 
-							class="row"
-						>
-							<mat-form-field class="col-6">
-								<mat-label>Heure(s)</mat-label>
-						    <input 
-						    	matInput 
-							    placeholder="Ex: 1" 
-							    formControlName="heure" 
-							    [matAutocomplete]="autoHour"
-							  >
-						    <mat-autocomplete #autoHour>
-						      <mat-option 
-						      	*ngFor="let option of optionsHour" 
-						      	[value]="option"
-						      >
-						        {{ option }}
-						      </mat-option>
-						    </mat-autocomplete>
-						  </mat-form-field>
-						  <mat-form-field class="col-6">
-								<mat-label>Minutes</mat-label>
-						    <input 
-						    	matInput 
-							    placeholder="Ex: 15" 
-							    formControlName="minutes" 
-							    [matAutocomplete]="autoMinute"
-							  >
-						    <mat-autocomplete #autoMinute>
-						      <mat-option 
-						      	*ngFor="let option of optionsMinute" 
-						      	[value]="option"
-						      >
-						        {{ option }}
-						      </mat-option>
-						    </mat-autocomplete>
-
-						  </mat-form-field>
-						</form>
-						<div 
-							*ngIf="(timeForm.get('heure').errors && timeForm.get('heure').errors.inArrayError) || (timeForm.get('minutes').errors && timeForm.get('minutes').errors.inArrayError)"
-							class="error"
-						>
-							Veuillez choisir une valeur dans la liste
-						</div>
-					</div>
-				</ng-template>
-
-				<mat-radio-group 
-					[ngClass]="{'offset-sm-1': !timeFormDisplay, 'col-sm-2': true}"
-					(change)="timeFormDisplay=!timeFormDisplay">
-				  <mat-radio-button 
-				  	value="1" 
-				  	color="primary"
-				  	[checked]="!timeFormDisplay"
-				  >Heure décimal</mat-radio-button>
-				  <mat-radio-button 
-				  	value="2" 
-				  	color="primary"
-				  	[checked]="timeFormDisplay"
-				  >Heure minutes</mat-radio-button>
-				</mat-radio-group>
-			</div>
+			<app-projet-time-control [form]="form.get('duration')"></app-projet-time-control>
 		</div>
 
 		<div class="col-4">
 			<div>
 				<mat-checkbox
 			  	color="primary"
-			    formControlName="estNuit"
+			    formControlName="isNight"
 			  >
 			  	Heure de nuit
 			  </mat-checkbox>
 			</div>
-			<div *ngIf="form.get('estWe').value">
+			<div *ngIf="form.get('isWe').value">
 				<b>Week-end pris en compte</b>
 			</div>
 		</div>
+	</div>
+
+	<div>
+		<h6> Déplacements </h6>
+
+		<button 
+			mat-raised-button
+			matTooltip="Ajouter un déplacement"
+			(click)="addTravel()"
+		>
+			<mat-icon>directions_car</mat-icon> Ajouter
+		</button>
+
+    <table 
+    *ngIf="travels.length"
+    	class="table table-sm travel-table"
+    >
+    	<thead>
+    		<tr>
+    			<th></th>
+    			<th> Trajet </th>
+    			<th> Durée (min) </th>
+    			<th> Distance (km) </th>
+    			<th> Conducteur </th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr *ngFor="let travel of travels; index as i">
+    			<td> 
+    				<mat-icon 
+    					style="color: red;" 
+    					matTooltip="Supprimer la ligne"
+    				> delete_outline </mat-icon> 
+    				<mat-icon 
+    					style="color: #683ab7;" 
+    					matTooltip="Modifier la ligne"
+    					(click)="editTravel(i)"
+    				> mode_edit_outline </mat-icon> 
+    			</td>
+    			<td> {{ travel.travel }} </td>
+    			<td> {{ travel.duration }} </td>
+    			<td> {{ travel.distance }} </td>
+    			<td class="text-center"> {{ travel.carpool ? 'Oui' : 'Non' }} </td>
+    		</tr>
+    	</tbody>
+    </table>
 	</div>
 
 	<mat-form-field>
@@ -115,12 +84,12 @@
 	<div>
 		<app-submit-btn
 			type="button"
-    	[disabled]="form.invalid || dureeForm.invalid || timeForm.invalid"
+    	[disabled]="form.invalid"
     	[waiting]="saving"
     	matTooltip="Enregistrer"
     	(click)="save()"
     >
-    	Ajouter
+    	{{ work ? 'Modifier' : 'Ajouter' }}
     </app-submit-btn>
 		<button
 			style="margin-left: 10px;"

@@ -12,7 +12,12 @@ export class SubmitBtnComponent {
 	@Input() type:string = 'button';
 	@Input() disabled:boolean = false;
 	@Input() waiting:boolean = false;
+	@Output() onClick = new EventEmitter();
 
   constructor() { }
+
+  click(value: any) {
+    this.onClick.emit(value);
+  }
 
 }

@@ -26,138 +26,141 @@ import { TravailleurFormComponent } from './components/person/form/travailleur-f
 import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { CalendarComponent } from './components/suiveuse/calendar/calendar.component';
 //news
-import { SalariesComponent } from './components/admin/salarie/salaries.component';
-import { AntennesComponent } from './components/admin/salarie/antennes/antennes.component';
-import { AntenneFormComponent } from './components/admin/salarie/antennes/antenne-form.component';
-import { FonctionsComponent } from './components/admin/salarie/fonctions/fonctions.component';
-import { FonctionFormComponent } from './components/admin/salarie/fonctions/fonction-form.component';
-import { PersonnesComponent } from './components/admin/salarie/personnes/personnes.component';
-import { PersonneFormComponent } from './components/admin/salarie/personnes/personne-form.component';
-import { SalarieFormComponent } from './components/admin/salarie/personnes/personne/salarie-form.component';
+import { EmployeesComponent } from './components/admin/employees/employees.component';
+import { AntennesComponent } from './components/admin/employees/antennes/antennes.component';
+import { AntenneFormComponent } from './components/admin/employees/antennes/antenne-form.component';
+import { FunctionsComponent } from './components/admin/employees/functions/functions.component';
+import { FunctionFormComponent } from './components/admin/employees/functions/function-form.component';
+import { PersonsComponent } from './components/admin/employees/persons/persons.component';
+import { PersonFormComponent } from './components/admin/employees/persons/person-form.component';
+import { EmployeeFormComponent } from './components/admin/employees/persons/person/employee-form.component';
 import { AdminProjetComponent } from './components/admin/admin-projet/admin-projet.component';
 import { LocalisationsComponent } from './components/admin/admin-projet/localisation/localisations.component';
 import { LocalisationService } from './components/admin/admin-projet/localisation/localisation.service';
 import { LocalisationFormComponent } from './components/admin/admin-projet/localisation/localisation-form.component';
 import { LocalisationInfoComponent } from './components/admin/admin-projet/localisation/info.component';
 import { LocalisationControlComponent } from './controls/localisation-control/localisation-control.component';
-import { OrganismeControlComponent } from './controls/organisme-control/organisme-control.component';
-import { TaskActionsComponent } from './components/admin/admin-projet/task-action/task-actions.component';
-import { TaskActionInfoComponent } from './components/admin/admin-projet/task-action/info.component';
-import { TaskActionFormComponent } from './components/admin/admin-projet/task-action/task-action-form.component';
-import { AvancementsComponent } from './components/admin/admin-projet/avancement/avancements.component';
-import { AvancementInfoComponent } from './components/admin/admin-projet/avancement/info.component';
-import { AvancementFormComponent } from './components/admin/admin-projet/avancement/avancement-form.component';
-import { TaskActionControlComponent } from './controls/task-action-control/task-action-control.component';
-import { TaskAvancementControlComponent } from './controls/task-avancement-control/task-avancement-control.component';
+import { OrganismControlComponent } from './controls/organism-control/organism-control.component';
+import { ActionCategoriesComponent } from './components/admin/admin-projet/action-categories/action-categories.component';
+import { ActionCategoryInfoComponent } from './components/admin/admin-projet/action-categories/action-category/info.component';
+import { ActionCategoryFormComponent } from './components/admin/admin-projet/action-categories/action-category/action-category-form.component';
+import { ActionCategoryControlComponent } from './controls/action-category-control/action-category-control.component';
+import { ChargeControlComponent } from './controls/charge-control/charge-control.component';
 import { ChargeTypesComponent } from './components/admin/admin-projet/charge-type/charge-types.component';
 import { ChargeTypeInfoComponent } from './components/admin/admin-projet/charge-type/info/info.component';
 import { ChargeTypeRefFormComponent } from './components/admin/admin-projet/charge-type/form/charge-type-ref-form.component';
 import { ChargeTypeFormComponent } from './components/admin/admin-projet/charge-type/form/charge-type-form.component';
 
 //repository
-import { PersonRepository } from './repository/person.repository';
 import { CategoryRepository } from './repository/category.repository';
-import { EtatRepository } from './repository/etat.repository';
-import { TypeRepository } from './repository/type.repository';
-import { ProjetRepository } from './repository/projet.repository';
-import { OrganismeRepository } from './repository/organisme.repository';
-import { MissionRepository } from './repository/mission.repository';
-import { SuiveuseRepository } from './repository/suiveuse.repository';
-import { SalarieRepository } from './repository/salarie.repository';
-import { ProjectTypeRepository } from './repository/project-type.repository';
+import { StudiesRepository } from './repository/studies.repository';
+import { OrganismRepository } from './repository/organism.repository';
+import { EmployeeRepository } from './repository/employee.repository';
+import { FundingTypeRepository } from './repository/funding-type.repository';
 import { ChargeTypeRepository } from './repository/charge-type.repository';
-import { TaskRepository } from './repository/task.repository';
-import { ConventionsRepository } from './repository/conventions.repository';
+import { ActionsRepository } from './repository/actions.repository';
+import { ProjectsRepository } from './repository/projects.repository';
 import { WorksRepository } from './repository/works.repository';
+import { PersonRepository } from './repository/person.repository';
+import { SuiveuseRepository } from './repository/suiveuse.repository';
 
 //services
-import { ProjetFormService } from './services/projet-form.service';
 import { SuiveuseService } from './components/suiveuse/suiveuse.service';
-import { TravailFormService } from './services/travail-form.service';
-import { AntenneService } from './components/admin/salarie/antennes/antenne.service';
-import { FonctionService } from './components/admin/salarie/fonctions/fonction.service';
-import { PersonneService } from './components/admin/salarie/personnes/personne.service';
-import { SalarieService } from './components/admin/salarie/personnes/personne/salarie.service';
-import { SalarieFormService } from './components/admin/salarie/personnes/personne/salarie-form.service';
-import { RefProjectTypeService } from './components/admin/admin-projet/project-types/ref-project-type.service';
-import { ProjectTypeService } from './components/admin/admin-projet/project-types/ref-project-type/project-type.service';
-import { ProjectTypeFormService } from './components/admin/admin-projet/project-types/ref-project-type/project-type-form.service';
+import { AntenneService } from './components/admin/employees/antennes/antenne.service';
+import { FunctionService } from './components/admin/employees/functions/function.service';
+import { PersonService } from './components/admin/employees/persons/person.service';
+import { EmployeeService } from './components/admin/employees/persons/person/employee.service';
+import { EmployeeFormService } from './components/admin/employees/persons/person/employee-form.service';
+import { FundingTypeRefService } from './components/admin/admin-projet/funding-types/funding-type-ref.service';
+import { FundingTypeService } from './components/admin/admin-projet/funding-types/funding-type-ref/funding-type.service';
+import { FundingTypeFormService } from './components/admin/admin-projet/funding-types/funding-type-ref/funding-type-form.service';
 import { ChargeTypeRefService } from './components/admin/admin-projet/charge-type/charge-type-ref.service';
 import { ChargeTypeService } from './components/admin/admin-projet/charge-type/charge-type.service';
-import { ProjetsService } from './components/projets/projets.service'
-import { ProjetService } from './components/projets/projet/projet.service'
-import { TaskFormService } from './components/projets/projet/tasks/task/form/task-form.service'
-import { TaskActionService } from './components/admin/admin-projet/task-action/task-action.service';
-import { AvancementService } from './components/admin/admin-projet/avancement/avancement.service';
-import { TaskService } from './components/projets/projet/tasks/task/task.service';
+import { StudiesService } from './components/studies/studies.service'
+import { StudyService } from './components/studies/study/study.service'
+import { ActionFormService } from './components/studies/study/actions/action/form/action-form.service'
+import { ActionCategoriesService } from './components/admin/admin-projet/action-categories/action-categories.service';
+import { ActionService } from './components/studies/study/actions/action/action.service';
 import { WorkService } from './components/suiveuse/works/work.service';
-import { WeeksService } from './components/projets/projet/tasks/task/weeks/weeks.service';
-import { ConventionService } from './components/conventions/convention/convention.service';
+import { WeeksService } from './components/studies/study/actions/action/weeks/weeks.service';
+import { ProjectService } from './components/projects/project/project.service';
+import { ProjectFundersService } from './components/projects/project/funders/funders.service';
+import { ProjectSignatoriesService } from './components/projects/project/signatories/signatories.service';
+import { ProjectStudiesFundingsService } from './components/projects/project/studies-fundings/studies-fundings.service';
+import { WorkFormService } from './components/suiveuse/works/work-form/work-form.service';
+import { GlobalProjectService } from './components/global-project.service';
 
 //dialog
-
-import { ProjetsComponent } from './components/projets/projets.component';
-import { ProjetFormDialog } from './components/projets/projet/form/projet-form.dialog';
-import { SalarieControlComponent } from './controls/salarie-control/salarie-control.component';
-import { ProjectTypeControlComponent } from './controls/project-type-control/project-type-control.component';
+import { StudiesComponent } from './components/studies/studies.component';
+import { StudyFormDialog } from './components/studies/study/form/study-form.dialog';
+import { EmployeeControlComponent } from './controls/employee-control/employee-control.component';
+import { FundingTypeControlComponent } from './controls/funding-type-control/funding-type-control.component';
 import { ChargeTypeControlComponent } from './controls/charge-type-control/charge-type-control.component';
-import { TaskFormDialog } from './components/projets/projet/tasks/task/form/task-form.dialog';
-import { MontagesProjectComponent } from './components/projets/projet/montages/montages.component';
-import { FinancementProjectComponent } from './components/projets/projet/financement-disp/financement-disp.component';
+import { ActionFormDialog } from './components/studies/study/actions/action/form/action-form.dialog';
+import { ActionsChargesStudyComponent } from './components/studies/study/montages/actions-charges/actions-charges.component';
+import { FinancementProjectComponent } from './components/studies/study/financement-disp/financement-disp.component';
 import { InfoChargeTypeFormDialog } from './components/admin/admin-projet/charge-type/info/info.component';
-import { ChargeFormDialog } from './components/projets/projet/montages/charge-form.dialog';
+import { ChargeFormDialog } from './components/studies/study/montages/charge-form.dialog';
 import { ProjetAccueilComponent } from './components/accueil/accueil.component';
-import { ConventionsComponent } from './components/conventions/conventions.component';
-import { ConventionFormComponent } from './components/conventions/convention/convention-form/convention-form.component';
-import { FinanceurFormComponent } from './components/conventions/convention/financeurs/financeur/financeur-form.component';
-import { ProjectControlComponent } from './controls/project-control/project-control.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { ProjectFormDialog } from './components/projects/project/project-form/project-form.dialog';
+import { FunderFormDialog } from './components/projects/project/funders/funder-form/funder-form.dialog';
+import { DailyCostFormDialog } from './components/projects/project/funders/daily-cost-form/daily-cost-form.dialog';
+import { StudyControlComponent } from './controls/study-control/study-control.component';
 import { SuiveusesComponent } from './components/suiveuse/suiveuses.component';
 import { WorksComponent } from './components/suiveuse/works/works.component';
 import { WorkFormComponent } from './components/suiveuse/works/work-form/work-form.component';
-import { TaskControlComponent } from './controls/task-control/task-control.component';
-import { ProjetComponent } from './components/projets/projet/projet.component';
-import { ProjetDisplayComponent } from './components/projets/projet/display/display.component';
-import { ProjetTasksService } from './components/projets/projet/tasks/tasks.service';
-import { ProjectLocalisationsService } from './components/projets/projet/localisations/localisations.service';
-import { ProjectResponsablesService } from './components/projets/projet/responsables/responsables.service';
-import { ProjectLocalisationsComponent } from './components/projets/projet/localisations/localisations.component';
-import { ProjectResponsablesComponent } from './components/projets/projet/responsables/responsables.component';
-import { ProjetMontagesService } from './components/projets/projet/montages/montages.service';
-import { ProjetFinancementService } from './components/projets/projet/financement-disp/financement.service';
-import { TasksComponent } from './components/projets/projet/tasks/tasks.component';
-import { TaskAttributionFormDialog } from './components/projets/projet/tasks/task/attributions/attribution-form/attribution-form.dialog';
-import { TaskAttributionsComponent } from './components/projets/projet/tasks/task/attributions/attributions.component';
-import { TaskPeriodsComponent } from './components/projets/projet/tasks/task/periods/periods.component';
-import { TaskWeeksComponent } from './components/projets/projet/tasks/task/weeks/weeks.component';
-import { AntenneComponent } from './components/admin/salarie/antennes/antenne/antenne.component';
-import { FonctionComponent } from './components/admin/salarie/fonctions/fonction/fonction.component';
-import { PersonneComponent } from './components/admin/salarie/personnes/personne/personne.component';
-import { SalarieFormTemplateComponent } from './components/admin/salarie/personnes/personne/salarie-form-template.component';
-import { RefProjectTypesComponent } from './components/admin/admin-projet/project-types/ref-project-types.component';
-import { RefProjectTypeComponent } from './components/admin/admin-projet/project-types/ref-project-type/ref-project-type.component';
-import { RefProjetTypeFormComponent } from './components/admin/admin-projet/project-types/ref-projet-type-form.component';
-import { ProjectTypeFormTemplateComponent } from './components/admin/admin-projet/project-types/ref-project-type/project-type-form-template.component';
-import { ProjectTypeFormComponent } from './components/admin/admin-projet/project-types/ref-project-type/project-type-form.component';
-import { ConventionComponent } from './components/conventions/convention/convention.component';
-import { FinanceursComponent } from './components/conventions/convention/financeurs/financeurs.component';
-import { FinanceurComponent } from './components/conventions/convention/financeurs/financeur/financeur.component';
-import { SignatairesComponent } from './components/conventions/convention/signataires/signataires.component';
-import { SignataireComponent } from './components/conventions/convention/signataires/signataire/signataire.component';
-import { SignataireFormComponent } from './components/conventions/convention/signataires/signataire/signataire-form.component';
-import { ProjectsComponent } from './components/conventions/convention/project-fundings/project-fundings.component';
-import { ProjectFundingComponent } from './components/conventions/convention/project-fundings/project-funding/project-funding.component';
-import { ProjectFundingFormComponent } from './components/conventions/convention/project-fundings/project-funding/project-funding-form.component';
-import { DeadlinesComponent } from './components/conventions/convention/deadlines/deadlines.component';
-import { DeadlineComponent } from './components/conventions/convention/deadlines/deadline/deadline.component';
-import { DeadlineFormComponent } from './components/conventions/convention/deadlines/deadline/deadline-form.component';
+import { ActionControlComponent } from './controls/action-control/action-control.component';
+import { StudyComponent } from './components/studies/study/study.component';
+import { StudyDisplayComponent } from './components/studies/study/display/display.component';
+import { StudyActionsService } from './components/studies/study/actions/actions.service';
+import { StudyLocalisationsService } from './components/studies/study/localisations/localisations.service';
+import { StudyManagersService } from './components/studies/study/managers/managers.service';
+import { StudyLocalisationsComponent } from './components/studies/study/localisations/localisations.component';
+import { StudyManagersComponent } from './components/studies/study/managers/managers.component';
+import { StudyMontagesService } from './components/studies/study/montages/montages.service';
+import { StudyFinancementService } from './components/studies/study/financement-disp/financement.service';
+import { ActionsComponent } from './components/studies/study/actions/actions.component';
+import { ActionAttributionFormDialog } from './components/studies/study/actions/action/attributions/attribution-form/attribution-form.dialog';
+import { ActionAttributionsComponent } from './components/studies/study/actions/action/attributions/attributions.component';
+import { ActionPeriodsComponent } from './components/studies/study/actions/action/periods/periods.component';
+import { ActionWeeksComponent } from './components/studies/study/actions/action/weeks/weeks.component';
+import { AntenneComponent } from './components/admin/employees/antennes/antenne/antenne.component';
+import { FunctionComponent } from './components/admin/employees/functions/function/function.component';
+import { PersonneComponent } from './components/admin/employees/persons/person/person.component';
+import { EmployeeFormTemplateComponent } from './components/admin/employees/persons/person/employee-form-template.component';
+import { FundingTypeRefsComponent } from './components/admin/admin-projet/funding-types/funding-type-refs.component';
+import { FundingTypeRefComponent } from './components/admin/admin-projet/funding-types/funding-type-ref/funding-type-ref.component';
+import { FundingTypeRefFormComponent } from './components/admin/admin-projet/funding-types/funding-type-ref-form.component';
+import { FundingTypeFormTemplateComponent } from './components/admin/admin-projet/funding-types/funding-type-ref/funding-type-form-template.component';
+import { FundingTypeFormComponent } from './components/admin/admin-projet/funding-types/funding-type-ref/funding-type-form.component';
+import { ProjectComponent } from './components/projects/project/project.component';
+import { FundersComponent } from './components/projects/project/funders/funders.component';
+import { SignatoriesComponent } from './components/projects/project/signatories/signatories.component';
+import { SignatoryFormDialog } from './components/projects/project/signatories/signatory-form/signatory-form.dialog';
+import { StudiesFundingsComponent } from './components/projects/project/studies-fundings/studies-fundings.component';
+import { StudyFundingFormDialog } from './components/projects/project/studies-fundings/study-funding-form/study-funding-form.dialog';
+import { DeadlinesComponent } from './components/projects/project/deadlines/deadlines.component';
+import { DeadlineComponent } from './components/projects/project/deadlines/deadline/deadline.component';
+import { DeadlineFormComponent } from './components/projects/project/deadlines/deadline/deadline-form.component';
 import { AntenneControlComponent } from './controls/antenne-control/antenne-control.component';
-import { TaskComponent } from './components/projets/projet/tasks/task/task.component';
+import { ActionComponent } from './components/studies/study/actions/action/action.component';
 import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
 import { PlanChargesComponent } from './components/plans-charges/plan-charges/plan-charges.component';
 import { GlobalStatsComponent } from './components/plans-charges/plan-charges/global-stats.component';
 import { PDCPersonInfoComponent } from './components/plans-charges/plan-charges/person-info/person-info.component';
-import { UnfundedTasksComponent, TaskFunderDialog } from './components/projets/projet/montages/unfunded-tasks.component';
-
+import { ProjectDisplayComponent } from './components/projects/project/display/display.component';
+import { AbstractControl } from './controls/abstract.control';
+import { AutocompleteControl } from './controls/autocomplete-control/autocomplete.control';
+import { SelectControl } from './controls/select-control/select.control';
+import { ProjectTypeControlComponent } from './controls/project-type-control/project-type-control.component';
+import { StudyEquipmentsChargesComponent } from './components/studies/study/montages/equipments-charges/equipments-charges.component';
+import { MontagesStudyComponent } from './components/studies/study/montages/montages.component';
+import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
+import { TravelFormDialog } from './components/suiveuse/works/work-form/travel-form/travel-form.dialog';
+import { TimeControlComponent } from './controls/time-control/time-control.component';
+import { ProvScheduleComponent } from './components/plans-charges/plan-charges/prov-schedule/prov-schedule.component';
+import { SchedulEditorDialog } from './components/plans-charges/plan-charges/prov-schedule/schedul-editor/schedul-editor.dialog';
 
 export const MY_FORMATS = {
   parse: {
@@ -194,33 +197,30 @@ export const MY_FORMATS = {
     SListUserComponent,
     CalendarComponent,
     //news
-    SalariesComponent,
+    EmployeesComponent,
     AntennesComponent,
     AntenneFormComponent,
-    FonctionsComponent,
-    FonctionFormComponent,
-    PersonnesComponent,
-    PersonneFormComponent,
-    SalarieFormComponent,
+    FunctionsComponent,
+    FunctionFormComponent,
+    PersonsComponent,
+    PersonFormComponent,
+    EmployeeFormComponent,
     AdminProjetComponent,
     LocalisationsComponent,
     LocalisationFormComponent,
     LocalisationInfoComponent,
-    ProjetsComponent,
-    ProjetFormDialog,
-    SalarieControlComponent,
+    StudiesComponent,
+    StudyFormDialog,
+    EmployeeControlComponent,
     LocalisationControlComponent,
-    ProjectTypeControlComponent,
-    TaskFormDialog,
-    TaskActionInfoComponent,
-    TaskActionsComponent,
-    TaskActionFormComponent,
-    AvancementsComponent,
-    AvancementInfoComponent,
-    AvancementFormComponent,
-    TaskActionControlComponent,
-    TaskAvancementControlComponent,
-    MontagesProjectComponent,
+    FundingTypeControlComponent,
+    ActionFormDialog,
+    ActionCategoryInfoComponent,
+    ActionCategoriesComponent,
+    ActionCategoryFormComponent,
+    ActionCategoryControlComponent,
+    ChargeControlComponent,
+    ActionsChargesStudyComponent,
     FinancementProjectComponent,
     ChargeTypesComponent,
     ChargeTypeInfoComponent,
@@ -230,53 +230,61 @@ export const MY_FORMATS = {
     ChargeFormDialog,
     ChargeTypeControlComponent,
     ProjetAccueilComponent,
-    ConventionsComponent,
-    ConventionFormComponent,
-    FinanceurFormComponent,
-    OrganismeControlComponent,
-    ProjectControlComponent,
+    ProjectsComponent,
+    ProjectFormDialog,
+    FunderFormDialog,
+    OrganismControlComponent,
+    StudyControlComponent,
     SuiveusesComponent,
     WorksComponent,
     WorkFormComponent,
-    TaskControlComponent,
-    ProjetComponent,
-    ProjetDisplayComponent,
-    TasksComponent,
-    TaskAttributionFormDialog,
-    TaskAttributionsComponent,
-    TaskPeriodsComponent,
-    TaskWeeksComponent,
+    ActionControlComponent,
+    StudyComponent,
+    StudyDisplayComponent,
+    ActionsComponent,
+    ActionAttributionFormDialog,
+    ActionAttributionsComponent,
+    ActionPeriodsComponent,
+    ActionWeeksComponent,
     AntenneComponent,
-    FonctionComponent,
+    FunctionComponent,
     PersonneComponent,
-    SalarieFormTemplateComponent,
-    RefProjectTypesComponent,
-    RefProjectTypeComponent,
-    RefProjetTypeFormComponent,
-    ProjectTypeFormTemplateComponent,
-    ProjectTypeFormComponent,
-    ConventionComponent,
-    FinanceursComponent,
-    FinanceurComponent,
-    SignatairesComponent,
-    SignataireComponent,
-    SignataireFormComponent,
-    ProjectsComponent,
-    ProjectFundingComponent,
-    ProjectFundingFormComponent,
+    EmployeeFormTemplateComponent,
+    FundingTypeRefsComponent,
+    FundingTypeRefComponent,
+    FundingTypeRefFormComponent,
+    FundingTypeFormTemplateComponent,
+    FundingTypeFormComponent,
+    ProjectComponent,
+    FundersComponent,
+    SignatoriesComponent,
+    SignatoryFormDialog,
+    StudiesFundingsComponent,
+    StudyFundingFormDialog,
     DeadlinesComponent,
     DeadlineComponent,
     DeadlineFormComponent,
     AntenneControlComponent,
-    ProjectLocalisationsComponent,
-    ProjectResponsablesComponent,
-    TaskComponent,
+    StudyLocalisationsComponent,
+    StudyManagersComponent,
+    ActionComponent,
     PlansChargesComponent,
     PlanChargesComponent,
     GlobalStatsComponent,
     PDCPersonInfoComponent,
-    UnfundedTasksComponent,
-    TaskFunderDialog,
+    ProjectDisplayComponent,
+    AbstractControl,
+    AutocompleteControl,
+    SelectControl,
+    DailyCostFormDialog,
+    StudyEquipmentsChargesComponent,
+    MontagesStudyComponent,
+    CumulSuiveusesComponent,
+    TravelFormDialog,
+    TimeControlComponent,
+    ProvScheduleComponent,
+    SchedulEditorDialog,
+    ProjectTypeControlComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -284,58 +292,63 @@ export const MY_FORMATS = {
     // ProjetTravailleurFormComponent,
     InfoChargeTypeFormDialog,
     ChargeFormDialog,
-    TaskAttributionFormDialog,
-    TaskFormDialog,
-    ProjetFormDialog,
-    TaskFunderDialog,
+    ActionAttributionFormDialog,
+    ActionFormDialog,
+    StudyFormDialog,
+    FunderFormDialog,
+    ProjectFormDialog,
+    SignatoryFormDialog,
+    StudyFundingFormDialog,
+    DailyCostFormDialog,
+    TravelFormDialog,
+    SchedulEditorDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
     {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
-    PersonRepository,
     CategoryRepository,
-    EtatRepository,
-    TypeRepository,
-    ProjetRepository,
-    OrganismeRepository,
-    MissionRepository,
-    SuiveuseRepository,
-    ProjectTypeRepository,
+    StudiesRepository,
+    OrganismRepository,
+    FundingTypeRepository,
     ChargeTypeRepository,
-    ProjetFormService,
     SuiveuseService,
-    TravailFormService,
-    SalarieRepository,
+    EmployeeRepository,
     AntenneService,
-    FonctionService,
-    PersonneService,
-    SalarieService,
-    SalarieFormService,
-    RefProjectTypeService,
-    ProjectTypeFormService,
-    ProjectTypeService,
+    FunctionService,
+    PersonService,
+    EmployeeService,
+    EmployeeFormService,
+    FundingTypeRefService,
+    FundingTypeFormService,
+    FundingTypeService,
     LocalisationService,
-    ProjetsService,
-    ProjetService,
-    TaskFormService,
-    TaskActionService,
-    TaskRepository,
-    AvancementService,
+    StudiesService,
+    StudyService,
+    ActionFormService,
+    ActionCategoriesService,
+    ActionsRepository,
     ChargeTypeRefService,
     ChargeTypeService,
-    ConventionsRepository,
+    ProjectsRepository,
     WorksRepository,
-    TaskService,
+    PersonRepository,
+    ActionService,
     WorkService,
     WeeksService,
-    ConventionService,
-    ProjetFinancementService,
-    ProjetMontagesService,
-    ProjetTasksService,
-    ProjectLocalisationsService,
-    ProjectResponsablesService,
+    ProjectService,
+    StudyFinancementService,
+    StudyMontagesService,
+    StudyActionsService,
+    StudyLocalisationsService,
+    StudyManagersService,
+    ProjectFundersService,
+    ProjectSignatoriesService,
+    ProjectStudiesFundingsService,
+    SuiveuseRepository,
+    WorkFormService,
+    GlobalProjectService,
   ]
 })
 export class ProjetModule { }

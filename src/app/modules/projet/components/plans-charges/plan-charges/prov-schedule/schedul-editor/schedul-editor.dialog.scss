@@ -1,0 +1,73 @@
+table.table th {
+	font-size: 11px;
+	text-align: center;
+}
+
+table.table td {
+  padding: 0px;
+}
+
+table.table td input {
+	width: 100%;
+  border: 0px;
+  height: 30px;
+  font-size: 20px;
+  padding-left: 10px;
+  text-align: center;
+}
+
+table.table td input::placeholder {
+  font-size: 11px;
+  text-align: left;
+}
+
+table.table th:nth-child(1), 
+table.table td:nth-child(1){
+  min-width: 250px;
+  font-size: 13px;
+}
+
+table.table thead tr:nth-child(2) th {
+  font-size: 11px;
+  min-width: 60px;
+  padding: 10px 5px;
+  vertical-align: middle;
+}
+
+table.table tbody td:not(:nth-child(1)) {
+  vertical-align: middle;
+  text-align: center;
+}
+
+table.table tfoot td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 4px 10px;
+}
+
+table.table tfoot td:nth-child(1) {
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #555;
+  color: white;
+}
+
+table.table tfoot td.lp-ok {
+  background-color: green;
+  color: white;
+}
+
+table.table tfoot td.lp-middle {
+  background-color: orange;
+  color: white;
+}
+
+table.table tfoot td.lp-hot {
+  background-color: red;
+  color: white;
+}
+
+table.table tfoot td.lp-dead {
+  color: white;
+  background-color: black;
+}

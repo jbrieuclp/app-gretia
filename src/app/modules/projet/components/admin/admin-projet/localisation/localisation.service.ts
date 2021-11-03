@@ -4,7 +4,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { BehaviorSubject, Subject, of } from 'rxjs';
 import { filter, tap, map, switchMap } from 'rxjs/operators';
 
-import { ProjetRepository, Localisation } from '../../../../repository/projet.repository'
+import { StudiesRepository } from '../../../../repository/studies.repository'
+import { Localisation } from '../../../../repository/project.interface'
 
 @Injectable()
 export class LocalisationService {
@@ -19,7 +20,7 @@ export class LocalisationService {
 
   constructor(
   	private fb: FormBuilder,
-  	private projetR: ProjetRepository
+  	private projetR: StudiesRepository
   ) { 
   	this.initForm();
   	this.setObservables();
@@ -34,7 +35,7 @@ export class LocalisationService {
   initForm(): void {
     //FORM
     this.form = this.fb.group({
-      nom: [null, Validators.required]
+      name: [null, Validators.required]
     });
 
     this.form.patchValue(this.initialValues);

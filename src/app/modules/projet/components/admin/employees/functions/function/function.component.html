@@ -1,0 +1,43 @@
+<mat-card *ngIf="loading || eFunction">
+	<mat-card-title>Information rapide</mat-card-title>
+
+	<ng-container *ngIf="!loading; else loadingTmp">
+
+		<mat-card-content>
+			<div class="float-right" style="margin-bottom: 10px;">
+			  <button 
+			  	*ngIf="eFunction.removable"
+					mat-mini-fab
+					matTooltip="Supprimer"
+					color="warn"
+					(click)="delete(eFunction)">
+			    <mat-icon>delete</mat-icon>
+			  </button>
+			</div>
+			<h5> Fonction : {{ eFunction.label }} </h5>
+
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Salarié</th>
+						<th>Taux</th>
+					</tr>
+				</thead>
+				<tbody>
+					<ng-container *ngIf="eFunction.employees.length; else noData">
+						<tr *ngFor="let employee of eFunction.employees">
+							<td>{{ employee.person.name }} {{ employee.person.firstName }}</td>
+							<td>{{ employee.rate }}%</td>
+						</tr>
+					</ng-container>
+					<ng-template #noData>
+						<tr><td colspan="2">Aucun salarié</td></tr>
+					</ng-template>
+				</tbody>
+			</table>
+		</mat-card-content>
+	</ng-container>
+	<ng-template #loadingTmp>
+		<app-loader message="Récupération des informations "></app-loader>
+	</ng-template>
+</mat-card>

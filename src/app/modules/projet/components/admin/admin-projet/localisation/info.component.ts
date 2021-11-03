@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ConfirmationDialogComponent } from '../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
-import { Localisation } from '../../../../repository/projet.repository';
+import { Localisation } from '../../../../repository/project.interface';
 import { LocalisationService } from './localisation.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class LocalisationInfoComponent implements OnInit {
   delete(localisation: Localisation) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: `Confirmer la suppression de la localisation "${localisation.nom}" ?`
+      data: `Confirmer la suppression de la localisation "${localisation.name}" ?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {

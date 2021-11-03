@@ -1,0 +1,94 @@
+<div class="alert alert-secondary">
+	<small>
+		Permet de préciser le détail de l'action d'un élément de l'étude en y attribuant un nombre de jours prévisionnels.
+		<br>
+		Il est nécessaire dans une second temps de flecher les salariés concernés par cette action.
+	</small>
+</div>
+
+<form [formGroup]="form">
+	<div class="row">
+
+		<app-projet-control-charge
+			class="col-8"
+			[form]="form.get('charge')"
+			[options]="associatedCharges"
+			[loading]="loadingCharges"
+			required
+		>	
+		</app-projet-control-charge>
+
+	</div>
+
+	<div class="row">
+		<app-projet-control-action-category 
+			class="col-8"
+			[form]="form.get('category')"
+			required
+		></app-projet-control-action-category>
+
+	  <mat-form-field class="col-md-4">
+	    <input 
+		    matInput 
+		    id="nbOfDays"
+		    type="number"
+		    placeholder="Nombre de jours"  
+  			required
+  			formControlName="nbOfDays"
+  		>
+  		<mat-hint> Maximum {{ availableDays }} jours disponibles</mat-hint>
+  		<mat-error *ngIf="form.get('nbOfDays').errors && form.get('nbOfDays').errors.required">
+  			Veuillez renseigner un nombre de jours
+  		</mat-error>
+  		<mat-error *ngIf="form.get('nbOfDays').errors && form.get('nbOfDays').errors.max">
+  			Trop de jours indiqués<br>
+  			Maximum {{ form.get('nbOfDays').errors.max.max }} jours possible
+  		</mat-error>
+	  </mat-form-field>
+	</div>
+
+	<div>
+		<div>Action</div>
+		<editor 
+			[init]="{
+	    	base_url: '/tinymce',
+	    	suffix: '.min',
+	    	plugins: [
+		     'lists link image paste help wordcount'
+		    ],
+	    	toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
+	  	}"
+	  	formControlName="objectif"
+	  	outputFormat="html"
+	  ></editor>
+<!-- 				<mat-form-field>
+	    <textarea
+		    matInput 
+		    placeholder="Action"  
+  			formControlName="action"
+  			required
+  		>
+  		</textarea> 
+	  </mat-form-field> -->
+	</div>
+
+
+	
+
+	<div>
+    <button 
+      mat-raised-button
+      type="button"
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="form.invalid"
+    	[waiting]="waiting"
+    	(click)="submit()"
+    >
+    	{{ action?.id ? 'Modifier' : 'Ajouter' }}
+    </app-submit-btn>
+  </div>
+</form>

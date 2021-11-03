@@ -7,7 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialogComponent } from '../../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ChargeTypeService } from '../charge-type.service';
 import { ChargeTypeRefService } from '../charge-type-ref.service'
-import { ChargeTypeRepository, ChargeTypeRef } from '../../../../../repository/charge-type.repository'
+import { ChargeTypeRepository } from '../../../../../repository/charge-type.repository'
+import { ChargeTypeRef } from '../../../../../repository/project.interface'
 
 @Component({
   selector: 'app-projet-charge-type-ref-charge-types-info',

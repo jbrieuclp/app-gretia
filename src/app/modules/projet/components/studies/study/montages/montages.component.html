@@ -1,0 +1,105 @@
+<div class="row">
+	<div class="col-sm-4">
+		<mat-card>
+			<mat-card-title> <h5> État financier </h5> </mat-card-title>
+			<mat-card-content>
+				<table class="table table-bordered table-sm">
+					<tbody>
+						<tr>
+							<th colspan="2"> Financements </th>
+							<td colspan="2"> 
+								<ng-container *ngIf="!studyS.loadingStudy; else queryLoader">
+									{{ study.funding }}
+								</ng-container>
+							</td>
+						</tr>
+						<tr class="table-secondary">
+							<th colspan="2"> Dépenses </th>
+							<th> Prévisionelles </th>
+							<th> Réelles </th>
+						</tr>
+						<tr>
+							<td></td>
+							<th> Actions </th>
+							<td> 
+								<ng-container *ngIf="!studyMontagesS.loading; else queryLoader">
+									- {{ actionsPreviCost }}
+								</ng-container>
+							</td>
+							<td> 
+								<ng-container *ngIf="!studyMontagesS.loading; else queryLoader">
+									- {{ actionsRealCost }}
+								</ng-container>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<th> Matériels </th>
+							<td> 
+								<ng-container *ngIf="!studyMontagesS.loading; else queryLoader">
+									- {{ materialsTotalCost }}
+								</ng-container>
+							</td>
+							<td> 
+								<ng-container *ngIf="!studyMontagesS.loading; else queryLoader">
+									- {{ materialsTotalCost }}
+								</ng-container>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th 
+								class="table-dark"
+								colspan="2"
+							> Total </th>
+							<td class="table-dark"> 
+								<ng-container *ngIf="!studyS.loadingStudy && !studyMontagesS.loading; else queryLoader">
+									{{ study.funding - (actionsPreviCost + materialsTotalCost) }}
+								</ng-container>
+							</td>
+							<td class="table-dark"> 
+								<ng-container *ngIf="!studyS.loadingStudy && !studyMontagesS.loading; else queryLoader">
+									{{ study.funding - (actionsRealCost + materialsTotalCost) }}
+								</ng-container>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="col-sm-8">
+
+		<mat-card>
+			<mat-card-title> <h5> Actions financées </h5> </mat-card-title>
+			<mat-card-content>
+				<app-projet-study-actions-charges [autofunding]="false"></app-projet-study-actions-charges>
+				
+				<div class="text-left">
+					<button 
+						mat-mini-fab
+						color="primary"
+						matTooltip="Ajouter une action"
+						(click)="openFormMontage()"
+					>
+				    <mat-icon>add</mat-icon>
+				  </button>		  	
+				</div>
+				
+			</mat-card-content>
+			<!-- <mat-card-title> <h5> Actions autofinancées </h5> </mat-card-title>
+			<mat-card-content>
+				<app-projet-study-actions-charges [autofunding]="true"></app-projet-study-actions-charges>
+
+			</mat-card-content> -->
+		</mat-card>
+
+		<app-project-study-equipments-charges></app-project-study-equipments-charges>
+	</div>
+</div>
+
+<ng-template #queryLoader>
+	<mat-progress-bar mode="query"></mat-progress-bar>
+</ng-template>

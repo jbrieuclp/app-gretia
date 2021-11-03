@@ -1,0 +1,62 @@
+<form [formGroup]="form">
+
+	<div class="row">
+		<mat-form-field class="col-md-6">
+	    <input 
+		    matInput 
+		    id="label"
+		    placeholder="Libelle"  
+  			required
+  			formControlName="label">
+	  </mat-form-field>
+	  <mat-form-field class="col-md-6">
+	  	<mat-label>Ordre pour liste déroulante</mat-label>
+	    <input 
+		    matInput 
+		    id="orderBy"
+		    type="number"
+		    placeholder="0, 1, 2... "  
+  			required
+  			formControlName="orderBy">
+	  </mat-form-field>
+	</div>
+
+	<div>
+		<mat-form-field>
+	    <textarea  
+		    matInput 
+		    id="description"
+		    placeholder="Description"  
+  			formControlName="description">
+  		</textarea>
+	  </mat-form-field>
+		
+	</div>
+
+  <ng-container *ngIf="form.get('fundingTypes')">
+    <div
+      *ngFor="let fundingTypeForm of fundingTypesControls; index as i"
+      class="blc-expansion-panel">
+
+      <app-projet-funding-type-form-template [form]="fundingTypeForm"></app-projet-funding-type-form-template>
+
+    </div>
+  </ng-container>
+
+	<div>
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+  	<button 
+  		mat-raised-button 
+  		style="min-width: 0; margin-top: 20px;" 
+  		color="primary" 
+  		[disabled]="!form.valid"
+  		(click)="save()">
+  		<mat-icon>done</mat-icon> {{ isEdit() ? 'Modifier' : 'Ajouter' }}
+  	</button>
+  </div>
+</form>

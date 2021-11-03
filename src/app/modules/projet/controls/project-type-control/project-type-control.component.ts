@@ -2,51 +2,46 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from 'rxjs';
 import { filter, tap, map, debounceTime, distinctUntilChanged, switchMap, startWith } from 'rxjs/operators';
-// import { dateProjectTypeValidator } from './date-project-type.validator';
+// import { dateFundingTypeValidator } from './date-project-type.validator';
 
 import * as moment from 'moment';
 
-import { ProjectTypeRepository, ProjectType } from '../../repository/project-type.repository';
+import { AbstractControl } from '../abstract.control';
+import { ProjectsRepository } from '../../repository/projects.repository';
+import { ProjectType } from '../../repository/project.interface';
 
 @Component({
-  selector: 'app-projet-control-project-type',
+  selector: 'app-projet-project-type-control',
   templateUrl: './project-type-control.component.html',
   styleUrls: ['./project-type-control.component.scss']
 })
-export class ProjectTypeControlComponent implements OnInit, OnDestroy {
+export class ProjectTypeControlComponent extends AbstractControl implements OnInit, OnDestroy {
 
-	@Input() form: FormControl;
-  @Input() required: boolean = false;
-  @Input() dateFilter: FormControl;
-  @Input() appearance: string = 'legacy';
-  
   projectTypes: ProjectType[] = [];
-  _subscription: Subscription;
   loading: boolean = false;
 
-
   constructor(
-  	private projectTypeR: ProjectTypeRepository
-  ) { }
-
-  ngOnInit() {
-    this._subscription = this.dateFilter.valueChanges
-      .pipe(
-        startWith(null),
-        map(date => date === null ? [] : date),
-        debounceTime(300), 
-        distinctUntilChanged(),
-        switchMap((date): Observable<ProjectType[]> => this.getProjectTypes(date))
-      )
-      .subscribe((projectTypes: ProjectType[])=>this.projectTypes = projectTypes);;
+  	private projectsR: ProjectsRepository
+  ) { 
+    super()
   }
 
-  private getProjectTypes(date): Observable<ProjectType[]> {
+  ngOnInit() {
+    super.ngOnInit();
+    
+    this._subscriptions.push(
+      this.getProjectTypes()
+        .pipe(
+          map(date => date === null ? [] : date),
+          distinctUntilChanged(),
+        )
+        .subscribe((projectTypes: ProjectType[])=>this.projectTypes = projectTypes)
+    );
+  }
+
+  private getProjectTypes(): Observable<ProjectType[]> {
     this.loading = true;
-    return this.projectTypeR.projectTypes({
-              "applicationDebut[before]": moment(date).format('yyyy-MM-DD'),
-              "applicationFin[after]": moment(date).format('yyyy-MM-DD')
-            })
+    return this.projectsR.projectTypes()
             .pipe(
               map((data: any): ProjectType[]=>data["hydra:member"]),
               tap(() => this.loading = false)
@@ -54,7 +49,7 @@ export class ProjectTypeControlComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._subscription.unsubscribe();
+    super.ngOnDestroy();
   }
 
 }

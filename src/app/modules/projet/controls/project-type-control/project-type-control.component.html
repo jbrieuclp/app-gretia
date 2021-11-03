@@ -1,4 +1,6 @@
-<mat-form-field [appearance]="appearance">
+<mat-form-field 
+	[appearance]="appearance"
+>
   <mat-label>Type de projet</mat-label>
   <mat-select 
   	[formControl]="form"
@@ -13,16 +15,21 @@
 					*ngFor="let projectType of projectTypes"
 					[value]="projectType['@id']"
 				>
-		      {{ projectType.refProjectType.libelle }}
+		      {{ projectType.label }}
 		    </mat-option>
 		  </ng-container>
 		  <ng-template #noDataTmp>
-		  	<mat-option>Aucune valeur pour cette période du projet (voir avec l'admin)</mat-option>
+		  	<mat-option>Erreur : aucune valeur (voir avec l'admin)</mat-option>
 		  </ng-template>
 	  </ng-template>
   </mat-select>
-  <mat-error *ngIf="form.errors">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
-  <mat-error *ngIf="form.errors && form.hasError('dateProjectTypeError')">
-		La valeur ne correspond pas à la date du projet
-	</mat-error>
+  <mat-spinner 
+		*ngIf="loading"
+		matSuffix
+		diameter="20"
+		strokeWidth="2"
+	>
+	</mat-spinner>
+  <mat-error *ngIf="form.errors && form.hasError('required')"> Ce champ est obligatoire </mat-error>
+  <mat-error *ngIf="form.errors && !form.hasError('required')">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
 </mat-form-field>

@@ -1,0 +1,110 @@
+<form 
+	[formGroup]="form"
+	[style.fontSize.px]="14"
+>
+
+	<div class="row">
+		<app-projet-control-antenne 
+	  	class="col-md-6"
+			[form]="form.get('localAttachment')" 
+			[required]="true"
+			appearance="outline"
+		>
+		</app-projet-control-antenne>
+		
+		<app-projet-project-type-control 
+	  	class="col-md-6"
+			[form]="form.get('projectType')" 
+			[required]="true"
+			appearance="outline"
+		>
+		</app-projet-project-type-control>
+	</div>
+
+	<div>
+	  <mat-form-field
+	  	appearance="outline"
+	  >
+	  	<mat-label>Intitulé</mat-label>
+	    <input
+	    	id="label" 
+		    matInput 
+		    placeholder="Intitulé"  
+  			required
+  			formControlName="label">
+	  	<mat-error *ngIf="form.get('label').errors && form.get('label').errors.required"> Ce champ est obligatoire </mat-error>
+	  </mat-form-field>
+	</div>
+
+	<div class="row">
+	  <mat-form-field 
+	  	class="col-md-6"
+	  	appearance="outline"
+	  >
+	  	<mat-label>Date de début d'action</mat-label>
+		  <input 
+		  	id="dateStart"
+		  	matInput 
+		  	type="text"
+		  	[matDatepicker]="dateStartP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	formControlName="dateStart"
+		  	required>
+		  <mat-datepicker-toggle matSuffix [for]="dateStartP"></mat-datepicker-toggle>
+		  <mat-datepicker #dateStartP></mat-datepicker>
+		  <mat-error *ngIf="form.get('dateStart').errors && form.get('dateStart').errors.required"> Ce champ est obligatoire </mat-error>
+		</mat-form-field>
+
+	  <mat-form-field 
+	  	class="col-md-6"
+	  	appearance="outline"
+	  >
+	  	<mat-label>Date de fin d'action</mat-label>
+		  <input 
+		  	matInput 
+		  	id="dateEnd"
+		  	type="text"
+		  	[matDatepicker]="dateEndP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	autocomplete="off" 
+		  	formControlName="dateEnd"
+		  >
+		  <mat-datepicker-toggle matSuffix [for]="dateEndP"></mat-datepicker-toggle>
+		  <mat-datepicker #dateEndP></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+	<div>
+		<h6>Descriptif</h6>
+		<editor 
+			[init]="{
+	    	base_url: '/tinymce',
+	    	suffix: '.min',
+	    	plugins: [
+		     'lists link image paste help wordcount'
+		    ],
+	    	toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
+	  	}"
+	  	formControlName="description"
+	  	outputFormat="html"
+	  ></editor>
+	</div>
+
+	<div style="margin-top: 10px;">
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="!form.valid"
+    	[text]="project?.id ? 'Modifier' : 'Ajouter'"
+    	[waiting]="waiting"
+    	(onClick)="submit()"
+    >
+    	<mat-icon>done</mat-icon> <span>{{ project?.id ? 'Modifier' : 'Ajouter' }}</span>
+    </app-submit-btn>
+  </div>
+
+</form>

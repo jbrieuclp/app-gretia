@@ -46,6 +46,7 @@ import { SortByPipe } from './pipes/sort-by.pipe';
 
 //Directives
 import { ColorDifferenceDirective } from './directives/color-difference.directive';
+import { BackButtonDirective } from './directives/back-button.directive';
 
 //Services
 import { GlobalsService } from './services/globals.service';
@@ -97,7 +98,8 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     SortByPipe,
     ColorDifferenceDirective,
     LoaderComponent,
-    SubmitBtnComponent
+    SubmitBtnComponent,
+    BackButtonDirective
   ],
   entryComponents: [
     ConfirmationDialogComponent
@@ -147,7 +149,8 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     SortByPipe,
     ColorDifferenceDirective,
     LoaderComponent,
-    SubmitBtnComponent
+    SubmitBtnComponent,
+    BackButtonDirective
   ]
 })
 export class SharedModule { }

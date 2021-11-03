@@ -1,24 +1,26 @@
 <div class="antenne-form">
   <mat-form-field [appearance]="appearance">
     <mat-label>Antennes</mat-label>
+    <mat-spinner 
+      *ngIf="loading"
+      matPrefix
+      diameter="20"
+      strokeWidth="2"
+    ></mat-spinner>
     <mat-select 
       [formControl]="form"
       [required]="required">
       <mat-option *ngIf="loading">
-        <mat-spinner 
-          diameter="20"
-          strokeWidth="2"
-        >
-        </mat-spinner>
         Chargement...
       </mat-option>
       <mat-option 
         *ngFor="let option of options" 
         [value]="option['@id']">
-        {{ option.nom }}
+        {{ option.name }}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.errors">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
+    <mat-error *ngIf="form.errors && form.errors.required"> Ce champ est obligatoire </mat-error>
+    <mat-error *ngIf="form.errors && !form.errors.required">{{ form.errors?.message || 'Erreur pour ce champs' }}</mat-error>
   </mat-form-field>
 
 </div>

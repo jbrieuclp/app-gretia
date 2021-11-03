@@ -5,6 +5,7 @@
 	[type]="type"
 	[color]="color" 
 	[disabled]="disabled || waiting"
+	(click)="click($event)"
 >
 	<ng-container *ngIf="waiting; else displayIcon">
 		<mat-spinner 

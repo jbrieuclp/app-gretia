@@ -1,0 +1,60 @@
+<form [formGroup]="form">
+
+	<div class="row">
+	  <mat-form-field class="col-md-6">
+	    <input 
+        id="firstName"
+		    matInput 
+		    placeholder="Prenom"  
+  			required
+  			formControlName="firstName">
+	  </mat-form-field>
+		<mat-form-field class="col-md-6">
+	    <input 
+        id="name"
+		    matInput 
+		    placeholder="Nom"  
+  			required
+  			formControlName="name">
+	  </mat-form-field>
+	</div>
+
+	<div class="row">
+		<mat-form-field class="col-md-6">
+	    <input 
+        id="alias"
+		    matInput 
+		    placeholder="Alias"  
+  			required
+  			formControlName="alias">
+	  </mat-form-field>
+	</div>
+
+  <ng-container *ngIf="form.get('employees')">
+    <div
+      *ngFor="let formEmployee of employeeControls; index as i"
+      class="blc-expansion-panel"
+    >
+
+      <app-projet-person-employee-form-template [form]="formEmployee"></app-projet-person-employee-form-template>
+
+    </div>
+  </ng-container>
+
+	<div>
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+  	<button 
+  		mat-raised-button 
+  		style="min-width: 0; margin-top: 20px;" 
+  		color="primary" 
+  		[disabled]="!form.valid"
+  		(click)="save()">
+  		<mat-icon>done</mat-icon> {{ isEdit() ? 'Modifier' : 'Ajouter' }}
+  	</button>
+  </div>
+</form>

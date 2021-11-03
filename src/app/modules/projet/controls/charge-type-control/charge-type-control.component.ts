@@ -5,8 +5,8 @@ import { map, tap, switchMap } from 'rxjs/operators';
 
 import * as moment from 'moment';
 
-import { ChargeTypeRepository, ChargeType } from '../../repository/charge-type.repository';
-import { Projet } from '../../repository/projet.repository';
+import { ChargeTypeRepository } from '../../repository/charge-type.repository';
+import { Study, ChargeType } from '../../repository/project.interface';
 
 @Component({
   selector: 'app-projet-control-charge-type',
@@ -17,7 +17,7 @@ export class ChargeTypeControlComponent implements OnInit {
 
 	@Input() form: FormControl;
   @Input() dateFilter: Date;
-  @Input() projectFilter: BehaviorSubject<Projet> = new BehaviorSubject(null);
+  @Input() studyFilter: BehaviorSubject<Study> = new BehaviorSubject(null);
   @Input() label: string = 'Charge';
   @Input() isPerDay: boolean = null;
   
@@ -36,10 +36,10 @@ export class ChargeTypeControlComponent implements OnInit {
       this.form.setValue(this.form.value['@id']);
     }
 
-    this.projectFilter.asObservable()
+    this.studyFilter.asObservable()
       .pipe(
-        switchMap((projet: Projet) => {
-          if (projet === null) {
+        switchMap((study: Study) => {
+          if (study === null) {
             return this.chargeTypeR.chargeTypes({
                       "applicationStart[before]": moment(this.dateFilter).format('yyyy-MM-DD'),
                       "applicationEnd[after]": moment(this.dateFilter).format('yyyy-MM-DD')
@@ -48,7 +48,7 @@ export class ChargeTypeControlComponent implements OnInit {
             return this.chargeTypeR.chargeTypes({
                       "applicationStart[before]": moment(this.dateFilter).format('yyyy-MM-DD'),
                       "applicationEnd[after]": moment(this.dateFilter).format('yyyy-MM-DD'),
-                      "charges.project.id[]": projet.id,
+                      "charges.study.id[]": study.id,
                       "chargeTypeRef.isPerDay": true
                     })
           }

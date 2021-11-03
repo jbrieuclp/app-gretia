@@ -1,0 +1,81 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Retourner au menu projet"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+
+<div class="col-md-5">
+<mat-card>
+	<mat-card-title>Gestion des différentes catégories associées aux actions</mat-card-title>
+
+	<mat-card-subtitle>Liste des éléments enregistrées</mat-card-subtitle>
+
+	<mat-card-content>
+
+		<mat-list>
+			<ng-container *ngIf="(categories||[]).length; else noAction">
+
+				<ng-container *ngFor="let category of categories|sortBy:'asc':'label'; let last = last;">
+
+				  <mat-list-item (click)="select(category)">
+				  	<span class="d_id">#{{ category.id }}</span>
+				  	<span class="d_nom">{{ category.label }}</span>
+				  </mat-list-item>
+				  <mat-divider *ngIf="!last"></mat-divider>
+
+				</ng-container>
+
+			</ng-container>
+
+			<ng-template #noAction>
+				<mat-list-item>Aucune category enregistrée</mat-list-item>
+			</ng-template>
+
+			<button 
+				(click)="addAction()"
+				mat-raised-button 
+				color="primary">
+				<mat-icon>add</mat-icon> Ajouter
+			</button>
+		</mat-list>
+	</mat-card-content>
+	<mat-card-actions>
+		
+	</mat-card-actions>
+</mat-card>
+</div>
+
+<div class="col-md-7">
+	<mat-card>
+		<mat-horizontal-stepper #stepper>
+
+			<mat-step>
+				<mat-card-title>Détails</mat-card-title>
+				<mat-card-subtitle>Selectionner une category dans la liste</mat-card-subtitle>
+				<mat-card-content>
+					<app-projet-admin-action-category-info></app-projet-admin-action-category-info>
+				</mat-card-content>
+			</mat-step>
+
+			<mat-step>
+				<mat-card-title>
+					<ng-container *ngIf="category; else createForm">
+						Modification de "{{ category.label }}"
+					</ng-container>
+					<ng-template #createForm>
+						Ajout d'une category
+					</ng-template>
+				</mat-card-title>
+				<mat-card-subtitle>Veuillez compléter ces informations</mat-card-subtitle>
+				<mat-card-content>
+					<app-projet-action-category-form></app-projet-action-category-form>
+				</mat-card-content>
+			</mat-step>
+
+		</mat-horizontal-stepper>
+	</mat-card>
+</div>

@@ -3,11 +3,11 @@ import { FormControl } from "@angular/forms";
 import { Observable, of, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { SalarieRepository, Antenne } from '../../repository/salarie.repository';
-
+import { EmployeeRepository } from '../../repository/employee.repository';
+import { Antenne } from '../../repository/project.interface';
 
 @Component({
-  selector: 'app-project-control-antenne',
+  selector: 'app-projet-control-antenne',
   templateUrl: './antenne-control.component.html',
   styleUrls: ['./antenne-control.component.scss']
 })
@@ -20,7 +20,7 @@ export class AntenneControlComponent implements OnInit {
   loading: boolean = false;
 
   constructor(
-    private salarieR: SalarieRepository
+    private salarieR: EmployeeRepository
   ) { }
 
   ngOnInit() {
@@ -33,7 +33,7 @@ export class AntenneControlComponent implements OnInit {
       .pipe(
         tap(()=>this.loading = false),
         map((data: any): Antenne[]=>data["hydra:member"]),
-        map((antennes: Antenne[])=>antennes.sort((a, b)=> a.nom > b.nom && 1 || -1))
+        map((antennes: Antenne[])=>antennes.sort((a, b)=> a.name > b.name && 1 || -1))
       )
       .subscribe((antennes: Antenne[])=>this.options = antennes);
   }

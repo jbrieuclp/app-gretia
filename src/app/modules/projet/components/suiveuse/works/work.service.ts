@@ -5,7 +5,8 @@ import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
 import { SuiveuseService } from '../suiveuse.service';
-import { WorksRepository, Work } from '../../../repository/works.repository'
+import { WorksRepository } from '../../../repository/works.repository'
+import { Work } from '../../../repository/project.interface'
 
 @Injectable()
 export class WorkService {
@@ -25,7 +26,7 @@ export class WorkService {
   		.pipe(
   			distinctUntilChanged(),
   			switchMap((date: Date) => this.getWorks({
-                  "dateTravail": moment(date).format('yyyy-MM-DD')
+                  "workingDate": moment(date).format('yyyy-MM-DD')
                 })),
   		)
   		.subscribe((works: Work[]) => this.works = works);
@@ -41,7 +42,7 @@ export class WorkService {
   }
 
   refreshWorks(date) {
-  	this.getWorks({"dateTravail": moment(date).format('yyyy-MM-DD')})
+  	this.getWorks({"workingDate": moment(date).format('yyyy-MM-DD')})
   		.subscribe((works: Work[]) => this.works = works);
   }
 

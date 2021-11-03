@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ConfirmationDialogComponent } from '../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { ChargeTypeRef } from '../../../../repository/charge-type.repository'
+import { ChargeTypeRef } from '../../../../repository/project.interface'
 import { ChargeTypeRefService } from './charge-type-ref.service'
 
 

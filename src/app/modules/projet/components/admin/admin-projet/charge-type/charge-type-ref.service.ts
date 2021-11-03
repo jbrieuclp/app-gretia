@@ -4,7 +4,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { BehaviorSubject, Subject, of, concat } from 'rxjs';
 import { filter, tap, map, switchMap } from 'rxjs/operators';
 
-import { ChargeTypeRepository, ChargeType, ChargeTypeRef } from '../../../../repository/charge-type.repository';
+import { ChargeTypeRepository } from '../../../../repository/charge-type.repository';
+import { ChargeType, ChargeTypeRef } from '../../../../repository/project.interface';
 import { ChargeTypeService } from './charge-type.service';
 
 @Injectable()
@@ -159,8 +160,6 @@ export class ChargeTypeRefService {
     (this.form.get('chargeTypes') as FormArray).push(form);
     form.parent.parent.get('isPerDay').valueChanges
       .subscribe(val=>{
-        console.log(this.form);
-        console.log(form);
         if (!val) {
           form.addControl('unitCost', new FormControl(null, Validators.required));
         } else {

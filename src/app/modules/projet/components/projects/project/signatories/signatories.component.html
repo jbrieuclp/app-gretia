@@ -1,0 +1,60 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Organisme</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<ng-container *ngIf="signatories.length; else noSignatories">
+				<tr *ngFor="let signatory of signatories">
+					<td>{{ signatory.organism.name || '-' }}</td>
+					<td>
+						<button
+							mat-icon-button
+							class="delete-btn"
+							type="button"
+							color="primary"
+							matTooltip="Modifier cette ligne"
+							(onClick)="openSignatoryFormDialog(signatory)"
+						>
+						  <mat-icon>edit</mat-icon>
+						</button>
+						<button
+							mat-icon-button
+							class="delete-btn"
+							type="button"
+							color="warn"
+							matTooltip="Enlever cette ligne"
+							(click)="delete(signatory)"
+						>
+						  <mat-icon>clear</mat-icon>
+						</button>
+					</td>
+				</tr>
+			</ng-container>
+			<ng-template #noSignatories>
+				<tr>
+					<td colspan="2">
+						Pas de signataire pour le moment
+					</td>
+				</tr>
+			</ng-template>
+		</tbody>
+	</table>
+
+	<div class="text-left">
+		<button 
+			mat-mini-fab
+			color="primary"
+			(click)="openSignatoryFormDialog()"
+		>
+	    <mat-icon>add</mat-icon>
+	  </button>
+	</div>
+
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Chargement en cours"></app-loader>
+</ng-template>

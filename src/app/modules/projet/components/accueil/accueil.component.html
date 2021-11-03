@@ -7,13 +7,13 @@
 </div>
 
 <ng-container *ngIf="calendarDisplay.checked; else tableView">
-	<app-projects-tasks-task-weeks
+	<app-projects-study-action-weeks
 		[year]="year"
 		[data]="getWeeksData()"
 		[displayYear]="true"
 		[editionMode]="false"
 		(change)="submit($event)"
-	></app-projects-tasks-task-weeks>
+	></app-projects-study-action-weeks>
 </ng-container>
 
 <ng-template #tableView>
@@ -29,17 +29,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let task of projet.tasks">
-						<td>{{ task.intitule }}</td>
-						<td>{{ task.nbJours }}</td>
-						<td>{{ task.numberDaysDone }}</td>
+					<tr *ngFor="let action of projet.actions">
+						<td>{{ action.intitule }}</td>
+						<td>{{ action.nbJours }}</td>
+						<td>{{ action.numberDaysDone }}</td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
 						<td><b>TOTAL</b></td>
-						<td>{{ tasksDay(projet) }}</td>
-						<td>{{ tasksDayDone(projet) }}</td>
+						<td>{{ actionsDay(projet) }}</td>
+						<td>{{ actionsDayDone(projet) }}</td>
 					</tr>
 				</tfoot>
 			</table>

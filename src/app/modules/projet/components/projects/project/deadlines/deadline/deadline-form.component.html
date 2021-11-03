@@ -1,0 +1,103 @@
+<ng-container 
+	*ngIf="displayForm; else displayBtn"
+	[formGroup]="form"
+>
+	<mat-card>
+		<mat-card-content>
+
+			<div class="row">
+				<mat-form-field class="col-sm-2">
+			  	<mat-label>Date</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="dateP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="date"
+				  	required>
+				  <mat-datepicker-toggle matSuffix [for]="dateP"></mat-datepicker-toggle>
+				  <mat-datepicker #dateP></mat-datepicker>
+				</mat-form-field>
+
+				<mat-form-field class="col-sm-2">
+				  <mat-label>Type</mat-label>
+				  <mat-select 
+				  	formControlName="deadlineType"
+				  	required>
+						<mat-option 
+							*ngFor="let deadlineType of deadlineTypes" 
+							[value]="deadlineType['@id']">
+				      {{ deadlineType.label }}
+				    </mat-option>
+				  </mat-select>
+				</mat-form-field>
+			</div>
+
+			<div class="row">
+				<div class="offset-sm-1 col-sm-11">
+
+					<div>
+						<mat-checkbox
+					  	color="primary"
+				      formControlName="isReported"
+				    >
+				    	Report
+				    </mat-checkbox>
+						-
+						<mat-checkbox
+					  	color="primary"
+				      formControlName="isObsolete"
+				    >
+				    	Caduque
+				    </mat-checkbox>
+					</div>
+
+					<mat-form-field>
+						<mat-label>Commentaire</mat-label>
+				    <textarea 
+				    	matInput 
+				    	placeholder="Détail pour cette échéance"
+				    	formControlName="comment"
+				    ></textarea>
+				  </mat-form-field>
+
+				</div>
+			</div>
+
+			<div>
+				<button
+					style="margin-left: 10px;"
+					mat-raised-button
+					type="button"
+					matTooltip="Annuler"
+					(click)="cancel()"
+				>
+				  Annuler
+				</button>
+				<button
+					mat-raised-button
+					type="button"
+					color="primary"
+					matTooltip="Ajouter l'échéance"
+					[disabled]="form.invalid" 
+					(click)="save()"
+				>
+				  Ajouter
+				</button>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+</ng-container>
+<ng-template #displayBtn>
+	<div class="text-right">
+		<button
+			mat-mini-fab
+			type="button"
+			color="primary"
+			matTooltip="Renseigner un funder"
+			(click)="displayForm=true"
+		>
+		  <mat-icon>add</mat-icon>
+		</button>
+	</div>
+</ng-template>

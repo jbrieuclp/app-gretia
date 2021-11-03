@@ -1,0 +1,57 @@
+<form 
+	[formGroup]="form" 
+	autocomplete="off"
+	[style.fontSize.px]="14"
+>
+	<div class="row">
+		<app-projet-study-control 
+			class="col-10"
+			[form]="form.get('study')"
+			[options]="studiesOptions"
+			[optionsDisabled]="studiesDisabled"
+		></app-projet-study-control>
+		<div class="col-2">
+			<button 
+				mat-mini-fab
+				color="primary"
+				matTooltip="Créer une nouvelle étude"
+				(click)="createStudy()"
+			>
+		    <mat-icon>add</mat-icon>
+		  </button>
+		</div>
+	</div>
+  
+  <div class="row">
+	  <mat-form-field class="col-9">
+	  	<mat-label>Part de financement</mat-label>
+	    <input 
+		    matInput 
+		    type="number"
+		    placeholder="Part de financement"  
+				required
+				formControlName="eligibleFunding">
+			<mat-icon matSuffix>euro_symbol</mat-icon>
+	  </mat-form-field>
+	</div>
+	
+	<div>
+		<app-submit-btn
+    	[disabled]="!form.valid"
+    	[waiting]="waiting"
+    	matTooltip="Ajouter l'organisme"
+    	(click)="submit()"
+    >
+    	<mat-icon>add</mat-icon> Ajouter
+    </app-submit-btn>
+		<button
+			style="margin-left: 10px;"
+			mat-raised-button
+			type="button"
+			matTooltip="Annuler"
+			(click)="cancel()"
+		>
+		  Annuler
+		</button>
+	</div>
+</form>

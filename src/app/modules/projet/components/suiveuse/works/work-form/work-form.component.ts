@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 import { Observable, of, BehaviorSubject, Subscription } from "rxjs";
 import { tap, map, switchMap, distinctUntilChanged, debounceTime, filter } from "rxjs/operators";
@@ -8,8 +9,11 @@ import 'moment/locale/fr'  // without this line it didn't work
 
 import { GlobalsService } from '../../../../../../shared/services/globals.service';
 import { SuiveuseService } from '../../suiveuse.service';
-import { WorksRepository, Work } from '../../../../repository/works.repository';
+import { WorksRepository } from '../../../../repository/works.repository';
+import { Work, Travel } from '../../../../repository/project.interface';
 import { WorkService } from '../work.service';
+import { WorkFormService } from './work-form.service';
+import { TravelFormDialog } from './travel-form/travel-form.dialog';
 
 @Component({
   selector: 'app-projet-suiveuses-work-form',
@@ -18,63 +22,34 @@ import { WorkService } from '../work.service';
 })
 export class WorkFormComponent implements OnInit, OnDestroy {
 
-  public form: FormGroup;
+  form: FormGroup;
 	$date: Observable<Date>
 	$dateSub: Subscription;
   saving: boolean = false;
-
-  timeForm: FormGroup;
-  dureeForm: FormControl;
-  optionsHour: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  optionsMinute: number[] = [0, 15, 30, 45];
-  timeFormDisplay: boolean = false;
+  travels: Travel[] = [];
+  get work(): Work { return this.workFormS.work.getValue(); };
 
   constructor(
   	private fb: FormBuilder,
+    public dialog: MatDialog,
   	private location: Location,
   	private suiveuseS: SuiveuseService,
   	private workR: WorksRepository,
     private workS: WorkService,
     private globalS: GlobalsService,
+    private workFormS: WorkFormService,
   ) { 
   	this.$date = suiveuseS.selectedDate.asObservable();
   }
 
   ngOnInit() {
   	this.initForm();
-  	this.setObservables()
-  }
-
-  private get initialValues(): any {
-    const values = {
-			    	estNuit: false,
-      			estWe: false,
-            dateTravail: moment(this.suiveuseS.selectedDate.getValue()).format('YYYY-MM-DD'),
-      		};
-    return values;
+  	this.setObservables();
   }
 
   initForm(): void {
     //FORM
-    this.form = this.fb.group({
-      tache: [null, [Validators.required]],
-      dateTravail: [null, [Validators.required]],
-      temps: [null, [Validators.required, Validators.pattern('^[0-9]+\.?[0-9]*$')]],
-      detail: null,
-      estNuit: [null, [Validators.required]],
-      estWe: [null, [Validators.required]]
-    });
-
-    /*Duree Form */
-    //declaration
-    this.dureeForm = new FormControl(null, [Validators.pattern('^[0-9]+\.?(25|5|75)?0?$')]);
-
-    this.timeForm = this.fb.group({
-                      heure: [null, [Validators.pattern('[0-9]+'), inArrayValidator(this.optionsHour)]],
-                      minutes: [null, [Validators.pattern('[0-9]+'), inArrayValidator(this.optionsMinute)]]
-                    });
-
-    this.form.patchValue(this.initialValues);
+    this.form = this.workFormS.form;
   }
 
   /**
@@ -89,83 +64,69 @@ export class WorkFormComponent implements OnInit, OnDestroy {
         tap((date) =>  this.reset()),
         map((date) => moment(date).format('YYYY-MM-DD'))
       )
-      .subscribe((date: string) => this.form.get('dateTravail').setValue(date));
+      .subscribe((date: string) => this.form.get('workingDate').setValue(date));
 
-    //changes event
-    this.dureeForm.valueChanges
+    this.workFormS.work.asObservable()
       .pipe(
-        distinctUntilChanged(),
-        filter(temps => temps !== null),
-        map((temps) => temps.toString().replace(',', '.').replace(/[^\d\.]/g, '')),
+        map((work: Work): Travel[] => work ? work.travels : [])
       )
-      .subscribe((duree: string) => this.dureeForm.setValue(duree));
-
-    this.dureeForm.valueChanges
-      .pipe(
-        filter(() => this.dureeForm.valid),
-        map((temps) => +(temps)*60),
-        filter((temps) => this.form.get('temps').value !== temps)
-      )
-      .subscribe(temps => {
-        this.form.get('temps').setValue(temps);
-      });
-
-    this.timeForm.valueChanges
-      .pipe(
-        filter(()=>this.timeForm.valid),
-        map((time)=>(+(time.heure)*60) + +(time.minutes)),
-        filter((temps)=>this.form.get('temps').value !== temps)
-      )
-      .subscribe(temps => {
-        this.form.get('temps').setValue(temps);
-      });
-
-    this.form.get('temps').valueChanges
-      .pipe(filter(()=>this.form.get('temps').valid))
-      .subscribe(temps => {
-        this.dureeForm.setValue(Math.round((+(temps)/60)*100)/100);
-        this.timeForm.setValue({heure: Math.trunc(+(temps)/60), minutes: temps%60});
-      });
+      .subscribe((travels: Travel[]) => this.travels = travels);
   }
 
-  isWeekend(date): boolean {
-    return moment(date).isoWeekday() === 6 || moment(date).isoWeekday() === 7;
+  addTravel() {
+    this.openTravelFormDialog();
+  }
+
+  editTravel(idx) {
+    let travel = this.travels.splice(idx, 1)[0];
+    this.openTravelFormDialog(travel);
+  }
+
+  private openTravelFormDialog(travel = {}) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      'travel': travel,
+    };
+    dialogConfig.width = '750px';
+    dialogConfig.position = {top: '70px'};
+    dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(TravelFormDialog, dialogConfig);
+
+    dialogRef.afterClosed()
+      .pipe(
+        filter((travelForm: FormGroup) => travelForm !== null),
+      )
+      .subscribe((travelForm: FormGroup) => this.pushTravel(travel));
+  }
+
+  private pushTravel(travel: Travel): void {
+    this.travels.push(travel);
   }
 
   save() {
     this.saving = true;
-		this.workR.postMyWorks(this.form.value)
-			.pipe(
-        tap(() => this.saving = false),
-        tap(() => this.reset()),
-        tap(() => this.workS.refreshWorks(this.suiveuseS.selectedDate.getValue())),
-        tap((work) => console.log(this.suiveuseS.addWorkToDay(work))),
-			)
-      .subscribe(() => this.globalS.snackBar({msg: "Travail ajouté"}))
+    let data = Object.assign((this.work !== null ? this.work : {}), this.form.value);
+    data.travels = this.travels;
+
+    let api = (data['@id'] ? this.workR.patch(data['@id'], data) : this.workR.postMyWorks(data));
+    api.pipe(
+      tap(() => this.saving = false),
+      tap(() => this.reset()),
+      tap(() => this.workS.refreshWorks(this.suiveuseS.selectedDate.getValue())),
+      //tap((work) => console.log(this.suiveuseS.addWorkToDay(work))),
+		)
+    .subscribe(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')}))
   }
 
-  reset() {
-    this.form.reset(this.initialValues);
-    this.dureeForm.reset();
-    this.timeForm.reset();
-    this.form.get('estWe').setValue(this.isWeekend(this.suiveuseS.selectedDate.getValue()))
+  private reset() {
+    this.workFormS.reset();
+    this.workFormS.work.next(null);
   }
 
   ngOnDestroy() {
   	this.$dateSub.unsubscribe();
   }
 
-}
-
-
-import {AbstractControl, ValidatorFn} from '@angular/forms';
-
-export function inArrayValidator(comparedValues: any[]): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } => {
-    if (control.value !== null) {
-      return comparedValues.findIndex(v => v === control.value) !== -1 ? null : {'inArrayError': true};
-    }
-
-    return null;
-  };
 }

@@ -1,0 +1,84 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Organisme</th>
+				<th>Financement</th>
+				<th>Type</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<ng-container *ngIf="funders.length; else noFunders">
+
+				<tr *ngFor="let funder of funders">
+					<td>{{ funder.organism.name || '-' }}</td>
+					<td>{{ funder.funding | number:'':'fr' }} €</td>
+					<td>{{ funder.fundingType.label }} <small>({{funder.fundingType.dailyCost}} €/j)</small></td>
+					<td>
+						<button
+							mat-icon-button
+							class="delete-btn"
+							type="button"
+							color="primary"
+							matTooltip="Modifier cette ligne"
+							(click)="openFunderFormDialog(funder)"
+						>
+						  <mat-icon>edit</mat-icon>
+						</button>
+						<button
+							mat-icon-button
+							class="delete-btn"
+							type="button"
+							color="warn"
+							matTooltip="Enlever cette ligne"
+							(click)="delete(funder)"
+						>
+						  <mat-icon>clear</mat-icon>
+						</button>
+					</td>
+				</tr>
+			</ng-container>
+			<ng-template #noFunders>
+				<tr>
+					<td colspan="3">
+						Pas de financeur pour le moment
+					</td>
+				</tr>
+			</ng-template>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th class="table-dark">TOTAL</th>
+				<td class="table-dark">{{ total | number:'':'fr' }} €</td>
+				<td class="table-dark" colspan="2">
+					<ng-container *ngIf="project">
+						Coût jour du projet : {{ project.dailyCost }} €/j 
+				  	<button 
+							mat-icon-button
+							color="primary"
+							matTooltip="Éditer le coût jour du projet"
+							(click)="openDialyCostFormDialog()"
+						>
+					    <mat-icon style="color: white;">edit</mat-icon>
+					  </button>
+					</ng-container>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+	<div class="text-left">
+		<button 
+			mat-mini-fab
+			color="primary"
+			(click)="openFunderFormDialog()"
+		>
+	    <mat-icon>add</mat-icon>
+	  </button>		  	
+	</div>
+
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Chargement en cours"></app-loader>
+</ng-template>

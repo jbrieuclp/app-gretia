@@ -1,0 +1,43 @@
+<div class="organism-form">
+	<mat-form-field
+	  [appearance]="appearance"
+	>
+		<mat-label>
+			Organisme
+		</mat-label>
+	  <input 
+		  type="text" 
+		  placeholder="Rechercher ou saisir un organisme" 
+		  matInput 
+		  [formControl]="form" 
+		  [matAutocomplete]="auto"
+		  [required]="required" 
+		>
+	  <mat-autocomplete 
+	  	#auto="matAutocomplete"
+	  	[displayWith]="displayFn.bind(this)">
+	    <mat-option 
+	    	*ngFor="let organism of (filteredOptions | async)" 
+	    	[value]="organism['@id']"
+	    	[disabled]="isDisabled(organism)"
+	    >
+	      {{ organism.name }}
+	    </mat-option>
+	  </mat-autocomplete>
+		<mat-spinner 
+			*ngIf="loading"
+			matSuffix
+			diameter="20"
+			strokeWidth="2"
+		>
+		</mat-spinner>
+	</mat-form-field>
+	<button
+		*ngIf="buttonDisplay" 
+		mat-mini-fab
+		color="primary"
+		matTooltip="Créer cet organism"
+		(click)="addOrganisme()">
+	  <mat-icon>done</mat-icon>
+	</button>
+</div>

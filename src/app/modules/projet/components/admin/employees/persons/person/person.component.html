@@ -1,0 +1,85 @@
+<mat-card *ngIf="loading || person">
+	<mat-card-title>Information rapide</mat-card-title>
+
+	<ng-container *ngIf="!loading; else loadingTmp">
+
+		<mat-card-content>
+			<div class="float-right" style="margin-bottom: 10px;">
+			  <button 
+			  	*ngIf="person.removable"
+					mat-mini-fab
+					matTooltip="Supprimer"
+					color="warn"
+					(click)="delete(person)">
+			    <mat-icon>delete</mat-icon>
+			  </button>
+			</div>
+			<h5> Personne : {{ person.firstName }} {{ person.name }} </h5>
+
+			<mat-horizontal-stepper #stepper>
+
+				<mat-step>
+					<h5>Liste des contrats</h5>
+					<div style="margin-bottom: 5px;">
+						<button 
+							mat-stroked-button 
+							color="primary"
+							(click)="addEmployee()">Nouveau contrat
+						</button>
+					</div>
+
+					<table class="table table-bordered">
+						<thead class="thead-dark">
+							<tr>
+								<th>Antenne</th>
+								<th>Fonction</th>
+								<th>Taux (%)</th>
+								<th>Début</th>
+								<th>Fin</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<ng-container *ngIf="person.employees.length; else noData">
+								<tr *ngFor="let employee of person.employees|sortBy:'desc':'contractStart';">
+									<td>{{ employee.antenne.name }}</td>
+									<td>{{ employee.function.label }}</td>
+									<td>{{ employee.rate }}</td>
+									<td>{{ employee.contractStart | date:'dd/MM/yyyy' }}</td>
+									<td>{{ employee.contractEnd | date:'dd/MM/yyyy' }}</td>
+									<td>
+										<ng-container *ngIf="employee.removable">
+											<button 
+												mat-icon-button 
+												color="primary"
+												(click)="editContrat(employee)">
+										    <mat-icon matTooltip="Modifier cette ligne">edit</mat-icon>
+										  </button>
+											<button 
+												mat-icon-button 
+												color="warn"
+												(click)="deleteContrat(employee)">
+										    <mat-icon matTooltip="Supprimer cette ligne">clear</mat-icon>
+										  </button>
+										</ng-container>
+									</td>
+								</tr>
+							</ng-container>
+							<ng-template #noData>
+								<tr><td colspan="6">Aucune donnée pour le moment</td></tr>
+							</ng-template>
+						</tbody>
+					</table>
+				</mat-step>
+
+				<mat-step>
+					<app-projet-person-employee-form (refreshPerson)="refreshPerson()"></app-projet-person-employee-form>
+				</mat-step>
+			</mat-horizontal-stepper>
+
+		</mat-card-content>
+	</ng-container>
+	<ng-template #loadingTmp>
+		<app-loader message="Récupération des informations "></app-loader>
+	</ng-template>
+</mat-card>

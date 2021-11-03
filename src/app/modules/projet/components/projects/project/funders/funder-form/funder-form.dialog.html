@@ -1,0 +1,52 @@
+<form 
+	[formGroup]="form" 
+	autocomplete="off"
+	[style.fontSize.px]="14"
+>
+	<app-projet-control-organism 
+		[form]="form.get('organism')"
+		[optionsDisabled]="funders"
+		appearance="outline"
+	></app-projet-control-organism>
+
+	<app-projet-funding-type-control
+		[form]="form.get('fundingType')" 
+		[dateFilter]="project.dateStart"
+		[required]="true"
+		appearance="outline"
+	>
+	</app-projet-funding-type-control>
+  
+  <mat-form-field
+  	appearance="outline"
+  >
+    <input 
+    	id="funding"
+	    matInput 
+	    placeholder="Financement"  
+	    type="number"
+			required
+			formControlName="funding">
+		<mat-icon matSuffix>euro_symbol</mat-icon>
+  </mat-form-field>
+	
+	<div>
+		<app-submit-btn
+    	[disabled]="!form.valid"
+    	[waiting]="waiting"
+    	matTooltip="Ajouter l'organisme"
+    	(onClick)="submit()"
+    >
+    	<mat-icon>add</mat-icon> Ajouter
+    </app-submit-btn>
+		<button
+			style="margin-left: 10px;"
+			mat-raised-button
+			type="button"
+			matTooltip="Annuler"
+			(click)="cancel()"
+		>
+		  Annuler
+		</button>
+	</div>
+</form>

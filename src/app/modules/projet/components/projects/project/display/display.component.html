@@ -1,0 +1,54 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+
+	<div class="float-right" style="margin-bottom: 10px;">
+	  <button 
+			mat-mini-fab
+			matTooltip="Modifier ces informations"
+			color="primary"
+			(click)="edit()">
+	    <mat-icon>edit</mat-icon>
+	  </button>
+	</div>
+	<div>
+
+		<br>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Antenne </div>
+			<div> {{ project.localAttachment?.name }} </div>
+		</div>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Type de projet </div>
+			<div> {{ project.projectType.label }} </div>
+		</div>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Date de commencement </div>
+			<div> {{ project.dateStart | date:'dd/MM/yyyy' }} </div>
+		</div>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Date de fin </div>
+			<div> {{ (project.dateEnd | date:'dd/MM/yyyy') || '-' }} </div>
+		</div>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Coût jour </div>
+			<div> {{ project.dailyCost || '-' }} €/jour </div>
+		</div>
+
+		<div class="element">
+			<div class="font-weight-bold title"> Descriptif </div>
+			<div [innerHTML]="project.description"></div>
+		</div>
+
+	</div>
+	<div>
+		<small>Créé le {{ project.createdAt|date:'dd/MM/y' }}</small>
+	</div>
+
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Chargement en cours"></app-loader>
+</ng-template>

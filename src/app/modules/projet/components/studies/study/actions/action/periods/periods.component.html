@@ -1,0 +1,35 @@
+<div>
+	<mat-slide-toggle
+		color="primary"
+		(toggleChange)="editionMode = !editionMode"
+	> Activer/désactiver l'édition </mat-slide-toggle>
+</div>
+
+<div 
+	*ngIf="years.length"
+	style="margin: 10px 0px 5px 0px;"
+>
+	<mat-button-toggle-group 
+		name="fontStyle" 
+		appearance="legacy"
+		[value]="viewYear"
+	>
+	  <mat-button-toggle 
+	  	*ngFor="let year of years"
+	  	[value]="year"
+	  	(click)="viewYear = year"
+	  > 
+	  	{{ year }} 
+	  </mat-button-toggle>
+	</mat-button-toggle-group>
+
+</div>
+
+<app-projects-study-action-weeks
+	[year]="viewYear"
+	[periods]="action.periods"
+	[displayYear]="true"
+	[editionMode]="editionMode"
+	(change)="onChange($event)"
+	(changeYear)="viewYear = $event"
+></app-projects-study-action-weeks>

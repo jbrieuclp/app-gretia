@@ -4,3 +4,23 @@
   margin-bottom: 10px;
   color: red;
 }
+
+.travel-table th:nth-child(1),
+.travel-table td:nth-child(1) {
+  width: 100px;
+  text-align: center;
+}
+
+.travel-table td:nth-child(1) > .mat-icon {
+  cursor: pointer;
+}
+
+.travel-table th:nth-child(3),
+.travel-table td:nth-child(3),
+.travel-table th:nth-child(4),
+.travel-table td:nth-child(4),
+.travel-table th:nth-child(5),
+.travel-table td:nth-child(5) {
+  width: 80px;
+  text-align: center;
+}

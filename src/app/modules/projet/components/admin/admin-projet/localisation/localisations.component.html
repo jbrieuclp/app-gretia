@@ -19,11 +19,11 @@
 		<mat-list>
 			<ng-container *ngIf="(localisations||[]).length; else noLocalisation">
 
-				<ng-container *ngFor="let localisation of localisations|sortBy:'asc':'nom'; let last = last;">
+				<ng-container *ngFor="let localisation of localisations|sortBy:'asc':'name'; let last = last;">
 
 				  <mat-list-item (click)="select(localisation)">
 				  	<span class="d_id">#{{ localisation.id }}</span>
-				  	<span class="d_nom">{{ localisation.nom }}</span>
+				  	<span class="d_nom">{{ localisation.name }}</span>
 				  </mat-list-item>
 				  <mat-divider *ngIf="!last"></mat-divider>
 
@@ -64,7 +64,7 @@
 			<mat-step>
 				<mat-card-title>
 					<ng-container *ngIf="localisation; else createForm">
-						Modification de {{ localisation.nom }}
+						Modification de {{ localisation.name }}
 					</ng-container>
 					<ng-template #createForm>
 						Ajout d'une localisation
