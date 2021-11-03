@@ -120,7 +120,7 @@ export class WorkFormComponent implements OnInit, OnDestroy {
     .subscribe(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')}))
   }
 
-  private reset() {
+  reset() {
     this.workFormS.reset();
     this.workFormS.work.next(null);
   }

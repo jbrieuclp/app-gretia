@@ -53,7 +53,6 @@
     <app-submit-btn
     	[disabled]="!form.valid"
     	[text]="travel?.id ? 'Modifier' : 'Ajouter'"
-    	[waiting]="waiting"
     	(click)="ajouter()"
     >
     	<mat-icon>done</mat-icon> <span>{{ travel?.id ? 'Modifier' : 'Ajouter' }}</span>
