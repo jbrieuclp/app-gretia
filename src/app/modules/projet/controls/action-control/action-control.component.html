@@ -6,22 +6,36 @@
 			strokeWidth="2"
 		>
 		</mat-spinner>
-		{{ label }}
+		{{ displayAll ? 'Toutes les actions' : 'Mes actions' }}
 	</mat-label>
+	<button 
+		*ngIf="!loading"
+		mat-icon-button 
+		matPrefix 
+		[matTooltip]="displayAll ? 'Afficher mes actions' : 'Afficher toutes les actions'"
+		(click)="displayAll = !displayAll"
+	>
+    <mat-icon>{{ displayAll ? 'groups' : 'person_outline' }}</mat-icon>
+  </button>
   <input 
 	  type="text" 
 	  placeholder="Rechercher une action" 
 	  matInput 
+	  #trigger
 	  [required]="required" 
 	  [formControl]="inputTerm" 
-	  [matAutocomplete]="auto">
+	  [matAutocomplete]="auto"
+	  (click)="onClick($event)"
+	>
   <mat-autocomplete 
   	#auto="matAutocomplete"
-  	[displayWith]="displayFn.bind(this)">
+  	[displayWith]="displayFn.bind(this)"
+  	(optionSelected)="onSelectOption($event.option.value)"
+  >
   	<mat-optgroup 
-  		*ngFor="let study of (studies | async)" 
+  		*ngFor="let study of (displayStudies | async)" 
   		label="{{ study.code }} {{ study.label }}">
-	    <mat-option *ngFor="let action of study.actions" [value]="action['@id']">
+	    <mat-option *ngFor="let action of getListActions(study)" [value]="action['@id']">
 	      <small>{{ action.category.label }}</small>
 	    </mat-option>
 	  </mat-optgroup>

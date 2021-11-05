@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
+import { MatAutocompleteTrigger } from "@angular/material";
 import { Observable, of, combineLatest, BehaviorSubject } from 'rxjs';
-import { filter, map, startWith, tap, mergeMap, distinctUntilChanged, pairwise } from 'rxjs/operators';
+import { filter, map, startWith, tap, distinctUntilChanged, debounceTime, skip } from 'rxjs/operators';
 
+import { AuthService } from '../../../../shared/auth/authentication.service';
 import { ActionsRepository } from '../../repository/actions.repository';
 import { Study, Action } from '../../repository/project.interface';
 
@@ -15,133 +17,119 @@ export class ActionControlComponent implements OnInit {
 
 	@Input() form: FormControl = new FormControl();
   @Input() required: boolean = false;
-  $actions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
-  filteredOptions: Observable<Study[]>;
+  get user() { return this.authService.getUser().getValue(); };
+  actions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
+  displayStudies: BehaviorSubject<Study[]> = new BehaviorSubject([]);
+  displayActions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
   loading: boolean = false;
-  label: string = 'Études';
+
   /* FormControl de l'element input de recherche
    * Il est utilisé pour tester la valeur cherchée et selectionnée et ne pas renvoyer dans form la valeur saisie
    **/
   inputTerm: FormControl = new FormControl(null);
+  @ViewChild(MatAutocompleteTrigger, { static: true }) trigger: MatAutocompleteTrigger;
 
-  get actions(): Action[] {
-  	return this.$actions.getValue();
-  }
-
-  get studies(): Observable<Study[]> {
-    return this.filteredOptions
-              .pipe(
-                filter((actions: Action[]) => actions === undefined),
-                map((actions: Action[]): Study[] => 
-                  actions.map(elem => {
-                            elem.study['actions'].push(elem);
-                            return elem.study
-                          })
-                         .filter((elem, index, self) => index === self.findIndex((t) => t['@id'] === elem['@id']))
-                )
-              );
-  }
+  _displayAll: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  get displayAll(): boolean {return this._displayAll.getValue(); };
+  set displayAll(value: boolean) { this._displayAll.next(value); };
 
   constructor(
-  	private actionR: ActionsRepository
-  ) { }
+    private authService: AuthService,
+  	private actionR: ActionsRepository,
+  ) {}
 
   ngOnInit() {  
+    
+    this.setObservable();
 
-  	this.loading = true;
-  	this.actionR.actions_me_for_select()
-  		.pipe(
-        map((data: any): Action[]=>data["hydra:member"]),
-        tap(() => this.loading = false),
-      )
-  		.subscribe((actions: Action[]) => this.$actions.next(actions));
-	  
-  	//Gère la selection de la valeur quand on est en mode edition
-	  this.$actions.asObservable()
-	  	.pipe(
-	  		distinctUntilChanged(),
-	  		filter((action: Action[]) => action.length > 0),
-	  		tap((action: Action[]) => this.$actions.next(action))
-	  	)
-	  	.subscribe((loc: Action[]) => {
-	  		if (this.form.value !== null && this.form.value['@id'] !== undefined) {
-		      this.form.setValue(this.form.value['@id']);
-		    }
-	  	})
+    this.getActions()
+      .subscribe((actions: Action[]) => this.actions.next(actions));
+  }
 
-    //affiche le texte en fonction de la valeur de la valeur form
-  	this.form.valueChanges
-      .pipe(
-        distinctUntilChanged(),
-        filter((val) => val !== null),
-      )
-  	  .subscribe(val => this.inputTerm.setValue(val));
+  private setObservable(): void {
 
-    //affiche le texte tapé ou le label d'une valeur selectionnée
-    combineLatest(
-      this.inputTerm.valueChanges
-        .pipe(
-          startWith(''),
-        ), 
-      this.$actions.asObservable()
-    )
-    .pipe(
-      map(([value, actions])=> {
-        const idx = actions.findIndex(action => this._removeAccent(action.study.label) === this._removeAccent(value) ||
-                                              action['@id'] === value);
-        return idx > -1 ? actions[idx] : null;
-      }),
-      tap((action: Action) => this.label = (action ? action.study.label : 'Study')),
-      map((action: Action) => action ? action['@id'] : null)
-    )
-    .subscribe(val=>this.form.setValue(val));
-	  
-
-  	//Gestion du filtre sur la liste de l'autocomplete
-  	this.filteredOptions = combineLatest(
-	  		this.inputTerm.valueChanges
-	  			.pipe(
-	  				startWith(''), 
-	  				filter(value=>!Number.isInteger(value) && value !== null)
-	  			), 
-	  		this.$actions.asObservable()
-	  	)
-      .pipe(
-        map(([term, actions]: [string, Action[]]) => this._filter(term)),
-        map((actions: Action[]): Study[] => this.transformToProjects(actions)),
-      );
-
+    //Set term input with form value
     this.form.valueChanges
       .pipe(
-        distinctUntilChanged(),
-        pairwise(),
-        filter(([prev, next]: [any, any]) => prev !== null && next === null),
+        map((val) => val === null ? '' : val),
       )
-      .subscribe(([value, actions])=> this.inputTerm.reset(''));
+      .subscribe((val) => this.inputTerm.setValue(val))
+
+    this.inputTerm.valueChanges
+      .pipe(
+        filter(term => term !== this.form.value)
+      )
+      .subscribe(() => this.form.setValue(null, { emitEvent: false }));
+  	
+    //Gestion du filtre sur la liste de l'autocomplete
+    //set display studies from filteres action list
+  	combineLatest(
+  		this.inputTerm.valueChanges
+  			.pipe(
+  				startWith(''), 
+          debounceTime(300),
+          distinctUntilChanged()
+  			), 
+  		this.actions.asObservable(),
+      this._displayAll.asObservable()
+        .pipe(
+          distinctUntilChanged()
+        ),
+  	)
+      .pipe(
+        map(([term, actions, displayAll]: [string, Action[], boolean]): Action[] => this._filter(term, actions, displayAll)),
+        tap((actions: Action[]) => this.displayActions.next(actions)),
+        map((actions: Action[]): Study[] => {
+          return actions.map(elem => elem.study)
+                        .filter((elem, index, self) =>index === self.findIndex((t) => t['@id'] === elem['@id']))
+        }),
+      )
+        .subscribe((studies: Study[]) => this.displayStudies.next(studies));
 
   }
 
-  private transformToProjects(actions: Action[]): Study[] {
-    const studies: Study[] = [];
-    actions.forEach((action) => {
-      const study_idx = studies.findIndex(study => study.id === action.study.id);
-      if (study_idx === -1) {
-        const study = action.study;
-        study['actions'] = [action];
-        studies.push(study);
-      } else {
-        studies[study_idx]['actions'].push(action);
-      }
-    });
-    return studies;
+  onSelectOption(value) {
+    this.form.setValue(value);
   }
 
-  private _filter(value: string): Action[] {
+  onClick(event: Event) {
+    this.trigger.openPanel();
+  }
+
+  private getActions(): Observable<Action[]> {
+    this.loading = true;
+    return this.actionR.actions_select()
+      .pipe(
+        map((data: any): Action[]=>data["hydra:member"]),
+        tap(() => this.loading = false),
+      );
+    
+  }
+
+  getListActions(study: Study) {
+    return this.displayActions.getValue().filter(elem => elem.study['@id'] === study['@id'])
+  }
+
+
+  private _filter(value: string, actions: Action[], displayAll: boolean = true): Action[] {
     const filterValue = this._removeAccent(value);
 
-    return this.actions.filter(action => this._removeAccent(action.category.label).includes(this._removeAccent(value)) || 
-                                      this._removeAccent(action.study.label).includes(this._removeAccent(value)) || 
-                                        this._removeAccent(action.study.code).includes(this._removeAccent(value)));
+    actions = actions.filter(action => 
+                    action['@id'] === filterValue || 
+                      this._removeAccent(action.category.label).includes(filterValue) || 
+                        this._removeAccent(action.study.label).includes(filterValue) || 
+                          this._removeAccent(action.study.code).includes(filterValue)
+                  );
+
+    if (displayAll === false) {
+      const user = this.user;
+      actions = actions.filter(action => (action.attributions.map(attr => attr.employee.person.compteId).includes(user.id) ||
+                                            action['@id'] === filterValue)
+      );
+    }
+
+    return actions;
+
   }
 
   private _removeAccent(value): string {
@@ -150,8 +138,8 @@ export class ActionControlComponent implements OnInit {
 
   displayFn(id) {
   	if (id) {
-  		const idx = this.actions.find(action => action['@id'] === id);
-  		return idx !== undefined ? idx.label : '';
+  		const elem = this.actions.getValue().find(action => action['@id'] === id);
+  		return elem !== undefined ? `${elem.category.label} - ${elem.study.label}` : '';
   	}
 	}
 

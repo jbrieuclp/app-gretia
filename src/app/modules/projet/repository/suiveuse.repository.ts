@@ -27,11 +27,11 @@ export class SuiveuseRepository extends ApiProjectRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
-  getMySynthese(options: any): Observable<any[]> {
-    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
+  getMySynthese(params: any): Observable<any[]> {
     const url = `${this.httpUrlBase}/works/me?${params}`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, HTTP_OPTIONS)
+      .get(url, http_options)
       .pipe(
         map((res: Work[]) => { 
           return res;
@@ -41,11 +41,12 @@ export class SuiveuseRepository extends ApiProjectRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
-  getMyRecup(options: any): Observable<Recup[]> {
-    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
+  getMyRecup(params: any): Observable<Recup[]> {
+    // const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
     const url = `${this.httpUrlBase}/recups/me?${params}`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, HTTP_OPTIONS)
+      .get(url, http_options)
       .pipe(
         map((res: Recup[]) => { 
           return res;
@@ -57,9 +58,9 @@ export class SuiveuseRepository extends ApiProjectRepository {
   /** GET personnes par ID (cd_nom) **/
   getMyParameters(params: any): Observable<any[]> {
     const url = `${this.httpUrlBase}/employee-parameters/me?${params}`;
-    HTTP_OPTIONS['params'] =  params;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, HTTP_OPTIONS)
+      .get(url, http_options)
       .pipe(
         map((res: any[]) => { 
           return res;
@@ -71,9 +72,9 @@ export class SuiveuseRepository extends ApiProjectRepository {
   /** GET list of Work **/
   calculateRecup(params = {}): Observable<any[]> {
     const url = `${this.httpUrlBase}/suiveuses/calculate`;
-    HTTP_OPTIONS['params'] =  params;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, HTTP_OPTIONS)
+      .get(url, http_options)
       .pipe(
         map((res: any[]) => res), 
         retry(3)
@@ -83,9 +84,9 @@ export class SuiveuseRepository extends ApiProjectRepository {
   /** GET list of Work **/
   cumulative(params = {}): Observable<any[]> {
     const url = `${this.httpUrlBase}/suiveuses/cumulative`;
-    HTTP_OPTIONS['params'] =  params;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, HTTP_OPTIONS)
+      .get(url, http_options)
       .pipe(
         map((res: any[]) => res), 
         retry(3)

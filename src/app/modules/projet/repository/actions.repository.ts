@@ -51,6 +51,18 @@ export class ActionsRepository extends ApiProjectRepository {
   }
 
   /** GET list of Localisation **/
+  actions(params = {}): Observable<Action[]> {
+    const url = `${this.httpUrlBase}/actions`;
+    const options = {params: params};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Action[]) => res), 
+        retry(3)
+      );
+  }
+
+  /** GET list of Localisation **/
   action(id, params = {}): Observable<Action> {
     const url = `${this.httpUrlBase}/actions/${id}`;
     const options = {params: params};

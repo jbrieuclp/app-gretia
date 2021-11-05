@@ -20,6 +20,6 @@ export class SuiveusesComponent {
     private suiveuseR: SuiveuseRepository,
   ) { 
     this.suiveuseR.calculateRecup()
-      .subscribe(res => console.log(res));
+      .subscribe(res => {return;});
   }
 }

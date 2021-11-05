@@ -24,3 +24,12 @@
   width: 80px;
   text-align: center;
 }
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-prefix .mat-icon-button {
+  height: 30px;
+  width: 30px;
+}
+
+::ng-deep .mat-form-field-prefix .mat-icon-button .mat-icon {
+  font-size: 22px !important;
+}

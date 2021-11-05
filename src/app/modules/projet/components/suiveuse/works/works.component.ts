@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angu
 import { distinctUntilChanged, switchMap, map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 
+import { GlobalsService } from '../../../../../shared/services/globals.service';
 import { SuiveuseService } from '../suiveuse.service';
 import { WorksRepository } from '../../../repository/works.repository';
 import { Work } from '../../../repository/project.interface';
@@ -20,7 +21,8 @@ import { ConfirmationDialogComponent } from '../../../../../shared/components/co
 export class WorksComponent implements OnInit {
 
 	get selectedDate() { return this.suiveuseS.selectedDate; }
-  get works(): Work[] { return this.workS.works; }
+  //liste des work à afficher : enlève celui en cours de modification si c'est le cas
+  get works(): Work[] { return this.workS.works.filter(elem => elem !== this.workFormS.work.getValue()); }
   get loading(): boolean { return this.workS.loading; }
 
   constructor(
@@ -29,6 +31,7 @@ export class WorksComponent implements OnInit {
     public dialog: MatDialog,
     private suiveuseR: SuiveuseRepository,
     private workFormS: WorkFormService,
+    private globalS: GlobalsService,
   ) { }
 
   ngOnInit() {
@@ -46,17 +49,19 @@ export class WorksComponent implements OnInit {
   }
 
   deleteWork(work) {
+    console.log(work);
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: `Confirmer la suppression de ${work.duration}h de travail sur "${work.action.label}" ?`
+      data: `Confirmer la suppression de ${work.duration}h de ${work.action.category.label} pour ${work.action.study.label}" ?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         this.suiveuseR.delete(work['@id'])
           .pipe(
-            // tap(() => this.projetS.snackBar("Tâche supprimée avec succès")),
+            tap(() => this.workS.refreshWorks(this.selectedDate.getValue())),
+            tap(() => this.suiveuseS.refreshDayData(work.workingDate)),
           )
-          .subscribe(() => this.workS.refreshWorks(this.selectedDate.getValue()));
+          .subscribe(() => this.globalS.snackBar({msg: "Travail supprimée"}));
       }
     }); 
   }

@@ -54,7 +54,6 @@ class DateWorkTime {
   }
 
   addRecup(recup: Recup) {
-    console.log(recup, recup.quantity, +recup.quantity);
     this.recup += +recup.quantity;
   }
 
@@ -101,11 +100,11 @@ export class SuiveuseService {
   		.subscribe((val: DateWorkTime[]) => this.workByDay = val);
   }
 
-  getDataByPeriod(start, end): Observable<any> {
+  getDataByPeriod(start, end, loader: boolean = true): Observable<any> {
     return forkJoin(
-      this.getSynthese({startAt: start, endAt: end}),
-      this.getRecup({startAt: start, endAt: end}),
-      this.getParameters({startAt: start, endAt: end, 'code[]': ['WEEKEND_HOURS_COEFF', 'NIGHT_HOUR_COEFF', 'TRAVEL_HOUR_COEFF']}),
+      this.getSynthese({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD')}, loader),
+      this.getRecup({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD')}, loader),
+      this.getParameters({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD'), 'code[]': ['WEEKEND_HOURS_COEFF', 'NIGHT_HOUR_COEFF', 'TRAVEL_HOUR_COEFF']}, loader),
     )
       .pipe(
         map(([works, recups, coeff]: [any, any, any]): [Work[], Recup[], any[]] => [
@@ -150,24 +149,45 @@ export class SuiveuseService {
     ;
   }
 
-  getSynthese(params): Observable<Work[]> {
-    this.loading = true;
+  refreshDayData(day): void {
+    this.getDataByPeriod(day, day, false)
+      .pipe(
+        map((val: DateWorkTime[]): DateWorkTime => val.shift()),
+        map((val: DateWorkTime): [DateWorkTime, number] => {
+          return [
+            val,
+            this.workByDay.findIndex(elem => moment(elem.date).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD'))
+          ]
+        }),
+        filter(([val, idx]: [DateWorkTime, number])  => idx !== -1),
+      )
+      .subscribe(([val, idx]: [DateWorkTime, number]) => this.workByDay[idx] = val)
+  }
+
+  getSynthese(params, loader: boolean): Observable<Work[]> {
+    if (loader) {
+      this.loading = true;
+    }
     return this.suiveuseR.getMySynthese(params)
       .pipe(
         tap(() => this.loading = false)
       );
   }  
 
-  getRecup(params): Observable<Work[]> {
-    this.loading = true;
+  getRecup(params, loader: boolean): Observable<Work[]> {
+    if (loader) {
+      this.loading = true;
+    }
     return this.suiveuseR.getMyRecup(params)
       .pipe(
         tap(() => this.loading = false)
       );
   }  
 
-  getParameters(params): Observable<any[]> {
-    this.loading = true;
+  getParameters(params, loader: boolean): Observable<any[]> {
+    if (loader) {
+      this.loading = true;
+    }
     return this.suiveuseR.getMyParameters(params)
       .pipe(
         tap(() => this.loading = false)

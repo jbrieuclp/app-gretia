@@ -107,15 +107,23 @@ export class WorkFormComponent implements OnInit, OnDestroy {
 
   save() {
     this.saving = true;
-    let data = Object.assign((this.work !== null ? this.work : {}), this.form.value);
+    let data = Object.assign({}, (this.work !== null ? this.work : {}), this.form.value);
     data.travels = this.travels;
 
     let api = (data['@id'] ? this.workR.patch(data['@id'], data) : this.workR.postMyWorks(data));
     api.pipe(
       tap(() => this.saving = false),
+      tap((work) => {
+        //update
+        if (this.work !== null) {
+          Object.assign(this.work, work);
+        } else {
+          this.workS.works.push(work);
+        }
+      }),
       tap(() => this.reset()),
-      tap(() => this.workS.refreshWorks(this.suiveuseS.selectedDate.getValue())),
-      //tap((work) => console.log(this.suiveuseS.addWorkToDay(work))),
+      // tap(() => this.workS.refreshWorks(this.suiveuseS.selectedDate.getValue())),
+      tap((work) => this.suiveuseS.refreshDayData(work.workingDate)),
 		)
     .subscribe(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')}))
   }
