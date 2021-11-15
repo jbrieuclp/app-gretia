@@ -1,0 +1,82 @@
+<ng-container *ngIf="study">
+<form [formGroup]="form">
+
+	<div class="row">
+	  <div class="col-md-4">
+			<app-projet-control-charge-type 
+				label="Catégorie" 
+				[form]="form.get('chargeType')"
+				required="true"
+			>
+			</app-projet-control-charge-type>
+		</div>
+
+	  <mat-form-field class="col-md-8">
+	  	<mat-label> Intitulé </mat-label>
+	    <input 
+	    	id="label"
+		    matInput 
+		    placeholder="Intitulé de l'action"  
+  			required
+  			formControlName="label">
+	  </mat-form-field>
+
+	</div>
+
+	<div>
+		<mat-form-field>
+			<mat-label> Description </mat-label>
+	    <textarea
+		    matInput 
+		    placeholder="Description rapide ou détaillée"  
+  			formControlName="description">
+  		</textarea> 
+	  </mat-form-field>
+	</div>
+
+	<div class="row">
+		<mat-form-field class="col-md-4">
+			<mat-label> Coût unitaire </mat-label>
+	    <input 
+	    	id="unitCostApplied"
+		    matInput 
+		    placeholder="En euro"
+		    type="number"
+		    min="0"
+  			required
+  			formControlName="unitCostApplied">
+  			<mat-icon matSuffix>euro_symbol</mat-icon>
+	  </mat-form-field>
+
+		<mat-form-field class="col-md-4">
+			<mat-label> Quantité prévue </mat-label>
+	    <input 
+	    	id="quantity"
+		    matInput 
+		    placeholder="Quantité prévue" 
+		    type="number"
+		    min="0"
+  			required
+  			formControlName="quantity">
+	  </mat-form-field>
+
+	</div>
+  <div class="btn-place">
+		<button 
+			*ngIf="!waiting"
+			type="button"
+			(click)="cancel()"
+			mat-raised-button 
+		>
+			Annuler
+		</button>
+  	<app-submit-btn
+    	[disabled]="form.invalid"
+    	[waiting]="saving"
+    	(click)="submit()"
+    >
+    	{{ charge === null ? 'Ajouter' : 'Modifier' }}
+    </app-submit-btn>
+  </div>
+</form>
+</ng-container>

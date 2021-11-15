@@ -7,13 +7,13 @@ import { ActionsRepository } from '../../repository/actions.repository';
 import { Charge } from '../../repository/project.interface';
 
 @Component({
-  selector: 'app-projet-control-charge',
+  selector: 'app-projet-control-objective',
   templateUrl: '../select-control/select.control.html'
 })
-export class ChargeControlComponent extends SelectControl implements OnInit {
+export class ObjectiveControlComponent extends SelectControl implements OnInit {
 
   categories: Charge[] = [];
-  label = "Montage";
+  label = "Objectif";
   optionDisplayFn = (option) => option.label;
   value = (option) => option['@id'];
 
@@ -24,6 +24,6 @@ export class ChargeControlComponent extends SelectControl implements OnInit {
   }
 
   ngOnInit() {
-
+    super.ngOnInit();
   }
 }

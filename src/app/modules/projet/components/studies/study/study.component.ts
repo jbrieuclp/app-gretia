@@ -16,14 +16,17 @@ export class StudyComponent implements OnInit, OnDestroy {
 
   tabs: any[] = [
     {url: "details", label: "Détails"}, 
-    {url: "montage", label: "Montage"}, 
-    {url: "actions", label: "Actions prévues"},
-    {url: "financement", label: "Financement"}, 
+    {url: "actions", label: "Actions"},
+    {url: "charges", label: "Matériels & frais"}, 
+    {url: "deadlines", label: "Échéances"}, 
+    {url: "financements", label: "Financements"}, 
+    {url: "bilan", label: "Bilan"}, 
   ];
   private _subscriptions: Subscription[] = [];
   get routeParams(): Observable <any> { return this.route.params; };
 
   get study(): Study { return this.studyS.study.getValue(); };
+  get loading(): boolean { return this.studyS.loadingStudy; };
 
   constructor(
   	private route: ActivatedRoute,

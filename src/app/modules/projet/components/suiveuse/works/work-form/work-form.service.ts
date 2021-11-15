@@ -34,6 +34,7 @@ export class WorkFormService {
     //FORM
     this.form = this.fb.group({
       action: [null, [Validators.required]],
+      category: [null, [Validators.required]],
       workingDate: [null, [Validators.required]],
       duration: [null, [Validators.required, Validators.pattern('^[0-9]+\.?[0-9]*$')]],
       detail: null,

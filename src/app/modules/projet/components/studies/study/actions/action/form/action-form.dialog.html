@@ -7,36 +7,40 @@
 </div>
 
 <form [formGroup]="form">
-	<div class="row">
 
-		<app-projet-control-charge
-			class="col-8"
-			[form]="form.get('charge')"
-			[options]="associatedCharges"
-			[loading]="loadingCharges"
+	<mat-form-field>
+		<mat-label>Intitulé</mat-label>
+    <input 
+	    matInput 
+	    id="label"
+	    placeholder="Intitulé explicite de l'action"  
+			formControlName="label"
 			required
+		>
+		<mat-error *ngIf="form.get('label').errors && form.get('label').errors.required">
+			Veuillez renseigner un intitulé
+		</mat-error>
+  </mat-form-field>
+
+	<div class="row">
+		<app-projet-control-objective
+			class="col-8"
+			[form]="form.get('objective')"
+			[options]="objectives"
+			[loading]="loading"
 		>	
-		</app-projet-control-charge>
-
-	</div>
-
-	<div class="row">
-		<app-projet-control-action-category 
-			class="col-8"
-			[form]="form.get('category')"
-			required
-		></app-projet-control-action-category>
+		</app-projet-control-objective>
 
 	  <mat-form-field class="col-md-4">
 	    <input 
 		    matInput 
 		    id="nbOfDays"
+		    min="0"
 		    type="number"
 		    placeholder="Nombre de jours"  
   			required
   			formControlName="nbOfDays"
   		>
-  		<mat-hint> Maximum {{ availableDays }} jours disponibles</mat-hint>
   		<mat-error *ngIf="form.get('nbOfDays').errors && form.get('nbOfDays').errors.required">
   			Veuillez renseigner un nombre de jours
   		</mat-error>
@@ -58,7 +62,7 @@
 		    ],
 	    	toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
 	  	}"
-	  	formControlName="objectif"
+	  	formControlName="description"
 	  	outputFormat="html"
 	  ></editor>
 <!-- 				<mat-form-field>
@@ -85,8 +89,8 @@
     </button>
     <app-submit-btn
     	[disabled]="form.invalid"
-    	[waiting]="waiting"
-    	(click)="submit()"
+    	[waiting]="saving"
+    	(onClick)="submit()"
     >
     	{{ action?.id ? 'Modifier' : 'Ajouter' }}
     </app-submit-btn>

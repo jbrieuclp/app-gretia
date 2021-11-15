@@ -16,7 +16,7 @@ import { ActionService } from '../action.service';
 })
 export class ActionAttributionsComponent implements OnInit {
 
-  get action(): Action { return this.actionS.action; }
+  get action(): Action { return this.actionS.action.getValue(); }
 
   loading: boolean = false;
 
@@ -59,9 +59,9 @@ export class ActionAttributionsComponent implements OnInit {
     dialogRef.afterClosed()
       .pipe(
         filter((res: boolean) => res),
-        switchMap(() => this.getAttributions(this.actionS.action.id))
+        switchMap(() => this.getAttributions(this.action.id))
       )
-      .subscribe((attributions: ActionAttribution[]) => this.actionS.action.attributions = attributions);
+      .subscribe((attributions: ActionAttribution[]) => this.action.attributions = attributions);
   }
 
   delete(attribution: ActionAttribution) {
@@ -73,9 +73,9 @@ export class ActionAttributionsComponent implements OnInit {
       .pipe(
         filter(close => close),
         switchMap(() => this.actionR.delete(attribution['@id'])),
-        switchMap(() => this.getAttributions(this.actionS.action.id))
+        switchMap(() => this.getAttributions(this.action.id))
       )
-      .subscribe((attributions: ActionAttribution[]) => this.actionS.action.attributions = attributions);
+      .subscribe((attributions: ActionAttribution[]) => this.action.attributions = attributions);
   }
 
 }

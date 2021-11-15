@@ -15,9 +15,18 @@
   </mat-select>
   <mat-spinner 
 		*ngIf="loading"
-		matSuffix
+		matPrefix
 		diameter="20"
 		strokeWidth="2"
 	>
 	</mat-spinner>
+	<button 
+		*ngIf="!required"
+		mat-icon-button 
+		matSuffix
+		(click)="onClear($event)"
+		matTooltip="Supprimer la selection"
+	>
+    <mat-icon>clear</mat-icon>
+  </button>
 </mat-form-field>

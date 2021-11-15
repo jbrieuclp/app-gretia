@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
+import { tap, switchMap, catchError, map, filter, distinctUntilChanged } from 'rxjs/operators';
 
 import { StudiesRepository } from '../../../../repository/studies.repository';
-import { Charge } from '../../../../repository/project.interface';
+import { Charge, Study } from '../../../../repository/project.interface';
 import { StudyService } from '../study.service';
 
 
 @Injectable()
-export class StudyMontagesService {
+export class StudyChargesService {
 
   public charges: BehaviorSubject<Charge[]> = new BehaviorSubject([]);
   public actionsRealCost: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -20,6 +20,21 @@ export class StudyMontagesService {
     private studyS: StudyService,
   ) { 
   	this.setObservables();
+  }
+
+  /**
+   * Initialise les observables pour la mise en place des actions automatiques
+   **/
+  private setObservables() {
+
+    //recuperation des info du study à partir de l'ID de l'URL
+    this.studyS.study.asObservable()
+      .pipe(
+        distinctUntilChanged(),
+        filter((study: Study) => study !== null),
+        switchMap((study: Study): Observable<Charge[]> => this.getCharges(study.id))
+      )
+      .subscribe((charges: Charge[]) => this.charges.next(charges));
   }
 
   getCharges(study_id): Observable<Charge[]> {
@@ -36,17 +51,5 @@ export class StudyMontagesService {
       )
   }
 
-  /**
-   * Initialise les observables pour la mise en place des actions automatiques
-   **/
-  private setObservables() {
-
-    //recuperation des info du study à partir de l'ID de l'URL
-    this.studyS.study_id.asObservable()
-      .pipe(
-        switchMap((id: number) => this.getCharges(id))
-      )
-      .subscribe((charges: Charge[]) => this.charges.next(charges));
-  }
 
 }

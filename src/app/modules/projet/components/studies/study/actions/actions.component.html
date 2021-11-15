@@ -1,66 +1,137 @@
-<h6> Liste des actions prévues dans le montage </h6>
+<h6> Objectifs et actions prévues </h6>
 <div class="row">
   <div class="col-md-4">
     <ng-container *ngIf="!loading; else loadingTemplate">
-      <div>
+      <div style="margin: 20px 0px;">
         <button 
-          (click)="openActionForm()"
-          type="button"
           mat-raised-button 
-          color="primary">
-          <mat-icon>add</mat-icon> Ajouter
-        </button>
-      </div>  
+          color="primary"
+          [matMenuTriggerFor]="menu"
+        ><mat-icon>add</mat-icon> Ajouter</button>
+        <mat-menu #menu="matMenu">
+          <button 
+            mat-menu-item
+            (click)="openObjectiveForm()"
+          >Objectif</button>
+          <button 
+            mat-menu-item
+            color="primary"
+            (click)="createAction()"
+          >Action</button>
+        </mat-menu>
+      </div> 
 
-      <mat-accordion multi="true">
-        <mat-expansion-panel 
-          *ngFor="let actionGroup of actionGroups"
-          expanded="true"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <h6> 
-                {{ actionGroup.label }} 
-                <small 
-                  *ngIf="actionGroup.quantity"
-                  class="text-muted"
-                >({{ actionGroup.quantity }} jours vendus)</small> 
-              </h6>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <table class="table table-hover">
-            <thead>
-              <tr class=""> 
-                <th> </th>
-                <th class="text-center"> jours prév </th>
-                <th class="text-center"> jours conso </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr 
-                *ngFor="let action of actionsFromGroup(actionGroup)"
-                [class.selected]="action.id === selectedId"
-                (click)="selectAction(action)"
-              >
-                <td> <span class="title">{{ action.category?.label }}</span> </td>
-                <td class="text-center"> {{ action.nbOfDays }} </td>
-                <td class="text-center"> {{ action.numberDaysDone }} </td>
-              </tr>
-            </tbody>
-          </table>
-        </mat-expansion-panel>
-      </mat-accordion>
-      
+      <!-- Tables for actions with objective -->
+      <ng-container *ngIf="objectives.length > 0; else noObjective">
+        <ng-container *ngFor="let objective of objectives">
+
+          <ng-container *ngTemplateOutlet="actionsTemplate;context:{objective: objective}"></ng-container>
+
+        </ng-container>
+      </ng-container>
+
+      <!-- Table for actions without objective -->
+      <ng-container *ngIf="actions.length > 0; else noAction">
+        <ng-container *ngIf="getObjectivesActions(null).length > 0">
+
+          <ng-container *ngTemplateOutlet="actionsTemplate;context:{objective: null}"></ng-container>
+
+        </ng-container>
+      </ng-container>
       
     </ng-container>
-    <ng-template #loadingTemplate>
-      <app-loader message="Chargement en cours"></app-loader>
-    </ng-template>
   </div>
   <div 
-    *ngIf="selectedId"
+    *ngIf="selectedAction !== null"
     class="col-md-8"
   >
     <app-projet-study-action></app-projet-study-action>
   </div>
 </div>
+    
+<ng-template #noObjective>
+  <div class="alert alert-primary" role="alert">
+    Aucun objectif n'est indiqué pour cette étude
+  </div>
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <app-loader message="Chargement en cours"></app-loader>
+</ng-template>
+
+<ng-template 
+  #actionsTemplate 
+  let-objective="objective"
+>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th [attr.colspan]="objective ? 4 : 5"> 
+          <ng-container *ngIf="objective !== null; else noObjectiveTitle"> 
+            {{ objective.code ? objective.code + ' - ' : '' }} {{ objective.label}} 
+          </ng-container>
+          <ng-template #noObjectiveTitle> Actions sans objectif associé </ng-template>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="getObjectivesActions(objective).length > 0; else noAction">
+        <tr>
+          <th> Intitulé </th>
+          <th class="text-center"> jours prév </th>
+          <th class="text-center"> jours conso </th>
+          <th class="text-center" colspan="2"></th>
+        </tr>
+        <tr 
+          *ngFor="let action of getObjectivesActions(objective)"
+          [class.selected]="action === selectedAction"
+          (click)="selectAction(action)"
+        >
+          <td> {{ action.label }}</td>
+          <td class="text-center"> {{ action.nbOfDays }} </td>
+          <td class="text-center"> {{ action.numberDaysDone }} </td>
+          <td class="text-center">
+            <button 
+              mat-icon-button 
+              color="primary"
+              type="button"
+              (click)="openActionForm()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button 
+              *ngIf="action.removable"
+              mat-icon-button 
+              color="warn"
+              type="button"
+              (click)="delete(action)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+          <td 
+            *ngIf="objective === null"
+            class="text-center"
+          >
+            <button 
+              mat-icon-button 
+              style="color: #000;"
+              type="button"
+              matTooltip="Assigner à un objectif"
+              (click)="assignObjective(action)"
+            >
+              <mat-icon>assignment_returned</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <ng-template #noAction>
+    <tr>
+      <th style="color: #555;"> <i> Aucune action dans cette catégorie pour le moment </i> </th>
+    </tr>
+  </ng-template>
+
+</ng-template>

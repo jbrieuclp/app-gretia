@@ -37,6 +37,11 @@ export class SelectControl extends AbstractControl implements OnInit, OnDestroy 
     }
   }
 
+  onClear(event) {
+    event.stopPropagation();
+    this.form.setValue(null);
+  }
+
   isDisabled(option): boolean {
     return this.optionsDisabled.findIndex(e => e['@id'] === option['@id']) !== -1;
   }

@@ -9,7 +9,9 @@ import * as moment from 'moment';
 export class AbstractControl implements OnInit, OnDestroy {
 
   @Input() form: FormControl;
-  @Input() required: boolean = false;
+  private _required: boolean = false;
+  @Input() set required(val: any) { this._required = (val.toLowerCase() === 'false' ? false : true); };
+  get required() { return this._required };
   @Input() appearance: string = 'legacy';
   loading: boolean = false;
   //options désactivées

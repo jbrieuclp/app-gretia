@@ -21,7 +21,7 @@ export class ActionPeriodsComponent implements OnInit, OnDestroy {
 	periods: BehaviorSubject<Week[]> = new BehaviorSubject([]);
 	_subscription: Subscription;
 
-	get action(): Action { return this.actionS.action; };
+	get action(): Action { return this.actionS.action.getValue(); };
 
 	/**
 	 *	Retourne un tableau d'années correspondant au periodes de l'action 
@@ -67,7 +67,7 @@ export class ActionPeriodsComponent implements OnInit, OnDestroy {
   			switchMap((periods) => this.save(periods)),
   			map((periods: Week[]) => this.periods.getValue())
   		)
-  		.subscribe((periods: Week[]) => this.actionS.action.periods = periods);
+  		.subscribe((periods: Week[]) => this.action.periods = periods);
   }
 
   onChange([checked, week]: [boolean, Week]): void {

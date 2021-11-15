@@ -18,6 +18,7 @@ export class ActionAttributionFormDialog implements OnInit {
 	attribution: ActionAttribution;
 	form: FormGroup;
 	waiting: boolean = false;
+  get action(): Action { return this.actionS.action.getValue(); };
 
 	@Output() onSubmit: EventEmitter<any> = new EventEmitter();
 
@@ -81,9 +82,9 @@ export class ActionAttributionFormDialog implements OnInit {
   }
 
   getMaxDay(): number {
-    let max = this.actionS.action.nbOfDays;
+    let max = this.action.nbOfDays;
 
-    (this.actionS.action).attributions.forEach(e => {
+    this.action.attributions.forEach(e => {
       if (this.attribution['@id'] !== e['@id']) {
         max -= e.nbOfDays;
       }

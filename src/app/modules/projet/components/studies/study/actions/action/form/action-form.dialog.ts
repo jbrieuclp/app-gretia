@@ -4,10 +4,9 @@ import { FormGroup, FormArray } from "@angular/forms";
 import { BehaviorSubject } from 'rxjs';;
 
 import { ActionFormService } from './action-form.service';
-import { StudyMontagesService } from '../../../montages/montages.service';
 import { ActionService } from '../action.service';
 import { StudyActionsService } from '../../actions.service';
-import { Study, Charge, Action } from '../../../../../../repository/project.interface';
+import { Study, Charge, Action, Objective } from '../../../../../../repository/project.interface';
 import { GlobalsService } from '../../../../../../../../shared/services/globals.service';
 
 @Component({
@@ -19,26 +18,19 @@ export class ActionFormDialog implements OnInit {
 
 	form: FormGroup;
   
-  get availableDays(): number { return this.actionFormS.availableDays; };
-
 	get action() {
-		return this.actionS.action;
+		return this.actionS.action.getValue();
 	}
-  get charges(): Charge[] {
-    return this.studyMontagesS.charges.getValue();
+  get objectives(): Objective[] {
+    return this.studyActionsS.objectives.getValue();
   }
 
-  get associatedCharges(): Charge[] {
-    return this.charges.filter(c => c.chargeType.chargeTypeRef.isPerDay === true);
-  }
-
-  get loadingCharges(): boolean { return this.studyMontagesS.loading; };
-  get waiting(): boolean { return this.actionFormS.waiting; };
+  get loading(): boolean { return this.studyActionsS.loading; };
+  get saving(): boolean { return this.actionFormS.waiting; };
 
   constructor(
     public dialogRef: MatDialogRef<ActionFormDialog>,
   	private actionFormS: ActionFormService,
-    private studyMontagesS: StudyMontagesService,
     private actionS: ActionService,
     private studyActionsS: StudyActionsService,
     private globalsS: GlobalsService
@@ -46,19 +38,17 @@ export class ActionFormDialog implements OnInit {
 
   ngOnInit() {
   	this.form = this.actionFormS.form;
-    this.actionFormS.patchForm();
   }
 
   submit() {
     this.actionFormS.submit()
-    .subscribe(
-        () => {this.dialogRef.close(true)},
+      .pipe()
+      .subscribe(
+        (res) => {this.dialogRef.close(true)},
         (err) => {
-          
           //this._commonService.translateToaster("error", "ErrorMessage");
         }
       );
-    ;
   }
 
   cancel() {

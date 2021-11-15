@@ -45,13 +45,14 @@ import { ActionCategoriesComponent } from './components/admin/admin-projet/actio
 import { ActionCategoryInfoComponent } from './components/admin/admin-projet/action-categories/action-category/info.component';
 import { ActionCategoryFormComponent } from './components/admin/admin-projet/action-categories/action-category/action-category-form.component';
 import { ActionCategoryControlComponent } from './controls/action-category-control/action-category-control.component';
-import { ChargeControlComponent } from './controls/charge-control/charge-control.component';
+import { ObjectiveControlComponent } from './controls/objective-control/objective-control.component';
 import { ChargeTypesComponent } from './components/admin/admin-projet/charge-type/charge-types.component';
 import { ChargeTypeInfoComponent } from './components/admin/admin-projet/charge-type/info/info.component';
 import { ChargeTypeRefFormComponent } from './components/admin/admin-projet/charge-type/form/charge-type-ref-form.component';
 import { ChargeTypeFormComponent } from './components/admin/admin-projet/charge-type/form/charge-type-form.component';
 
 //repository
+import { ApiProjectRepository } from './repository/api-project.repository';
 import { CategoryRepository } from './repository/category.repository';
 import { StudiesRepository } from './repository/studies.repository';
 import { OrganismRepository } from './repository/organism.repository';
@@ -79,6 +80,7 @@ import { ChargeTypeService } from './components/admin/admin-projet/charge-type/c
 import { StudiesService } from './components/studies/studies.service'
 import { StudyService } from './components/studies/study/study.service'
 import { ActionFormService } from './components/studies/study/actions/action/form/action-form.service'
+import { ObjectiveFormService } from './components/studies/study/actions/action/objective/objective-form.service'
 import { ActionCategoriesService } from './components/admin/admin-projet/action-categories/action-categories.service';
 import { ActionService } from './components/studies/study/actions/action/action.service';
 import { WorkService } from './components/suiveuse/works/work.service';
@@ -97,10 +99,10 @@ import { EmployeeControlComponent } from './controls/employee-control/employee-c
 import { FundingTypeControlComponent } from './controls/funding-type-control/funding-type-control.component';
 import { ChargeTypeControlComponent } from './controls/charge-type-control/charge-type-control.component';
 import { ActionFormDialog } from './components/studies/study/actions/action/form/action-form.dialog';
-import { ActionsChargesStudyComponent } from './components/studies/study/montages/actions-charges/actions-charges.component';
+// import { ActionsChargesStudyComponent } from './components/studies/study/charges/actions-charges/actions-charges.component';
 import { FinancementProjectComponent } from './components/studies/study/financement-disp/financement-disp.component';
 import { InfoChargeTypeFormDialog } from './components/admin/admin-projet/charge-type/info/info.component';
-import { ChargeFormDialog } from './components/studies/study/montages/charge-form.dialog';
+import { ChargeFormDialog } from './components/studies/study/charges/form/charge-form.dialog';
 import { ProjetAccueilComponent } from './components/accueil/accueil.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { ProjectFormDialog } from './components/projects/project/project-form/project-form.dialog';
@@ -114,11 +116,11 @@ import { ActionControlComponent } from './controls/action-control/action-control
 import { StudyComponent } from './components/studies/study/study.component';
 import { StudyDisplayComponent } from './components/studies/study/display/display.component';
 import { StudyActionsService } from './components/studies/study/actions/actions.service';
-import { StudyLocalisationsService } from './components/studies/study/localisations/localisations.service';
-import { StudyManagersService } from './components/studies/study/managers/managers.service';
-import { StudyLocalisationsComponent } from './components/studies/study/localisations/localisations.component';
-import { StudyManagersComponent } from './components/studies/study/managers/managers.component';
-import { StudyMontagesService } from './components/studies/study/montages/montages.service';
+import { StudyLocalisationsService } from './components/studies/study/display/localisations/localisations.service';
+import { StudyManagersService } from './components/studies/study/display/managers/managers.service';
+import { StudyLocalisationsComponent } from './components/studies/study/display/localisations/localisations.component';
+import { StudyManagersComponent } from './components/studies/study/display/managers/managers.component';
+import { StudyChargesService } from './components/studies/study/charges/charges.service';
 import { StudyFinancementService } from './components/studies/study/financement-disp/financement.service';
 import { ActionsComponent } from './components/studies/study/actions/actions.component';
 import { ActionAttributionFormDialog } from './components/studies/study/actions/action/attributions/attribution-form/attribution-form.dialog';
@@ -154,13 +156,17 @@ import { AbstractControl } from './controls/abstract.control';
 import { AutocompleteControl } from './controls/autocomplete-control/autocomplete.control';
 import { SelectControl } from './controls/select-control/select.control';
 import { ProjectTypeControlComponent } from './controls/project-type-control/project-type-control.component';
-import { StudyEquipmentsChargesComponent } from './components/studies/study/montages/equipments-charges/equipments-charges.component';
-import { MontagesStudyComponent } from './components/studies/study/montages/montages.component';
+import { StudyChargesComponent } from './components/studies/study/charges/charges.component';
+// import { MontagesStudyComponent } from './components/studies/study/charges/montages.component';
 import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
 import { TravelFormDialog } from './components/suiveuse/works/work-form/travel-form/travel-form.dialog';
 import { TimeControlComponent } from './controls/time-control/time-control.component';
 import { ProvScheduleComponent } from './components/plans-charges/plan-charges/prov-schedule/prov-schedule.component';
 import { SchedulEditorDialog } from './components/plans-charges/plan-charges/prov-schedule/schedul-editor/schedul-editor.dialog';
+import { ActionObjectiveFormDialog } from './components/studies/study/actions/action/objective/objective-form.dialog';
+import { ActionObjectiveAssignmentDialog } from './components/studies/study/actions/action/objective/objective-assignment.dialog';
+import { StudyResultsComponent } from './components/studies/study/results/results.component';
+import { StudyDeadlinesComponent } from './components/studies/study/deadlines/deadlines.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -219,8 +225,8 @@ export const MY_FORMATS = {
     ActionCategoriesComponent,
     ActionCategoryFormComponent,
     ActionCategoryControlComponent,
-    ChargeControlComponent,
-    ActionsChargesStudyComponent,
+    ObjectiveControlComponent,
+    // ActionsChargesStudyComponent,
     FinancementProjectComponent,
     ChargeTypesComponent,
     ChargeTypeInfoComponent,
@@ -277,14 +283,18 @@ export const MY_FORMATS = {
     AutocompleteControl,
     SelectControl,
     DailyCostFormDialog,
-    StudyEquipmentsChargesComponent,
-    MontagesStudyComponent,
+    StudyChargesComponent,
+    // MontagesStudyComponent,
     CumulSuiveusesComponent,
     TravelFormDialog,
     TimeControlComponent,
     ProvScheduleComponent,
     SchedulEditorDialog,
     ProjectTypeControlComponent,
+    ActionObjectiveFormDialog,
+    ActionObjectiveAssignmentDialog,
+    StudyResultsComponent,
+    StudyDeadlinesComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -302,12 +312,15 @@ export const MY_FORMATS = {
     DailyCostFormDialog,
     TravelFormDialog,
     SchedulEditorDialog,
+    ActionObjectiveFormDialog,
+    ActionObjectiveAssignmentDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
     {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
+    ApiProjectRepository,
     CategoryRepository,
     StudiesRepository,
     OrganismRepository,
@@ -339,7 +352,7 @@ export const MY_FORMATS = {
     WeeksService,
     ProjectService,
     StudyFinancementService,
-    StudyMontagesService,
+    StudyChargesService,
     StudyActionsService,
     StudyLocalisationsService,
     StudyManagersService,
@@ -349,6 +362,7 @@ export const MY_FORMATS = {
     SuiveuseRepository,
     WorkFormService,
     GlobalProjectService,
+    ObjectiveFormService,
   ]
 })
 export class ProjetModule { }

@@ -7,6 +7,15 @@
 	</div>
 
 	<div class="row">
+		<app-projet-control-action-category
+			class="col-sm-4"
+			[form]="form.get('category')"
+			required
+		>	
+		</app-projet-control-action-category>
+	</div>
+
+	<div class="row">
 		<div class="col-8">
 			<app-projet-time-control [form]="form.get('duration')"></app-projet-time-control>
 		</div>
@@ -27,49 +36,54 @@
 	</div>
 
 	<div>
-		<h6> Déplacements </h6>
+		<h6> Frais </h6>
 
-		<button 
-			mat-raised-button
-			matTooltip="Ajouter un déplacement"
-			(click)="addTravel()"
-		>
-			<mat-icon>directions_car</mat-icon> Ajouter
-		</button>
+		<div>
+			<button 
+				mat-raised-button
+				matTooltip="Ajouter un déplacement"
+				(click)="addTravel()"
+			>
+				<mat-icon>directions_car</mat-icon> Déplacement
+			</button>
 
-    <table 
-    *ngIf="travels.length"
-    	class="table table-sm travel-table"
-    >
-    	<thead>
-    		<tr>
-    			<th></th>
-    			<th> Trajet </th>
-    			<th> Durée (min) </th>
-    			<th> Distance (km) </th>
-    			<th> Conducteur </th>
-    		</tr>
-    	</thead>
-    	<tbody>
-    		<tr *ngFor="let travel of travels; index as i">
-    			<td> 
-    				<mat-icon 
-    					style="color: red;" 
-    					matTooltip="Supprimer la ligne"
-    				> delete_outline </mat-icon> 
-    				<mat-icon 
-    					style="color: #683ab7;" 
-    					matTooltip="Modifier la ligne"
-    					(click)="editTravel(i)"
-    				> mode_edit_outline </mat-icon> 
-    			</td>
-    			<td> {{ travel.travel }} </td>
-    			<td> {{ travel.duration }} </td>
-    			<td> {{ travel.distance }} </td>
-    			<td class="text-center"> {{ travel.carpool ? 'Oui' : 'Non' }} </td>
-    		</tr>
-    	</tbody>
-    </table>
+			<mat-checkbox> Frais de repas ? </mat-checkbox>
+
+			<mat-checkbox> Frais de nuit ? </mat-checkbox>
+		</div>
+
+		<div *ngIf="travels.length">
+	    <table class="table table-sm travel-table">
+	    	<thead>
+	    		<tr>
+	    			<th></th>
+	    			<th> Trajet </th>
+	    			<th> Durée (min) </th>
+	    			<th> Distance (km) </th>
+	    			<th> Conducteur </th>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    		<tr *ngFor="let travel of travels; index as i">
+	    			<td> 
+	    				<mat-icon 
+	    					style="color: red;" 
+	    					matTooltip="Supprimer la ligne"
+	    				> delete_outline </mat-icon> 
+	    				<mat-icon 
+	    					style="color: #683ab7;" 
+	    					matTooltip="Modifier la ligne"
+	    					(click)="editTravel(i)"
+	    				> mode_edit_outline </mat-icon> 
+	    			</td>
+	    			<td> {{ travel.travel }} </td>
+	    			<td> {{ travel.duration }} </td>
+	    			<td> {{ travel.distance }} </td>
+	    			<td class="text-center"> {{ travel.carpool ? 'Oui' : 'Non' }} </td>
+	    		</tr>
+	    	</tbody>
+	    </table>
+	  </div>
 	</div>
 
 	<mat-form-field>

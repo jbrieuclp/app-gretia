@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge } from './project.interface';
+import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective } from './project.interface';
 
 @Injectable()
 export class StudiesRepository extends ApiProjectRepository {
@@ -132,6 +132,18 @@ export class StudiesRepository extends ApiProjectRepository {
       .get(url, options)
       .pipe(
         map((res: Action[]) => res), 
+        retry(3)
+      );
+  }
+
+  /** GET list of Objective **/
+  study_objetives(id): Observable<Objective[]> {
+    const url = `${this.httpUrlBase}/studies/${id}/objectives`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Objective[]) => res), 
         retry(3)
       );
   }

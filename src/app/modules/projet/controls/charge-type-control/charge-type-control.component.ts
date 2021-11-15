@@ -1,65 +1,40 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from "@angular/forms";
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import * as moment from 'moment';
-
+import { SelectControl } from '../select-control/select.control';
 import { ChargeTypeRepository } from '../../repository/charge-type.repository';
-import { Study, ChargeType } from '../../repository/project.interface';
+import { ChargeType } from '../../repository/project.interface';
 
 @Component({
   selector: 'app-projet-control-charge-type',
-  templateUrl: './charge-type-control.component.html',
-  styleUrls: ['./charge-type-control.component.scss']
+  templateUrl: '../select-control/select.control.html'
 })
-export class ChargeTypeControlComponent implements OnInit {
+export class ChargeTypeControlComponent extends SelectControl implements OnInit {
 
-	@Input() form: FormControl;
-  @Input() dateFilter: Date;
-  @Input() studyFilter: BehaviorSubject<Study> = new BehaviorSubject(null);
-  @Input() label: string = 'Charge';
-  @Input() isPerDay: boolean = null;
-  
-  chargeTypes: ChargeType[] = [];
-  loading: boolean;
+  label = "Type de charge";
+  loading: boolean = false;
+  optionDisplayFn = (option) => option.label;
+  value = (option) => option['@id'];
 
   constructor(
-  	private chargeTypeR: ChargeTypeRepository
-  ) { }
-
-  ngOnInit() {
-    this.loading = true;
-
-    //pour charger la valeur à partir d'un objet (en mode edition)
-    if (this.form.value !== null && this.form.value['@id'] !== undefined) {
-      this.form.setValue(this.form.value['@id']);
-    }
-
-    this.studyFilter.asObservable()
-      .pipe(
-        switchMap((study: Study) => {
-          if (study === null) {
-            return this.chargeTypeR.chargeTypes({
-                      "applicationStart[before]": moment(this.dateFilter).format('yyyy-MM-DD'),
-                      "applicationEnd[after]": moment(this.dateFilter).format('yyyy-MM-DD')
-                    })
-          } else {
-            return this.chargeTypeR.chargeTypes({
-                      "applicationStart[before]": moment(this.dateFilter).format('yyyy-MM-DD'),
-                      "applicationEnd[after]": moment(this.dateFilter).format('yyyy-MM-DD'),
-                      "charges.study.id[]": study.id,
-                      "chargeTypeRef.isPerDay": true
-                    })
-          }
-        }),
-        map((data: any): ChargeType[]=>data["hydra:member"]),
-        map((chargeTypes:ChargeType[]): ChargeType[] => {
-          return chargeTypes.filter(c => this.isPerDay !== null ? c.chargeTypeRef.isPerDay === this.isPerDay : true)
-        }),
-        tap(() => this.loading = false)
-      )
-      .subscribe((chargeTypes:ChargeType[]) => this.chargeTypes = chargeTypes);
+    private chargeTypeR: ChargeTypeRepository
+  ) {
+    super();
   }
 
+  ngOnInit() {
+    super.ngOnInit();
+    this.getChargeTypes();
+  }
+
+  getChargeTypes() {
+    this.loading = true;
+    this.chargeTypeR.chargeTypes()
+      .pipe(
+        map((data: any): ChargeType[]=>data["hydra:member"]),
+        tap(() => this.loading = false)
+      )
+      .subscribe((chargeTypes:ChargeType[]) => this.options = chargeTypes);
+  }
 }

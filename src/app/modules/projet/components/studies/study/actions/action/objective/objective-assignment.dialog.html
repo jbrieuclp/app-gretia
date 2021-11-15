@@ -1,0 +1,24 @@
+<h6> Rattacher l'action à un objectif </h6>
+<app-projet-control-objective
+	[form]="objectiveForm"
+	[options]="objectives"
+	[loading]="loading"
+>	
+</app-projet-control-objective>
+
+<div>
+  <button 
+    mat-raised-button
+    type="button"
+    style="margin-right: 10px;"
+    (click)="cancel()">
+    Annuler
+  </button>
+  <app-submit-btn
+  	[disabled]="objectiveForm.invalid"
+  	[waiting]="saving"
+  	(onClick)="submit()"
+  >
+  	Assigner
+  </app-submit-btn>
+</div>

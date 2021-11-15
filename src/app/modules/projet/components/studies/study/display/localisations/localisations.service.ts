@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
+import { tap, switchMap, catchError, map, filter } from 'rxjs/operators';
 
-import { StudiesRepository } from '../../../../repository/studies.repository';
-import { Localisation } from '../../../../repository/project.interface';
-import { StudyService } from '../study.service';
+import { StudiesRepository } from '../../../../../repository/studies.repository';
+import { Localisation, Study } from '../../../../../repository/project.interface';
+import { StudyService } from '../../study.service';
 
 
 @Injectable()
@@ -21,6 +21,22 @@ export class StudyLocalisationsService {
   	this.setObservables();
   }
 
+  /**
+   * Initialise les observables pour la mise en place des actions automatiques
+   **/
+  private setObservables() {
+
+    //recuperation des info du study à partir de l'ID de l'URL
+    this.studyS.study.asObservable()
+      .pipe(
+        filter((study: Study) => study !== null),
+        switchMap((study: Study) => this.getLocalisations(study.id)),
+        tap((data: any) => this.totalItems = data["hydra:totalItems"]),
+        map((data: any): Localisation[]=>data["hydra:member"]),
+      )
+      .subscribe((localisations: Localisation[]) => this.localisations = localisations);
+  }
+
   getLocalisations(study_id): Observable<Localisation[]> {
     this.loading = true;
     return this.studyR.study_localisations(study_id)
@@ -33,19 +49,5 @@ export class StudyLocalisationsService {
       )
   }
 
-  /**
-   * Initialise les observables pour la mise en place des actions automatiques
-   **/
-  private setObservables() {
-
-    //recuperation des info du study à partir de l'ID de l'URL
-    this.studyS.study_id.asObservable()
-      .pipe(
-        switchMap((id: number) => this.getLocalisations(id)),
-        tap((data: any) => this.totalItems = data["hydra:totalItems"]),
-        map((data: any): Localisation[]=>data["hydra:member"]),
-      )
-      .subscribe((localisations: Localisation[]) => this.localisations = localisations);
-  }
 
 }

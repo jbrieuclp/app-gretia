@@ -116,7 +116,7 @@ export class ActionControlComponent implements OnInit {
 
     actions = actions.filter(action => 
                     action['@id'] === filterValue || 
-                      this._removeAccent(action.category.label).includes(filterValue) || 
+                      this._removeAccent(action.label).includes(filterValue) || 
                         this._removeAccent(action.study.label).includes(filterValue) || 
                           this._removeAccent(action.study.code).includes(filterValue)
                   );
@@ -139,7 +139,7 @@ export class ActionControlComponent implements OnInit {
   displayFn(id) {
   	if (id) {
   		const elem = this.actions.getValue().find(action => action['@id'] === id);
-  		return elem !== undefined ? `${elem.category.label} - ${elem.study.label}` : '';
+  		return elem !== undefined ? `${elem.label} - ${elem.study.label}` : '';
   	}
 	}
 

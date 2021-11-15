@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, forkJoin } from 'rxjs';
 import { tap, switchMap, catchError, map } from 'rxjs/operators';
 
 import { StudiesRepository } from '../../../../repository/studies.repository';
-import { Action, Charge } from '../../../../repository/project.interface';
+import { Action, Charge, Objective } from '../../../../repository/project.interface';
 import { StudyService } from '../study.service';
 
 
@@ -11,7 +11,9 @@ import { StudyService } from '../study.service';
 export class StudyActionsService {
 
   public actions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
-  public loading: boolean = false; //chargement du study
+  public objectives: BehaviorSubject<Objective[]> = new BehaviorSubject([]);
+  private _loading: boolean = false; //chargement du study
+  get loading(): boolean { return !(!this._loading && !this.studyS.loadingStudy); }; //chargement du study
 
   constructor(
     private studyR: StudiesRepository,
@@ -20,11 +22,47 @@ export class StudyActionsService {
   	this.setObservables();
   }
 
+  /**
+   * Initialise les observables pour la mise en place des actions automatiques
+   **/
+  private setObservables() {
+
+    //recuperation des info du study à partir de l'ID de l'URL
+    this.studyS.study_id.asObservable()
+      .pipe(
+        tap(() => this._loading = true),
+        switchMap((id: number) => {
+          return forkJoin(
+            this.getActions(id),
+            this.getObjectives(id)
+          );
+        }),
+        tap(() => this._loading = false),
+        map(([actions, objectives]: [Action[], Objective[]]) => {
+          return [actions, objectives];
+        })
+      )
+      .subscribe(([actions, objectives]: [Action[], Objective[]]) => {
+        this.actions.next(actions);
+        this.objectives.next(objectives);
+      });
+  }
+
   getActions(study_id): Observable<Action[]> {
-    this.loading = true;
     return this.studyR.study_actions(study_id)
       .pipe(
-        tap(() => this.loading = false),
+        map((data: any): Charge[]=>data["hydra:member"]),
+        tap((data: any)=>console.log(data)),
+        catchError(err => {
+            console.log('caught mapping error and rethrowing', err);
+            return throwError(err);
+        })
+      )
+  }
+
+  getObjectives(study_id): Observable<Action[]> {
+    return this.studyR.study_objetives(study_id)
+      .pipe(
         map((data: any): Charge[]=>data["hydra:member"]),
         catchError(err => {
             console.log('caught mapping error and rethrowing', err);
@@ -38,17 +76,5 @@ export class StudyActionsService {
       .subscribe((actions: Action[]) => this.actions.next(actions));
   }
 
-  /**
-   * Initialise les observables pour la mise en place des actions automatiques
-   **/
-  private setObservables() {
-
-    //recuperation des info du study à partir de l'ID de l'URL
-    this.studyS.study_id.asObservable()
-      .pipe(
-        switchMap((id: number) => this.getActions(id))
-      )
-      .subscribe((actions: Action[]) => this.actions.next(actions));
-  }
 
 }

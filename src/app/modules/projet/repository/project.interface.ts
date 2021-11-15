@@ -3,10 +3,9 @@ export interface Action {
   "@type"?: string;
   "id"?: number;
   "study"?: Study;
-  "category"?: any;
-  "charge"?: any;
+  "objective"?: any;
   "label"?: string;
-  "objectif"?: string;
+  "description"?: string;
   "nbOfDays"?: number;
   "numberDaysDone"?: number;
   "isClose"?: boolean;
@@ -57,8 +56,7 @@ export interface Charge {
   "quantity"?: number;
   "quantityUsed"?: number;
   "cost"?: number;
-  "autofunding"?: boolean;
-  "study"?: Study;
+  "study"?: any;
   "chargeType"?: ChargeType;
   "actions"?: Action[];
   "createdAt"?: Date;
@@ -71,10 +69,11 @@ export interface ChargeType {
   "@id"?: string;
   "@type"?: string;
   "id"?: number;
-  "chargeTypeRef"?: ChargeTypeRef;
-  "applicationStart"?: Date;
-  "applicationEnd"?: Date;
+  "label"?: string;
+  "description"?: string;
   "unitCost"?: number;
+  "orderBy"?: number;
+  "charges"?: any;
   "createdAt"?: Date;
   "createdBy"?: any;
   "updatedAt"?: Date;
@@ -208,6 +207,16 @@ export interface Localisation {
   "updatedBy"?: any;
 }
 
+export interface Objective {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "code"?: string;
+  "label"?: string;
+  "actions"?: any[];
+  "study"?: any;
+};
+
 export interface Organism {
   "@id"?: string;
   "@type"?: string;
@@ -312,6 +321,7 @@ export interface Study {
   "fundings"?: StudyFunding[];
   "parent"?: Study;
   "charges"?: Charge[];
+  "objectives"?: any[];
   "childrens"?: Study[];
   "type"?: string;
   "cost"?: number;

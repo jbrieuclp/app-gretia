@@ -1,10 +1,10 @@
-.table tbody tr {
+.table tbody tr:not(:nth-child(1)) {
   cursor: pointer;
   opacity: 0.8;
   transition: box-shadow .25s ease,background-color .25s ease;
 }
 
-.table tbody tr:hover {
+.table tbody tr:not(:nth-child(1)):hover {
   opacity: 1;
   transition: opacity .25s ease-in-out;
   -moz-transition: opacity .25s ease-in-out;
@@ -19,13 +19,8 @@
 
 .table tbody tr.selected {
   opacity: 1;
-  background-color: #673ab7;
+  background-color: #ededed;
 }
-
-.table tr.selected td {
-  color: #fff;
-}
-
   
 .action-group {
   margin: 0;
@@ -107,4 +102,46 @@
   -ms-grid-column: 3;
   grid-area: label;
   text-transform: uppercase;
+}
+
+.table tbody tr th {
+  padding: 0.3rem 0.75rem;
+  font-weight: 400;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1), {
+  width: auto;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2), {
+  width: 90px;
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3), {
+  width: 100px;
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4), {
+  width: 70px;
+  padding: 0.75rem 5px;
+}
+
+.table th:nth-child(5),
+.table td:nth-child(5), {
+  width: 60px;
+}
+
+
+.table button {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.table td button:not(:nth-child(1)) {
+  margin-left: 5px;
 }

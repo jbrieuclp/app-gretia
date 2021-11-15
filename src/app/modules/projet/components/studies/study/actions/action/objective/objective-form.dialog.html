@@ -1,0 +1,46 @@
+<form [formGroup]="form">
+	<div class="row">
+		<mat-form-field class="col-sm-3">
+			<mat-label>Code</mat-label>
+	    <input 
+		    matInput 
+		    id="code"
+		    placeholder="Code"  
+				formControlName="code"
+			>
+	  </mat-form-field>
+
+	  <mat-form-field class="col-sm-9">
+			<mat-label>Intitulé</mat-label>
+	    <input 
+		    matInput 
+		    id="label"
+		    placeholder="Intitulé explicite de l'objectif"  
+				formControlName="label"
+				required
+			>
+			<mat-error *ngIf="form.get('label').errors && form.get('label').errors.required">
+				Veuillez renseigner un intitulé
+			</mat-error>
+	  </mat-form-field>
+	</div>
+
+	
+
+	<div>
+    <button 
+      mat-raised-button
+      type="button"
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="form.invalid"
+    	[waiting]="waiting"
+    	(onClick)="submit()"
+    >
+    	{{ objective?.id ? 'Modifier' : 'Ajouter' }}
+    </app-submit-btn>
+  </div>
+</form>

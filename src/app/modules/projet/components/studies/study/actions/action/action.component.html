@@ -1,17 +1,7 @@
 <mat-card>
   <ng-container *ngIf="!loading; else loadingTemplate">
     <ng-container *ngIf="action">
-      <button 
-        class="float-right"
-        mat-stroked-button
-        color="primary"
-        (click)="openActionForm(action)"
-        matTooltip="Modifier la tâche"
-      >
-        <mat-icon>edit</mat-icon> Éditer
-      </button>
-
-      <mat-card-title> <h5> {{ action.category.label }} </h5> </mat-card-title>
+      <mat-card-title> <h5> {{ action?.category?.label }} </h5> </mat-card-title>
       <mat-card-subtitle> {{ action?.charge?.label || 'Non hors montage' }}</mat-card-subtitle>
 
       <mat-card-content>
@@ -29,21 +19,6 @@
         <app-projects-study-action-periods></app-projects-study-action-periods>
       </mat-card-content>
     
-    <!-- <mat-tab-group [dynamicHeight]="true">
-      <mat-tab> 
-        <ng-template mat-tab-label> Attribution du temps </ng-template> 
-        <ng-template matTabContent>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab> 
-        <ng-template mat-tab-label> Temps d'action </ng-template> 
-        <ng-template matTabContent>
-          <app-projects-study-action-periods [action]="action"></app-projects-study-action-periods>
-        </ng-template>
-      </mat-tab>
-
-    </mat-tab-group> -->
     </ng-container>
   </ng-container>
   <ng-template #loadingTemplate>

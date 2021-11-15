@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { filter } from 'rxjs/operators';
+import { Component } from '@angular/core';
 
 import { ActionService } from './action.service';
 import { Action } from '../../../../../repository/project.interface';
-import { ActionFormDialog } from '../action/form/action-form.dialog';
 
 @Component({
   selector: 'app-projet-study-action',
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.scss']
 })
-export class ActionComponent implements OnInit {
+export class ActionComponent {
 
   get action() { return this.actionS.action; }
   
@@ -19,26 +16,5 @@ export class ActionComponent implements OnInit {
 
   constructor(
     private actionS: ActionService,
-    public dialog: MatDialog,
   ) { }
-
-  ngOnInit() {
-  }
-
-  openActionForm(action: Action = null) {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.width = '750px';
-    dialogConfig.position = {top: '70px'};
-    dialogConfig.disableClose = true;
-
-    const dialogRef = this.dialog.open(ActionFormDialog, dialogConfig);
-
-    dialogRef.afterClosed()
-      .pipe(
-        filter((res: boolean) => res)
-      )
-      .subscribe((actions) => {console.log(this.action)}/*this.projetS.refreshCharges()*/);
-  }
-
 }

@@ -3,14 +3,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray, AbstractControl } from "@angular/forms";
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, switchMap, map, tap, filter } from 'rxjs/operators';
-import { StudiesRepository } from '../../../../repository/studies.repository';
-import { Study, Charge, ChargeType, ProjectType } from '../../../../repository/project.interface';
-import { ChargeTypeRepository } from '../../../../repository/charge-type.repository';
-import { ProjectsRepository } from '../../../../repository/projects.repository';
-import { StudyService } from '../study.service';
+
+import { StudiesRepository } from '../../../../../repository/studies.repository';
+import { Study, Charge, ChargeType, ProjectType } from '../../../../../repository/project.interface';
+import { ChargeTypeRepository } from '../../../../../repository/charge-type.repository';
+import { StudyService } from '../../study.service';
+import { StudyChargesService } from '../charges.service';
 
 @Component({
-  selector: 'app-projet-study-display-charge-form',
+  selector: 'app-projet-study-charge-form',
   templateUrl: './charge-form.dialog.html',
   styleUrls: ['./charge-form.dialog.scss']
 })
@@ -19,10 +20,10 @@ export class ChargeFormDialog implements OnInit {
 	public form: FormGroup;
   charge: Charge = null;
   formParam: any = {};
-  waiting: boolean = false;
+  saving: boolean = false;
 
 	get study(){ return this.studyS.study.getValue(); }
-  get project(){ return this.studyS.study.getValue(); }
+  get charges(){ return this.studyChargesS.charges.getValue(); }
 
   constructor(
     public dialogRef: MatDialogRef<ChargeFormDialog>,
@@ -31,7 +32,7 @@ export class ChargeFormDialog implements OnInit {
   	private studyS: StudyService,
   	private chargeTypeR: ChargeTypeRepository,
   	private studyR: StudiesRepository,
-    private projectsR: ProjectsRepository,
+    private studyChargesS: StudyChargesService,
   ) {
     this.charge = data.charge;
     this.formParam = data.formParam;
@@ -46,7 +47,7 @@ export class ChargeFormDialog implements OnInit {
     return {
       unitCostApplied: 1,
       quantity: 1,
-      autofunding: false,
+      study: this.study['@id'],
     };
   }
 
@@ -58,34 +59,16 @@ export class ChargeFormDialog implements OnInit {
       unitCostApplied: [null, Validators.required],
       quantity: [null, Validators.required],
       chargeType: [null, Validators.required],
-      // autofunding: [null, Validators.required],
       study: [null, Validators.required],
     });
 
-    if (this.charge !== null) {
-      this.form.patchValue(this.charge);
-    } else {
-      this.form.patchValue(this.initialValues);
-    }
+    this.form.patchValue(this.charge !== null ? this.charge : this.initialValues);
   }
 
   /**
    * Initialise les observables pour la mise en place des actions automatiques
    **/
   private setObservables() {
-
-  	this.studyS.study.asObservable()
-  		.pipe(
-  			tap(() => this.form.get('study').setValue(null)),
-  			filter((study: Study) => study !== null),
-        tap((study: Study) => {
-          if (this.charge === null && this.formParam.isPerDay) {
-            this.form.get('unitCostApplied').setValue(study.dailyCost);
-          }
-        })
-  		)
-  		.subscribe((study: Study) => this.form.get('study').setValue(study['@id']));
-
   	this.form.get('chargeType').valueChanges
   		.pipe(
         filter(() => this.formParam.isPerDay === false),
@@ -103,36 +86,29 @@ export class ChargeFormDialog implements OnInit {
       return;
     }
 
-    this.waiting = true;
+    this.saving = true;
     let api;
 
     if (this.charge === null) {
       //create
-      api = this.studyR
-        .createCharge(this.form.value)
+      api = this.studyR.createCharge(this.form.value)
         .pipe(
-        	tap((): void => {
-            this.form.reset(this.initialValues);
-        	})
+        	tap((charge: Charge) => this.charges.push(charge))
         );
     } else {
       //update
-      console.log(this.form.value)
-      api = this.studyR
-        .updateCharge(this.charge.id, this.form.value)
+      api = this.studyR.patch(this.charge['@id'], this.form.value)
         .pipe(
-          tap((): void => {
-            this.form.reset(this.initialValues);
-          })
+          tap((charge: Charge) => Object.assign(this.charge, charge))
         );
     }
 
     api
       .pipe(
-        tap(()=>this.waiting = false)
+        tap(()=>this.saving = false)
       )
       .subscribe(
-          (charge: Charge) => this.dialogRef.close(charge),
+          (charge: Charge) => this.cancel(),
           (err) => {
             //this._commonService.translateToaster("error", "ErrorMessage");
           }

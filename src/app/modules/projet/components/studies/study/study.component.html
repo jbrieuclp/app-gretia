@@ -7,31 +7,38 @@
 </a>
 
 <mat-card>
-	<mat-card-title>
-		<h5> {{ study?.label }} </h5>
-	</mat-card-title>
+	<ng-container *ngIf="!loading; else loadingTemplate">
+		<mat-card-title>
+			<h5> <span style="color: #aaa;">Étude #</span>{{ study.code }} - {{ study.label }} </h5>
+		</mat-card-title>
 
-	<mat-card-content>
+		<mat-card-content>
 
-		<nav mat-tab-nav-bar *ngIf="(routeParams|async).study">
-		  <a 
-		  	mat-tab-link 
-		  	*ngFor="let tab of tabs; let index = index;"
-		  	[routerLink]="['/projet/etudes', (route.params|async).study, tab.url]"
-		  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
-		  > {{ tab.label }} </a>
-		</nav>
+			<nav mat-tab-nav-bar *ngIf="(routeParams|async).study">
+			  <a 
+			  	mat-tab-link 
+			  	*ngFor="let tab of tabs; let index = index;"
+			  	[routerLink]="['/projet/etudes', (route.params|async).study, tab.url]"
+			  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
+			  > {{ tab.label }} </a>
+			</nav>
 
-		<div style="padding: 10px 15px 5px 15px;">
-			<ng-container [ngSwitch]="(routeParams|async).onglet">
+			<div style="padding: 10px 15px 5px 15px;">
+				<ng-container [ngSwitch]="(routeParams|async).onglet">
 
-				<app-projet-study-display *ngSwitchCase="''"></app-projet-study-display>
-				<app-projet-study-display *ngSwitchCase="'details'"></app-projet-study-display>
-				<app-projet-study-financement *ngSwitchCase="'financement'"></app-projet-study-financement>
-				<app-project-study-montages *ngSwitchCase="'montage'"></app-project-study-montages>
-				<app-projet-study-actions *ngSwitchCase="'actions'"></app-projet-study-actions>
+					<app-projet-study-display *ngSwitchCase="''"></app-projet-study-display>
+					<app-projet-study-display *ngSwitchCase="'details'"></app-projet-study-display>
+					<app-projet-study-financement *ngSwitchCase="'financements'"></app-projet-study-financement>
+					<app-project-study-charges *ngSwitchCase="'charges'"></app-project-study-charges>
+					<app-projet-study-actions *ngSwitchCase="'actions'"></app-projet-study-actions>
+					<app-project-study-results *ngSwitchCase="'bilan'"></app-project-study-results>
+					<app-project-study-deadlines *ngSwitchCase="'deadlines'"></app-project-study-deadlines>
 
-			</ng-container>
-		</div>
-	</mat-card-content>
+				</ng-container>
+			</div>
+		</mat-card-content>
+	</ng-container>
+	<ng-template #loadingTemplate>
+		<app-loader message="Chargement en cours"></app-loader>
+	</ng-template>
 </mat-card>

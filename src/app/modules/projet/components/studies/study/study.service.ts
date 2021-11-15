@@ -11,7 +11,7 @@ import { Employee, Action, Study, Charge, Project } from '../../../repository/pr
 @Injectable()
 export class StudyService {
 
-	public  study_id: BehaviorSubject<number> = new BehaviorSubject(null);
+	public study_id: BehaviorSubject<number> = new BehaviorSubject(null);
 
   public study: BehaviorSubject<Study> = new BehaviorSubject(null);
   public project: BehaviorSubject<Project> = new BehaviorSubject(null);
@@ -89,14 +89,6 @@ export class StudyService {
       )
       .subscribe((study: Study) => this.study.next(study));
 
-    this.study_id.asObservable()
-      .pipe(
-        filter((id) => id !== null),
-        distinctUntilChanged(),
-        filter((id) => this.study.getValue() === null || id !== this.study.getValue().id),
-        switchMap((id: number) => this.getStudy(id)),
-      )
-      .subscribe((study: Study) => this.study.next(study));
 
   //   this.form.get('dateDebut').valueChanges
   //     .subscribe(() => this.form.get('studyType').updateValueAndValidity())

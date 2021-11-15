@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
+import { tap, switchMap, catchError, map, filter } from 'rxjs/operators';
 
-import { StudiesRepository } from '../../../../repository/studies.repository';
-import { Employee } from '../../../../repository/project.interface';
-import { StudyService } from '../study.service';
+import { StudiesRepository } from '../../../../../repository/studies.repository';
+import { Employee, Study } from '../../../../../repository/project.interface';
+import { StudyService } from '../../study.service';
 
 
 @Injectable()
@@ -20,10 +20,26 @@ export class StudyManagersService {
   ) { 
   	this.setObservables();
   }
+  
+  /**
+   * Initialise les observables pour la mise en place des actions automatiques
+   **/
+  private setObservables() {
 
-  getResponsables(project_id): Observable<Employee[]> {
+    //recuperation des info du study à partir de l'ID de l'URL
+    this.studyS.study.asObservable()
+      .pipe(
+        filter((study: Study) => study !== null),
+        switchMap((study: Study) => this.getResponsables(study.id)),
+        tap((data: any) => this.totalItems = data["hydra:totalItems"]),
+        map((data: any): Employee[]=>data["hydra:member"]),
+      )
+      .subscribe((managers: Employee[]) => this.managers = managers);
+  }
+
+  getResponsables(study_id): Observable<Employee[]> {
     this.loading = true;
-    return this.studyR.study_managers(project_id)
+    return this.studyR.study_managers(study_id)
       .pipe(
         tap(() => this.loading = false),
         catchError(err => {
@@ -33,19 +49,5 @@ export class StudyManagersService {
       )
   }
 
-  /**
-   * Initialise les observables pour la mise en place des actions automatiques
-   **/
-  private setObservables() {
-
-    //recuperation des info du study à partir de l'ID de l'URL
-    this.studyS.study_id.asObservable()
-      .pipe(
-        switchMap((id: number) => this.getResponsables(id)),
-        tap((data: any) => this.totalItems = data["hydra:totalItems"]),
-        map((data: any): Employee[]=>data["hydra:member"]),
-      )
-      .subscribe((managers: Employee[]) => this.managers = managers);
-  }
 
 }
