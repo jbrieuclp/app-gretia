@@ -40,7 +40,7 @@
 						</button>
 					</td>
 					<td>
-						<div>{{ work.action.category.label || '-' }}</div>
+						<div>{{ work.action?.category?.label || '-' }}</div>
 						<div><i>{{ work.action.study.label || '-' }}</i></div>
 					</td>
 					<td>{{ displayDuration(work.duration) }}</td>

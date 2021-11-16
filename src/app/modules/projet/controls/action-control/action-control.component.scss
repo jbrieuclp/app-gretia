@@ -3,3 +3,8 @@
   margin-right: 10px;
   vertical-align: -3px;
 }
+
+::ng-deep .mat-selected {
+  background: rgba(0,0,0,.12) !important;
+  color: #673ab7 !important;
+}

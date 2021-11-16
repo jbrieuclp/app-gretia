@@ -1,4 +1,16 @@
 <h5> {{ travel?.id ? 'Modifier' : 'Ajouter' }} un déplacement </h5>
+
+<div 
+	*ngIf="chargeTypeLoading"
+	class="alert alert-primary" 
+>
+  <mat-spinner 
+		diameter="25"
+		strokeWidth="2">
+	</mat-spinner>
+	<span> Chargement d'informations complémentaires </span>
+</div>
+
 <form 
 	[formGroup]="form"
 	[style.fontSize.px]="14"
@@ -20,7 +32,19 @@
 	</div>
 
 	<div class="row">
-		<mat-form-field class="col-sm-4">
+		<div class="col-sm-6">
+			<mat-slide-toggle 
+				style="margin: 20px 0px;"
+				color="primary"
+				[checked]="iWasDriving"
+				(change)="onSliderChange($event.checked)"
+			> J'étais conducteur <small>(Ajoute le calcul des frais)</small> </mat-slide-toggle>
+		</div>
+
+		<mat-form-field 
+			class="col-sm-6 collapsible"
+			[@collapse]="iWasDriving"
+		>
 			<mat-label> Distance </mat-label>
 		  <input 
 		  	id="distance"
@@ -29,18 +53,10 @@
 		    placeholder="En kilomètres"
 		    autocomplete="off"
 		    formControlName="distance"
+		    [required]="iWasDriving"
 		  >
 		</mat-form-field>
 
-		<div class="col-sm-4">
-			<mat-checkbox
-		  	color="primary"
-		    formControlName="carpool"
-		  >
-		  	Covoiturage
-		  	<div>(Ne conduisait pas)</div>
-		  </mat-checkbox>
-		</div>
 	</div>
 
 	<div style="margin-top: 10px;">
@@ -53,7 +69,7 @@
     <app-submit-btn
     	[disabled]="!form.valid"
     	[text]="travel?.id ? 'Modifier' : 'Ajouter'"
-    	(click)="ajouter()"
+    	(onClick)="ajouter()"
     >
     	<mat-icon>done</mat-icon> <span>{{ travel?.id ? 'Modifier' : 'Ajouter' }}</span>
     </app-submit-btn>

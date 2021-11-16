@@ -90,6 +90,7 @@ import { ProjectFundersService } from './components/projects/project/funders/fun
 import { ProjectSignatoriesService } from './components/projects/project/signatories/signatories.service';
 import { ProjectStudiesFundingsService } from './components/projects/project/studies-fundings/studies-fundings.service';
 import { WorkFormService } from './components/suiveuse/works/work-form/work-form.service';
+import { ExpenseFormService } from './components/suiveuse/works/work-form/expense-form/expense-form.service';
 import { GlobalProjectService } from './components/global-project.service';
 
 //dialog
@@ -100,7 +101,7 @@ import { FundingTypeControlComponent } from './controls/funding-type-control/fun
 import { ChargeTypeControlComponent } from './controls/charge-type-control/charge-type-control.component';
 import { ActionFormDialog } from './components/studies/study/actions/action/form/action-form.dialog';
 // import { ActionsChargesStudyComponent } from './components/studies/study/charges/actions-charges/actions-charges.component';
-import { FinancementProjectComponent } from './components/studies/study/financement-disp/financement-disp.component';
+import { StudyFundingsComponent } from './components/studies/study/fundings/fundings.component';
 import { InfoChargeTypeFormDialog } from './components/admin/admin-projet/charge-type/info/info.component';
 import { ChargeFormDialog } from './components/studies/study/charges/form/charge-form.dialog';
 import { ProjetAccueilComponent } from './components/accueil/accueil.component';
@@ -121,7 +122,7 @@ import { StudyManagersService } from './components/studies/study/display/manager
 import { StudyLocalisationsComponent } from './components/studies/study/display/localisations/localisations.component';
 import { StudyManagersComponent } from './components/studies/study/display/managers/managers.component';
 import { StudyChargesService } from './components/studies/study/charges/charges.service';
-import { StudyFinancementService } from './components/studies/study/financement-disp/financement.service';
+import { StudyFundingsService } from './components/studies/study/fundings/fundings.service';
 import { ActionsComponent } from './components/studies/study/actions/actions.component';
 import { ActionAttributionFormDialog } from './components/studies/study/actions/action/attributions/attribution-form/attribution-form.dialog';
 import { ActionAttributionsComponent } from './components/studies/study/actions/action/attributions/attributions.component';
@@ -167,6 +168,10 @@ import { ActionObjectiveFormDialog } from './components/studies/study/actions/ac
 import { ActionObjectiveAssignmentDialog } from './components/studies/study/actions/action/objective/objective-assignment.dialog';
 import { StudyResultsComponent } from './components/studies/study/results/results.component';
 import { StudyDeadlinesComponent } from './components/studies/study/deadlines/deadlines.component';
+import { StudyDeadlinesService } from './components/studies/study/deadlines/deadlines.service';
+import { StudyDeadlineFormDialog } from './components/studies/study/deadlines/form/deadline-form.dialog';
+import { DeadlineTypeControlComponent } from './controls/deadline-type-control/deadline-type-control.component';
+import { WorkExpenseFormDialog } from './components/suiveuse/works/work-form/expense-form/expense-form.dialog';
 
 export const MY_FORMATS = {
   parse: {
@@ -227,7 +232,7 @@ export const MY_FORMATS = {
     ActionCategoryControlComponent,
     ObjectiveControlComponent,
     // ActionsChargesStudyComponent,
-    FinancementProjectComponent,
+    StudyFundingsComponent,
     ChargeTypesComponent,
     ChargeTypeInfoComponent,
     ChargeTypeRefFormComponent,
@@ -295,6 +300,9 @@ export const MY_FORMATS = {
     ActionObjectiveAssignmentDialog,
     StudyResultsComponent,
     StudyDeadlinesComponent,
+    StudyDeadlineFormDialog,
+    DeadlineTypeControlComponent,
+    WorkExpenseFormDialog,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -314,6 +322,8 @@ export const MY_FORMATS = {
     SchedulEditorDialog,
     ActionObjectiveFormDialog,
     ActionObjectiveAssignmentDialog,
+    StudyDeadlineFormDialog,
+    WorkExpenseFormDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
@@ -351,7 +361,7 @@ export const MY_FORMATS = {
     WorkService,
     WeeksService,
     ProjectService,
-    StudyFinancementService,
+    StudyFundingsService,
     StudyChargesService,
     StudyActionsService,
     StudyLocalisationsService,
@@ -363,6 +373,8 @@ export const MY_FORMATS = {
     WorkFormService,
     GlobalProjectService,
     ObjectiveFormService,
+    StudyDeadlinesService,
+    ExpenseFormService,
   ]
 })
 export class ProjetModule { }

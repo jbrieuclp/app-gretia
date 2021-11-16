@@ -60,9 +60,9 @@ export interface Charge {
   "chargeType"?: ChargeType;
   "actions"?: Action[];
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface ChargeType {
@@ -75,9 +75,9 @@ export interface ChargeType {
   "orderBy"?: number;
   "charges"?: any;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 };
 
 export interface ChargeTypeRef {
@@ -90,25 +90,10 @@ export interface ChargeTypeRef {
   "isPerDay"?: boolean;
   "chargeTypes"?: ChargeType[];
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 };
-
-export interface Deadline {
-  "@id"?: string;
-  "@type"?: string;
-  "project"?: Project;
-  "deadlineType"?: any;
-  "date"?: Date;
-  "comment"?: string;
-  "isReported"?: boolean;
-  "isObsolete"?: boolean;
-  "createdAt"?: Date;
-  "createdBy"?: any;
-  "updatedAt"?: Date;
-  "updatedBy"?: any;
-}
 
 export interface DeadlineType {
   "@id"?: string;
@@ -117,9 +102,9 @@ export interface DeadlineType {
   "description"?: string;
   "order"?: number;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface Employee {
@@ -143,6 +128,23 @@ export interface EmployeeParameter {
   "value"?: any;
 }
 
+export interface Expense {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "work"?: Work|string;
+  "chargeType"?: ChargeType|string;
+  "provider"?: string;
+  "details"?: string;
+  "amountExclTax"?: number;
+  "vat"?: number;
+  "amountInclTax"?: number;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
+}
+
 export interface Function {
   "@id"?: string;
   "@type"?: string;
@@ -159,9 +161,9 @@ export interface Funder {
   "funding"?: number;
   "fundingType"?: FundingType;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface FundingType {
@@ -202,9 +204,9 @@ export interface Localisation {
   "name"?: string;
   "studies"?: Study[];
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface Objective {
@@ -254,12 +256,27 @@ export interface Project {
   "projectType"?: any;
   "funders"?: Funder[];
   "signatories"?: Signatory[];
-  "deadlines"?: Deadline[];
+  "deadlines"?: ProjectDeadline[];
   "studiesFundings"?: StudyFunding[];
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
+}
+
+export interface ProjectDeadline {
+  "@id"?: string;
+  "@type"?: string;
+  "project"?: Project;
+  "deadlineType"?: any;
+  "date"?: Date;
+  "comment"?: string;
+  "isReported"?: boolean;
+  "isObsolete"?: boolean;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
 }
 
 export interface ProjectType {
@@ -286,9 +303,9 @@ export interface Signatory {
   "project"?: Project;
   "organism"?: Organism;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface StudyFunding {
@@ -299,9 +316,9 @@ export interface StudyFunding {
   "label"?: string;
   "eligibleFunding"?: number;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface Study {
@@ -328,9 +345,24 @@ export interface Study {
   "dailyCost"?: number;
   "funding"?: number;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
+}
+
+export interface StudyDeadline {
+  "@id"?: string;
+  "@type"?: string;
+  "study"?: any;
+  "deadlineType"?: any;
+  "date"?: Date;
+  "comment"?: string;
+  "isReported"?: boolean;
+  "isObsolete"?: boolean;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
 }
 
 export interface Travel {
@@ -340,11 +372,10 @@ export interface Travel {
   "travel"?: string;
   "duration"?: number;
   "distance"?: number;
-  "carpool"?: boolean;
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }
 
 export interface Week {
@@ -363,6 +394,7 @@ export interface Work {
   "@type"?: string;
   "id"?: number;
   "action"?: any;
+  "category"?: any;
   "employee"?: any;
   "workingDate"?: Date;
   "duration"?: number;
@@ -370,8 +402,9 @@ export interface Work {
   "isNight"?: boolean;
   "isWe"?: boolean;
   "travels"?: any[];
+  "expenses"?: any[];
   "createdAt"?: Date;
-  "createdBy"?: any;
+  "createdBy"?: string;
   "updatedAt"?: Date;
-  "updatedBy"?: any;
+  "updatedBy"?: string;
 }

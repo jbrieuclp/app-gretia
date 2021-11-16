@@ -6,13 +6,15 @@ import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
 import { SuiveuseService } from '../../suiveuse.service';
-import { Work } from '../../../../repository/project.interface';
+import { Work, Travel, Expense } from '../../../../repository/project.interface';
 
 @Injectable()
 export class WorkFormService {
 
   public form: FormGroup;
   work: BehaviorSubject<Work> = new BehaviorSubject(null);
+  travels: Travel[] = [];
+  expenses: Expense[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -26,6 +28,8 @@ export class WorkFormService {
             isNight: false,
             isWe: false,
             workingDate: moment(this.suiveuseS.selectedDate.getValue()).format('YYYY-MM-DD'),
+            travels: [],
+            expenses: [],
           };
     return values;
   }
@@ -40,7 +44,6 @@ export class WorkFormService {
       detail: null,
       isNight: [null, [Validators.required]],
       isWe: [null, [Validators.required]],
-      travels: this.fb.array([])
     });
 
 
@@ -53,6 +56,10 @@ export class WorkFormService {
             return data;
           } 
           return this.initialValues;
+        }),
+        tap((work: Work) => {
+          this.travels = work.travels;
+          this.expenses = work.expenses;
         })
       )
       .subscribe((data: any) => this.form.patchValue(data));

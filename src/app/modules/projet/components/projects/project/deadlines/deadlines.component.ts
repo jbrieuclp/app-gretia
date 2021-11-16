@@ -3,7 +3,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, tap, filter, switchMap } from 'rxjs/operators';
 
 import { ProjectsRepository } from '../../../../repository/projects.repository';
-import { Project, Deadline } from '../../../../repository/project.interface';
+import { Project, ProjectDeadline } from '../../../../repository/project.interface';
 import { ProjectService } from '../project.service';
 
 @Component({
@@ -14,9 +14,9 @@ import { ProjectService } from '../project.service';
 export class DeadlinesComponent implements OnInit, OnDestroy {
 
 	public totalItems: number = 0;
-	private _deadlines: Deadline[] = [];
-  set deadlines(values: Deadline[]) { this._deadlines = values; };
-  get deadlines(): Deadline[] { return this._deadlines.filter(v => v !== null); };
+	private _deadlines: ProjectDeadline[] = [];
+  set deadlines(values: ProjectDeadline[]) { this._deadlines = values; };
+  get deadlines(): ProjectDeadline[] { return this._deadlines.filter(v => v !== null); };
 	public loadingList: boolean = false;
 
   public _subscriptions: Subscription[] = [];
@@ -31,18 +31,18 @@ export class DeadlinesComponent implements OnInit, OnDestroy {
     	this.projectS.project.asObservable()
     		.pipe(
     			filter((project: Project) => project !== null),
-    			switchMap((project: Project): Observable<Deadline[]> => this.getDeadlines(project.id)),
+    			switchMap((project: Project): Observable<ProjectDeadline[]> => this.getDeadlines(project.id)),
     		)
-    		.subscribe((deadlines: Deadline[]) => this.deadlines = deadlines)
+    		.subscribe((deadlines: ProjectDeadline[]) => this.deadlines = deadlines)
     );
   }
 
-  getDeadlines(project_id): Observable<Deadline[]> {
+  getDeadlines(project_id): Observable<ProjectDeadline[]> {
   	this.loadingList = true;
   	return this.projectR.projectDeadlines(project_id)
   		.pipe(
   			tap((data: any) => this.totalItems = data["hydra:totalItems"]),
-        map((data: any): Deadline[] => data["hydra:member"]),
+        map((data: any): ProjectDeadline[] => data["hydra:member"]),
         tap(() => this.loadingList = false),
   		);
   }

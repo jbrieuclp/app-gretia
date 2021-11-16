@@ -55,7 +55,12 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let study of studies">
-					<td> {{ study.label }} </td>
+					<td> 
+						<a 
+							[routerLink]="['/projet/etudes/', study.id]" 
+	        		matTooltip="Accéder au détail de l'étude"
+	        	><b>{{ study.label }}</b></a> 
+	        </td>
 					<td> {{ getScheduledDays(study) }} </td>
 					<td> {{ getUsedDays(study) | number: '1.0-2'}} </td>
 					<td> {{ getScheduledDays(study) - getUsedDays(study) | number: '1.0-2' }} </td>

@@ -10,10 +10,11 @@ import 'moment/locale/fr'  // without this line it didn't work
 import { GlobalsService } from '../../../../../../shared/services/globals.service';
 import { SuiveuseService } from '../../suiveuse.service';
 import { WorksRepository } from '../../../../repository/works.repository';
-import { Work, Travel } from '../../../../repository/project.interface';
+import { Work, Travel, Expense } from '../../../../repository/project.interface';
 import { WorkService } from '../work.service';
 import { WorkFormService } from './work-form.service';
 import { TravelFormDialog } from './travel-form/travel-form.dialog';
+import { WorkExpenseFormDialog } from './expense-form/expense-form.dialog';
 
 @Component({
   selector: 'app-projet-suiveuses-work-form',
@@ -26,8 +27,9 @@ export class WorkFormComponent implements OnInit, OnDestroy {
 	$date: Observable<Date>
 	$dateSub: Subscription;
   saving: boolean = false;
-  travels: Travel[] = [];
   get work(): Work { return this.workFormS.work.getValue(); };
+  get travels(): Travel[] { return this.workFormS.travels }
+  get expenses(): Expense[] { return this.workFormS.expenses }
 
   constructor(
   	private fb: FormBuilder,
@@ -65,20 +67,13 @@ export class WorkFormComponent implements OnInit, OnDestroy {
         map((date) => moment(date).format('YYYY-MM-DD'))
       )
       .subscribe((date: string) => this.form.get('workingDate').setValue(date));
-
-    this.workFormS.work.asObservable()
-      .pipe(
-        map((work: Work): Travel[] => work ? work.travels : [])
-      )
-      .subscribe((travels: Travel[]) => this.travels = travels);
   }
 
   addTravel() {
     this.openTravelFormDialog();
   }
 
-  editTravel(idx) {
-    let travel = this.travels.splice(idx, 1)[0];
+  editTravel(travel) {
     this.openTravelFormDialog(travel);
   }
 
@@ -96,19 +91,43 @@ export class WorkFormComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed()
       .pipe(
-        filter((travelForm: FormGroup) => travelForm !== null),
+        filter((travel: Travel) => travel !== null),
+        filter((travel: Travel) => this.travels.findIndex(e => e === travel) === -1)
       )
-      .subscribe((travelForm: FormGroup) => this.pushTravel(travel));
+      .subscribe((travel: Travel) => this.travels.push(travel));
   }
 
-  private pushTravel(travel: Travel): void {
-    this.travels.push(travel);
+  addExpense() {
+    this.openExpenseFormDialog();
+  }
+
+  editExpense(idx) {
+    let expense = this.expenses.splice(idx, 1)[0];
+    this.openExpenseFormDialog(expense);
+  }
+
+  private openExpenseFormDialog(expense = {}) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      'expense': expense,
+    };
+    dialogConfig.width = '750px';
+    dialogConfig.position = {top: '70px'};
+    dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(WorkExpenseFormDialog, dialogConfig);
+  }
+
+  private pushExpense(expense: Expense): void {
+    this.expenses.push(expense);
   }
 
   save() {
     this.saving = true;
     let data = Object.assign({}, (this.work !== null ? this.work : {}), this.form.value);
     data.travels = this.travels;
+    data.expenses = this.expenses;
 
     let api = (data['@id'] ? this.workR.patch(data['@id'], data) : this.workR.postMyWorks(data));
     api.pipe(

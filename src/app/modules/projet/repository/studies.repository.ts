@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective } from './project.interface';
+import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective, StudyDeadline } from './project.interface';
 
 @Injectable()
 export class StudiesRepository extends ApiProjectRepository {
@@ -148,6 +148,18 @@ export class StudiesRepository extends ApiProjectRepository {
       );
   }
 
+  /** GET list of Objective **/
+  study_deadlines(id): Observable<StudyDeadline[]> {
+    const url = `${this.httpUrlBase}/studies/${id}/deadlines`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: StudyDeadline[]) => res), 
+        retry(3)
+      );
+  }
+
   //////////////
   //  Charge  //
   //////////////
@@ -221,6 +233,21 @@ export class StudiesRepository extends ApiProjectRepository {
       .get(url, options)
       .pipe(
         map((res: Employee[]) => res), 
+        retry(3)
+      );
+  }
+
+  //////////////////////
+  //  Deadline Types  //
+  //////////////////////
+  /** GET list of charge **/
+  deadline_types(param: any = {}): Observable<StudyDeadline[]> {
+    const url = `${this.httpUrlBase}/deadline-types`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: StudyDeadline[]) => res), 
         retry(3)
       );
   }

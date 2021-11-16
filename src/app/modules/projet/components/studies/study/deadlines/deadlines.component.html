@@ -1,4 +1,55 @@
-Debut<br>
-rendu<br>
-fin rapport<br>
-...
+<table class="table">
+	<thead>
+		<tr>
+			<th>Type</th>
+			<th>Date</th>
+			<th>Report</th>
+			<th>Abandon</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<ng-container *ngIf="deadlines.length > 0; else noDate">
+			<tr *ngFor="let deadline of deadlines">
+				<td> {{ deadline.deadlineType.label }} </td>
+				<td> {{ deadline.date|date:'d/m/y' }} </td>
+				<td> {{ deadline.isReported }} </td>
+				<td> {{ deadline.isObsolete }} </td>
+				<td> 
+					<button 
+            mat-icon-button 
+            color="primary"
+            type="button"
+            (click)="openDeadlineForm()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn"
+            type="button"
+            (click)="delete(deadline)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button> 
+        </td>
+			</tr>
+		</ng-container>
+	</tbody>
+</table>
+
+<div class="text-left">
+	<button 
+		mat-mini-fab
+		color="primary"
+		(click)="openDeadlineForm()"
+	>
+    <mat-icon>add</mat-icon>
+  </button>		  	
+</div>
+
+<ng-template #noDate>
+	<tr>
+		<td colspan="5"> <i> Aucune date n'a été pour le moment renseignée </i> </td>
+	<tr>
+</ng-template>

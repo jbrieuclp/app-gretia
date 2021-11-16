@@ -1,0 +1,105 @@
+<h5> {{ expense?.id ? 'Modifier' : 'Ajouter' }} un frais </h5>
+<form 
+	[formGroup]="form"
+	[style.fontSize.px]="14"
+>
+	<div class="row">
+		<mat-form-field class="col-sm-6">
+			<mat-label> Fournisseur ou type </mat-label>
+		  <input 
+		  	id="provider"
+		  	matInput 
+		    placeholder="Fournisseur ou type"
+		    autocomplete="off"
+		    formControlName="provider"
+		    required
+		  >
+		</mat-form-field>
+
+		<div class="col-sm-6">
+			<app-projet-control-charge-type 
+				[form]="this.form.get('chargeType')"
+				required
+			></app-projet-control-charge-type>
+		</div>
+	</div>
+
+	<mat-form-field>
+		<mat-label> Détails </mat-label>
+	  <input 
+	  	id="details"
+	  	matInput 
+	    placeholder="Repas, description du matériel, péage..."
+	    autocomplete="off"
+	    formControlName="details">
+	</mat-form-field>
+
+	<div>
+		<div 
+			class="row collapsible"
+			[@collapse]="HTForm_visibility"
+		>
+			<mat-form-field class="col-sm-4">
+				<mat-label> Montant HT </mat-label>
+			  <input 
+			  	id="amountExclTax"
+			  	type="number"
+			  	min="0"
+			  	matInput 
+			    placeholder="Montant hors taxe"
+			    autocomplete="off"
+			    formControlName="amountExclTax"
+			    [required]="HTForm_visibility"
+			  >
+			</mat-form-field>
+			<mat-form-field class="col-sm-4">
+				<mat-label> TVA </mat-label>
+			  <input 
+			  	id="vat"
+			  	type="number"
+			  	min="0"
+			  	matInput 
+			    placeholder="Montant de la TVA"
+			    autocomplete="off"
+			    formControlName="vat"
+			    [required]="HTForm_visibility"
+			  >
+			</mat-form-field>
+		</div>
+		<div class="row">
+			<mat-form-field class="col-sm-4">
+				<mat-label> Montant TTC </mat-label>
+			  <input 
+			  	id="amountTTCForm"
+			  	type="number"
+			  	min="0"
+			  	matInput 
+			    placeholder="Montant TTC"
+			    autocomplete="off"
+			    [formControl]="amountTTCForm">
+			</mat-form-field>
+			<mat-slide-toggle 
+				style="margin: 20px 15px;"
+				color="primary"
+				(change)="sliderChange($event.checked)"
+			> Saisir le montant TTC </mat-slide-toggle>
+		</div>
+	</div>
+	
+
+	<div style="margin-top: 10px;">
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="!form.valid"
+    	[text]="expense?.id ? 'Modifier' : 'Ajouter'"
+    	(onClick)="add()"
+    >
+    	<mat-icon>done</mat-icon> <span>{{ expense?.id ? 'Modifier' : 'Ajouter' }}</span>
+    </app-submit-btn>
+  </div>
+</form>

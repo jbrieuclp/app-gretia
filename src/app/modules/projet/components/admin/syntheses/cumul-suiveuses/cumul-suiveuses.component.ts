@@ -30,8 +30,6 @@ export class CumulSuiveusesComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(moment().startOf('month').format('YYYY-MM-DD'));
-    console.log(moment().endOf('month').format('YYYY-MM-DD'));
     this.form = this.fb.group({
       start: [moment().startOf('month').format('YYYY-MM-DD'), Validators.required],
       end: [moment().endOf('month').format('YYYY-MM-DD'), Validators.required]

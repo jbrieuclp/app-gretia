@@ -6,7 +6,7 @@ import { tap, map } from "rxjs/operators";
 
 import { GlobalsService } from '../../../../../../../shared';
 import { ProjectsRepository } from '../../../../../repository/projects.repository'
-import { Deadline, DeadlineType } from '../../../../../repository/project.interface'
+import { ProjectDeadline, DeadlineType } from '../../../../../repository/project.interface'
 import { DeadlineService } from './deadline.service';
 import { ConfirmationDialogComponent } from '../../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
@@ -17,8 +17,8 @@ import { ConfirmationDialogComponent } from '../../../../../../../shared/compone
 })
 export class DeadlineComponent implements OnInit {
 
-	@Input() deadline: Deadline;
-	@Output() deadlineChange = new EventEmitter<[string, Deadline]>();
+	@Input() deadline: ProjectDeadline;
+	@Output() deadlineChange = new EventEmitter<[string, ProjectDeadline]>();
 	public form: FormGroup;
 	get displayForm(): boolean { return this.deadlineS.displayForm; }
 	get waiting(): boolean { return this.deadlineS.waiting; }
@@ -54,7 +54,7 @@ export class DeadlineComponent implements OnInit {
 
   save() {
   	this.deadlineS.submit(this.deadline)
-  		.subscribe((deadline: Deadline) => {
+  		.subscribe((deadline: ProjectDeadline) => {
   			this.deadlineChange.emit([this.deadline['@id'], deadline]);
   			this.deadline = deadline; 
   		});

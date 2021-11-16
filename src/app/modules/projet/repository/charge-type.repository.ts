@@ -66,9 +66,9 @@ export class ChargeTypeRepository extends ApiProjectRepository {
   /** GET list of ChargeType **/
   chargeTypes(params = {}): Observable<ChargeType[]> {
     const url = `${this.httpUrlBase}/charge-types`;
-    const options = {params: params};
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
     return this.http
-      .get(url, options)
+      .get(url, http_options)
       .pipe(
         map((res: ChargeType[]) => res), 
         retry(3)

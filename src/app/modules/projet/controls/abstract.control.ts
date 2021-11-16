@@ -10,7 +10,7 @@ export class AbstractControl implements OnInit, OnDestroy {
 
   @Input() form: FormControl;
   private _required: boolean = false;
-  @Input() set required(val: any) { this._required = (val.toLowerCase() === 'false' ? false : true); };
+  @Input() set required(val: any) { this._required = ((val.toString()).toLowerCase() === 'false' ? false : true); };
   get required() { return this._required };
   @Input() appearance: string = 'legacy';
   loading: boolean = false;

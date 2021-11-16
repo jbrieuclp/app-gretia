@@ -4,7 +4,6 @@ import { tap } from 'rxjs/operators';
 
 import { GlobalsService } from '../../../../../../../shared';
 import { ProjectsRepository } from '../../../../../repository/projects.repository';
-import { Deadline } from '../../../../../repository/project.interface';
 import { ProjectService } from '../../project.service';
 
 @Injectable({

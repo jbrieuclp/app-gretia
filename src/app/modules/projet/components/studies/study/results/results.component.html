@@ -1,3 +1,44 @@
+<form [formGroup]="form">
+			
+	<div class="row">
+	  <mat-form-field class="col-md-2">
+	  	<mat-label>Date de début</mat-label>
+		  <input 
+		  	matInput 
+		  	[matDatepicker]="startP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	formControlName="start"
+		  	required>
+		  <mat-datepicker-toggle matSuffix [for]="startP"></mat-datepicker-toggle>
+		  <mat-datepicker #startP></mat-datepicker>
+		</mat-form-field>
+
+	  <mat-form-field class="col-md-2">
+	  	<mat-label>Date de fin</mat-label>
+		  <input 
+		  	matInput 
+		  	[matDatepicker]="endP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	formControlName="end">
+		  <mat-datepicker-toggle matSuffix [for]="endP"></mat-datepicker-toggle>
+		  <mat-datepicker #endP></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+	<button 
+		mat-raised-button 
+		color="primary"
+		[disabled]="form.invalid || waiting"
+		(click)="getWorks()"
+	> {{ waiting ? 'Ca arrive...' : 'Afficher'}} </button>
+
+</form>
+
+<mat-divider 
+	inset="true"
+	style="margin: 20px 0px;"
+></mat-divider>
+
 <table class="table table-bordered">
 	<thead>
 		<tr>

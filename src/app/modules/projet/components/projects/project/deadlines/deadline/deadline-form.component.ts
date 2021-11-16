@@ -4,7 +4,7 @@ import { Observable, of, BehaviorSubject, Subscription } from "rxjs";
 import { tap, map, switchMap, distinctUntilChanged, debounceTime } from "rxjs/operators";
 
 import { ProjectsRepository } from '../../../../../repository/projects.repository'
-import { Deadline, DeadlineType } from '../../../../../repository/project.interface'
+import { ProjectDeadline, DeadlineType } from '../../../../../repository/project.interface'
 import { DeadlineService } from './deadline.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { DeadlineService } from './deadline.service';
 export class DeadlineFormComponent implements OnInit {
 
   public form: FormGroup;
-  @Output() onCreate = new EventEmitter<Deadline>();
+  @Output() onCreate = new EventEmitter<ProjectDeadline>();
   get displayForm(): boolean { return this.deadlineS.displayForm; }
   set displayForm(value: boolean) { this.deadlineS.displayForm = value; }
   get waiting(): boolean { return this.deadlineS.waiting; }
@@ -44,7 +44,7 @@ export class DeadlineFormComponent implements OnInit {
       .pipe(
         tap(() => this.cancel())
       )
-      .subscribe((deadline: Deadline) => {
+      .subscribe((deadline: ProjectDeadline) => {
         this.onCreate.emit(deadline);
       });
   }

@@ -1,16 +1,24 @@
 <mat-card>
 	<mat-card-title>Liste des projets et des études associées</mat-card-title>
 	<mat-card-content>
-		<div>
-			<button
-				type="button"
-				mat-raised-button 
-				color="primary"
-				(click)="openProjectFormDialog()"
-			>
-				Nouveau projet
-			</button>
-		</div>
+		<div style="margin-bottom: 20px;">
+      <button 
+        mat-raised-button 
+        color="primary"
+        [matMenuTriggerFor]="menu"
+      ><mat-icon>add</mat-icon> Ajouter</button>
+      <mat-menu #menu="matMenu">
+        <button 
+          mat-menu-item
+          (click)="openProjectFormDialog()"
+        >Projet</button>
+        <button 
+          mat-menu-item
+          color="primary"
+          (click)="openStudyFormDialog()"
+        >Étude</button>
+      </mat-menu>
+    </div> 
 
 		<ng-container *ngIf="!loadingList; else loadingTemplate">
 			<!-- <table class="table table-bordered">

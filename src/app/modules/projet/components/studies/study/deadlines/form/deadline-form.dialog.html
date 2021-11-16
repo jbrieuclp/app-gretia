@@ -1,0 +1,52 @@
+<form [formGroup]="form">
+
+	<div class="row">
+	  <div class="col-md-4">
+			<app-projet-control-deadline-type 
+				label="Type" 
+				[form]="form.get('deadlineType')"
+				required="true"
+			>
+			</app-projet-control-deadline-type>
+		</div>
+
+	  <mat-form-field class="col-md-8">
+	  	<mat-label> Date </mat-label>
+	    <input 
+	    	id="date"
+		    matInput 
+		    placeholder="Date"  
+  			required
+  			formControlName="label">
+	  </mat-form-field>
+
+	</div>
+
+	<div>
+		<mat-form-field>
+			<mat-label> Commentaire </mat-label>
+	    <textarea
+		    matInput 
+		    placeholder="Commentaire rapide ou détaillée"  
+  			formControlName="comment">
+  		</textarea> 
+	  </mat-form-field>
+	</div>
+
+  <div class="btn-place">
+		<button 
+			type="button"
+			(click)="cancel()"
+			mat-raised-button 
+		>
+			Annuler
+		</button>
+  	<app-submit-btn
+    	[disabled]="form.invalid"
+    	[waiting]="saving"
+    	(click)="submit()"
+    >
+    	{{ deadline === null ? 'Ajouter' : 'Modifier' }}
+    </app-submit-btn>
+  </div>
+</form>

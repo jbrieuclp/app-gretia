@@ -36,54 +36,107 @@
 	</div>
 
 	<div>
-		<h6> Frais </h6>
+		<h6> Déplacement - Frais </h6>
 
 		<div>
+
 			<button 
-				mat-raised-button
-				matTooltip="Ajouter un déplacement"
-				(click)="addTravel()"
-			>
-				<mat-icon>directions_car</mat-icon> Déplacement
-			</button>
+        mat-raised-button 
+        color="primary"
+        [matMenuTriggerFor]="menu"
+      ><mat-icon>add</mat-icon> Ajouter</button>
+      <mat-menu #menu="matMenu">
+        <button 
+          mat-menu-item
+          (click)="addTravel()"
+        > <mat-icon>directions_car</mat-icon> Déplacement </button>
+        <button 
+          mat-menu-item
+          color="primary"
+          (click)="addExpense()"
+        > <mat-icon>euro_symbol</mat-icon> Frais </button>
+      </mat-menu>
 
-			<mat-checkbox> Frais de repas ? </mat-checkbox>
-
-			<mat-checkbox> Frais de nuit ? </mat-checkbox>
 		</div>
 
-		<div *ngIf="travels.length">
+		<!-- <div *ngIf="travels.length || expenses.length">
 	    <table class="table table-sm travel-table">
-	    	<thead>
-	    		<tr>
-	    			<th></th>
-	    			<th> Trajet </th>
-	    			<th> Durée (min) </th>
-	    			<th> Distance (km) </th>
-	    			<th> Conducteur </th>
-	    		</tr>
-	    	</thead>
-	    	<tbody>
-	    		<tr *ngFor="let travel of travels; index as i">
-	    			<td> 
-	    				<mat-icon 
-	    					style="color: red;" 
-	    					matTooltip="Supprimer la ligne"
-	    				> delete_outline </mat-icon> 
-	    				<mat-icon 
-	    					style="color: #683ab7;" 
-	    					matTooltip="Modifier la ligne"
-	    					(click)="editTravel(i)"
-	    				> mode_edit_outline </mat-icon> 
-	    			</td>
-	    			<td> {{ travel.travel }} </td>
-	    			<td> {{ travel.duration }} </td>
-	    			<td> {{ travel.distance }} </td>
-	    			<td class="text-center"> {{ travel.carpool ? 'Oui' : 'Non' }} </td>
-	    		</tr>
-	    	</tbody>
+	    	<ng-container *ngIf="travels.length">
+		    	<thead>
+		    		<tr>
+		    			<th 
+			    			class="text-left"
+			    			colspan="4"
+			    		> <i> <b> Déplacements </b> </i> </th>
+			    	</tr>
+		    		<tr>
+		    			<th></th>
+		    			<th> Trajet </th>
+		    			<th> Durée (min) </th>
+		    			<th> Distance (km) </th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr *ngFor="let travel of travels; index as i">
+		    			<ng-container *ngIf="travel.travel !== null">
+			    			<td> 
+			    				<mat-icon 
+			    					style="color: red;" 
+			    					matTooltip="Supprimer la ligne"
+			    				> delete_outline </mat-icon> 
+			    				<mat-icon 
+			    					style="color: #683ab7;" 
+			    					matTooltip="Modifier la ligne"
+			    					(click)="editTravel(travel)"
+			    				> mode_edit_outline </mat-icon> 
+			    			</td>
+			    			<td> {{ travel.travel }} </td>
+			    			<td> {{ travel.duration }} </td>
+			    			<td> {{ travel.distance }} </td>
+			    		</ng-container>
+		    		</tr>
+		    	</tbody>
+		    </ng-container>
+		    <ng-container *ngIf="expenses.length">
+		    	<thead>
+		    		<tr>
+		    			<th 
+			    			class="text-left"
+			    			colspan="5"
+			    		> 
+			    			<i><b> Frais </b></i> 
+			    		</th>
+			    	</tr>
+		    		<tr>
+		    			<th></th>
+		    			<th> Catégorie </th>
+		    			<th> Fournisseur / Type </th>
+		    			<th> Détails </th>
+		    			<th> Coût TTC </th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr *ngFor="let expense of expenses; index as i">
+		    			<td> 
+		    				<mat-icon 
+		    					style="color: red;" 
+		    					matTooltip="Supprimer la ligne"
+		    				> delete_outline </mat-icon> 
+		    				<mat-icon 
+		    					style="color: #683ab7;" 
+		    					matTooltip="Modifier la ligne"
+		    					(click)="editExpense(i)"
+		    				> mode_edit_outline </mat-icon> 
+		    			</td>
+		    			<td> {{ expense.chargeType.label }} </td>
+		    			<td> {{ expense.provider }} </td>
+		    			<td> {{ expense.details }} </td>
+		    			<td class="text-center"> {{ travel.amountInclTax }} € </td>
+		    		</tr>
+		    	</tbody>
+		    </ng-container>
 	    </table>
-	  </div>
+	  </div> -->
 	</div>
 
 	<mat-form-field>

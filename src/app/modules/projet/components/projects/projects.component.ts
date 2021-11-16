@@ -11,8 +11,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 import { GlobalProjectService } from '../global-project.service';
 import { ProjectsRepository } from '../../repository/projects.repository';
-import { Project } from '../../repository/project.interface';
+import { Project, Study } from '../../repository/project.interface';
 import { ProjectFormDialog } from './project/project-form/project-form.dialog';
+import { StudyFormDialog } from '../studies/study/form/study-form.dialog';
 
 @Component({
   selector: 'app-projects',
@@ -34,7 +35,7 @@ export class ProjectsComponent implements OnInit {
   get loadingList(): boolean { return this.globalProjectS.loadingList; }
 
   expandedElement: Project | null;
-  columnsToDisplay: any[] = ['projectType', 'label', 'localAttachment', 'dateStart', 'dateEnd', 'access'];
+  columnsToDisplay: any[] = ['access', 'projectType', 'label', 'localAttachment', 'dateStart', 'dateEnd'];
 
   public filterInput: FormControl;
   public dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -118,6 +119,22 @@ export class ProjectsComponent implements OnInit {
         map((project: Project): number => project.id)
       )
       .subscribe((id: number) => this.location.replaceState(`/projet/projets/${id}`));
+  }
+
+  openStudyFormDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.width = '750px';
+    dialogConfig.position = {top: '70px'};
+    dialogConfig.disableClose = true;
+
+    const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
+
+    dialogRef.afterClosed()
+      .pipe(
+        filter((study: Study) => study !== null)
+      )
+      .subscribe((study) => this.router.navigate(['studies', study.id]));
   }
 
 }

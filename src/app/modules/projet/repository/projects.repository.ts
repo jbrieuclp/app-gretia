@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Organism, Project, Funder, Signatory, Deadline, DeadlineType, StudyFunding, ProjectType } from './project.interface';
+import { Organism, Project, Funder, Signatory, ProjectDeadline, DeadlineType, StudyFunding, ProjectType } from './project.interface';
 
 @Injectable()
 export class ProjectsRepository extends ApiProjectRepository {
@@ -143,26 +143,26 @@ export class ProjectsRepository extends ApiProjectRepository {
   ////////////////////
   //  DEADLINE  //
   ////////////////////
-  /** GET list of Deadline **/
-  deadlines(): Observable<Deadline[]> {
+  /** GET list of ProjectDeadline **/
+  deadlines(): Observable<ProjectDeadline[]> {
     const url = `${this.httpUrlBase}/project-deadlines`;
     const options = {};
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Deadline[]) => res), 
+        map((res: ProjectDeadline[]) => res), 
         retry(3)
       );
   }
 
-  /** POST create new Deadline **/
-  postDeadlines(data: Deadline): Observable<Deadline> {
+  /** POST create new ProjectDeadline **/
+  postDeadlines(data: ProjectDeadline): Observable<ProjectDeadline> {
     const url = `${this.httpUrlBase}/project-deadlines`;
     const sources = JSON.stringify(data);
     return this.http.post(url, sources, HTTP_OPTIONS);
   }
 
-  /** GET list of Deadline **/
+  /** GET list of DeadlineType **/
   deadlineTypes(): Observable<DeadlineType[]> {
     const url = `${this.httpUrlBase}/deadline-types`;
     const options = {};

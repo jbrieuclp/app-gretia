@@ -35,7 +35,11 @@
   	<mat-optgroup 
   		*ngFor="let study of (displayStudies | async)" 
   		label="{{ study.code }} {{ study.label }}">
-	    <mat-option *ngFor="let action of getListActions(study)" [value]="action['@id']">
+	    <mat-option 
+	    	*ngFor="let action of getListActions(study)" 
+	    	[class.mat-selected] = "form.value === action['@id']"
+	    	[value]="action['@id']"
+	    >
 	      <small>{{ action.label }}</small>
 	    </mat-option>
 	  </mat-optgroup>
