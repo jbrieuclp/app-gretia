@@ -1,4 +1,6 @@
-<mat-form-field>
+<mat-form-field
+	[appearance]="appearance"
+>
 	<mat-label>
 		<mat-spinner 
 			*ngIf="loading"
@@ -12,18 +14,35 @@
 	  type="text" 
 	  [placeholder]="placeholder" 
 	  matInput 
+	  #autocompleteTrigger
+	  (click)="onClick($event)"
 	  [required]="required" 
-	  [formControl]="form" 
-	  [matAutocomplete]="auto">
+	  [formControl]="inputTerm"
+	  [matAutocomplete]="auto"
+	>
   <mat-autocomplete 
   	#auto="matAutocomplete"
-  	[displayWith]="displayFn.bind(this)">
-  	<mat-optgroup 
-  		*ngFor="let study of (filteredOptions | async)" 
-  		label="{{ study.code }} {{ study.label }}">
-	    <mat-option *ngFor="let action of study.actions" [value]="action['@id']">
-	      <small>{{ action.label }}</small>
-	    </mat-option>
-	  </mat-optgroup>
+  	[displayWith]="displayFn.bind(this)"
+  	(optionSelected)="onSelectOption($event.option.value)"
+  	(closed)="onClosed()"
+  >
+    <mat-option 
+    	*ngFor="let option of displayOptions" 
+    	[class.mat-selected] = "form.value === this.value(option)"
+    	[value]="value(option)"
+    	[disabled]="isDisabled(option)" 
+    >
+      {{ optionDisplayFn(option) }}
+    </mat-option>
   </mat-autocomplete>
+  <button 
+  	*ngIf="inputTerm.value !== null && clearable"
+		mat-icon-button 
+		style="color: #969696; font-size: 14px;"
+		matSuffix
+		(click)="onClear($event)"
+		matTooltip="Supprimer la selection"
+	>
+    <mat-icon>clear</mat-icon>
+  </button>
 </mat-form-field>

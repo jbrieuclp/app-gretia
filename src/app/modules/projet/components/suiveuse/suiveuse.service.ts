@@ -1,71 +1,18 @@
 import { Injectable } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router, NavigationStart, RoutesRecognized, NavigationEnd } from '@angular/router';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, combineLatest } from 'rxjs';
 import { filter, map, distinctUntilChanged, tap, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { PersonRepository } from '../../repository/person.repository';
-import { SuiveuseRepository } from '../../repository/suiveuse.repository';
-import { Work, Recup } from '../../repository/project.interface';
-
-class DateWorkTime {
-  date: Date; 
-  work_day: number = 0;
-  work_night: number = 0;
-  work_we: number = 0;
-  travel: number = 0;
-  recup: number = 0;
-
-  coeff_night: number = 1;
-  coeff_travel: number = 1;
-  coeff_we: number = 1;
-
-  constructor(date: Date) {
-    this.date = date;
-  }
-
-  addWork(work: Work) {
-    if (work.isWe) {
-      this.work_we += work.duration;
-    } else {
-      if (work.isNight) {
-        this.work_night += work.duration;
-      } else {
-        this.work_day += work.duration;
-      }
-    }
-
-    this.travel += work.travels.map(t => t.duration).reduce((a, b) => a + b, 0);
-  }
-
-  addCoeff(coeff: any) {
-    if (coeff.code === 'WEEKEND_HOURS_COEFF') {
-      this.coeff_we = +coeff.value;
-    } 
-
-    if (coeff.code === 'NIGHT_HOUR_COEFF') {
-      this.coeff_night = +coeff.value;
-    }
-
-    if (coeff.code === 'TRAVEL_HOUR_COEFF') {
-      this.coeff_travel = +coeff.value;
-    }
-  }
-
-  addRecup(recup: Recup) {
-    this.recup += +recup.quantity;
-  }
-
-  addTravel(time) {
-    this.travel += time;
-  }
-
-  get workingTime() {
-    return this.work_day + (this.work_night * this.coeff_night) + (this.travel * this.coeff_travel);
-  }
-
-};
+import { AuthService } from '@shared/auth/authentication.service';
+import { PersonRepository } from '@projet/repository/person.repository';
+import { EmployeeRepository } from '@projet/repository/employee.repository';
+import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
+import { WorksRepository } from '@projet/repository/works.repository';
+import { Work, Travel } from '@projet/repository/project.interface';
+import { DateWorkTime } from './date-work-time';
 
 @Injectable()
 export class SuiveuseService {
@@ -78,41 +25,59 @@ export class SuiveuseService {
   get displayMonth() { return this._displayMonth; }
   get displayMonthValue() { return this._displayMonth.getValue(); }
 
+  personForm: FormControl = new FormControl();
+
   workByDay: DateWorkTime[] = [];
   loading: boolean = false;
 
   constructor(
   	private suiveuseR: SuiveuseRepository,
+    private employeeR: EmployeeRepository,
+    private worksR: WorksRepository,
+    private authService: AuthService
   ) { 
   	this.setObservables();
   }
 
   setObservables() {
-  	this.displayMonth.asObservable()
-  		.pipe(
-  			distinctUntilChanged((prev, curr) => moment(prev).isSame(curr, 'month')),
-  			map(date => {
-  				return [moment(date).startOf('month').startOf('week').format('YYYY-MM-DD'), moment(date).endOf('month').endOf('week').format('YYYY-MM-DD')]
-  			}),
-  			switchMap(([firstDate, lastDate]): Observable<DateWorkTime[]> => this.getDataByPeriod(firstDate, lastDate)),
-        tap(() => this.workByDay = []),
-  		)
-  		.subscribe((val: DateWorkTime[]) => this.workByDay = val);
-  }
-
-  getDataByPeriod(start, end, loader: boolean = true): Observable<any> {
-    return forkJoin(
-      this.getSynthese({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD')}, loader),
-      this.getRecup({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD')}, loader),
-      this.getParameters({startAt: moment(start).format('YYYY-MM-DD'), endAt: moment(end).format('YYYY-MM-DD'), 'code[]': ['WEEKEND_HOURS_COEFF', 'NIGHT_HOUR_COEFF', 'TRAVEL_HOUR_COEFF']}, loader),
+  	combineLatest(
+      this.personForm.valueChanges,
+      this.displayMonth.asObservable()
+    		.pipe(
+    			distinctUntilChanged((prev, curr) => moment(prev).isSame(curr, 'month')),
+    			map((date): [string, string] => {
+    				return [moment(date).startOf('month').startOf('week').format('YYYY-MM-DD'), moment(date).endOf('month').endOf('week').format('YYYY-MM-DD')]
+    			})
+        )
     )
       .pipe(
-        map(([works, recups, coeff]: [any, any, any]): [Work[], Recup[], any[]] => [
-          works["hydra:member"], 
-          recups["hydra:member"],
-          coeff["hydra:member"],
-        ]),
-        map(([works, recups, coeff]: [Work[], Recup[], any[]]): DateWorkTime[] => {
+        map(([compteId, dates]) => {
+          return {
+              'startDate': moment(dates[0]).format('YYYY-MM-DD'), 
+              'endDate': moment(dates[1]).format('YYYY-MM-DD'),
+              'compteId': compteId
+            }}
+        ),
+  			switchMap((params): Observable<DateWorkTime[]> => this.getDataByPeriod(params)),
+        tap(() => this.workByDay = []),
+  		)
+        .subscribe((val: DateWorkTime[]) => this.workByDay = val);
+
+
+    this.authService.getUser().asObservable()
+      .pipe(
+        map((user: any): number => user.id !== null ? user.id : null),
+      )
+      .subscribe(userId => this.personForm.setValue(userId))
+  }
+
+  getDataByPeriod(params, loader: boolean = true): Observable<any> {
+    return forkJoin(
+      this.getWorks(params, loader),
+      this.getTravels(params, loader),
+    )
+      .pipe(
+        map(([works, travels]: [Work[], Travel[]]): DateWorkTime[] => {
           let dates: DateWorkTime[] = [];
           works.forEach((work: Work) => {
             //si l'objet DateWorkTime correspondant à la date du Work n'existe pas on le créer
@@ -122,26 +87,19 @@ export class SuiveuseService {
 
             const date = dates.find(d => moment(d.date).isSame(moment(work.workingDate), 'day'));
 
-            //lecture des coeff nuit/week-end et application à la date
-            coeff.forEach(e => {
-              if (moment(work.workingDate).isBetween(moment(e.contractStart), moment(e.contractEnd||undefined), undefined, '[]')) {
-                date.addCoeff(e);
-              }
-            });
-
             // récupération de l'objet DateWorkTime correspondant à la date du work
             date.addWork(work);
-          })
+          });
 
-          recups.forEach((recup: Recup) => {
-            //si l'objet DateWorkTime correspondant à la date de la Recup n'existe pas on le créer
-            if (dates.findIndex(d => moment(d.date).isSame(moment(recup.dateRecup), 'day')) === -1) {
-              dates.push(new DateWorkTime(moment(recup.dateRecup).toDate()));
+          travels.forEach((travel: Travel) => {
+            //si l'objet DateWorkTime correspondant à la date du Work n'existe pas on le créer
+            if (dates.findIndex(d => moment(d.date).isSame(moment(travel.travelDate), 'day')) === -1) {
+              dates.push(new DateWorkTime(moment(travel.travelDate).toDate()));
             }
-            // récupération de l'objet DateWorkTime correspondant à la date du work
-            const date = dates.find(d => moment(d.date).isSame(moment(recup.dateRecup), 'day'));
-            date.addRecup(recup);
-          })
+
+            const date = dates.find(d => moment(d.date).isSame(moment(travel.travelDate), 'day'));
+            date.addTravel(travel);
+          });
 
           return dates;
         })
@@ -150,47 +108,47 @@ export class SuiveuseService {
   }
 
   refreshDayData(day): void {
-    this.getDataByPeriod(day, day, false)
-      .pipe(
-        map((val: DateWorkTime[]): DateWorkTime => val.shift()),
-        map((val: DateWorkTime): [DateWorkTime, number] => {
-          return [
-            val,
-            this.workByDay.findIndex(elem => moment(elem.date).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD'))
-          ]
-        }),
-        filter(([val, idx]: [DateWorkTime, number])  => idx !== -1),
-      )
-      .subscribe(([val, idx]: [DateWorkTime, number]) => this.workByDay[idx] = val)
+    // this.getDataByPeriod(day, day, false)
+    //   .pipe(
+    //     map((val: DateWorkTime[]): DateWorkTime => val.shift()),
+    //     map((val: DateWorkTime): [DateWorkTime, number] => {
+    //       return [
+    //         val,
+    //         this.workByDay.findIndex(elem => moment(elem.date).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD'))
+    //       ]
+    //     }),
+    //     filter(([val, idx]: [DateWorkTime, number])  => idx !== -1),
+    //   )
+    //   .subscribe(([val, idx]: [DateWorkTime, number]) => this.workByDay[idx] = val)
   }
 
-  getSynthese(params, loader: boolean): Observable<Work[]> {
+  getWorks(params, loader: boolean): Observable<Work[]> {
     if (loader) {
       this.loading = true;
     }
-    return this.suiveuseR.getMySynthese(params)
+    return this.worksR.works({
+        'workingDate[after]': params.startDate, 
+        'workingDate[before]': params.endDate,
+        'compteId': params.compteId
+      })
       .pipe(
-        tap(() => this.loading = false)
+        tap(() => this.loading = false),
+        map((data: any) => data["hydra:member"])
       );
   }  
 
-  getRecup(params, loader: boolean): Observable<Work[]> {
+  getTravels(params, loader: boolean): Observable<Travel[]> {
     if (loader) {
       this.loading = true;
     }
-    return this.suiveuseR.getMyRecup(params)
+    return this.worksR.travels({
+        'travelDate[after]': params.startDate, 
+        'travelDate[before]': params.endDate,
+        'compteId': params.compteId
+      })
       .pipe(
-        tap(() => this.loading = false)
-      );
-  }  
-
-  getParameters(params, loader: boolean): Observable<any[]> {
-    if (loader) {
-      this.loading = true;
-    }
-    return this.suiveuseR.getMyParameters(params)
-      .pipe(
-        tap(() => this.loading = false)
+        tap(() => this.loading = false),
+        map((data: any) => data["hydra:member"])
       );
   }  
 }

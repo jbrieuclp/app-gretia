@@ -9,6 +9,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './shared/auth/token.interceptor';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 
 //modules
 import { SharedModule } from './shared';
@@ -29,6 +31,8 @@ import { AppComponent } from './app.component';
 export function tokenGetter() {
   return localStorage.getItem('id_token');
 }
+
+registerLocaleData(localeFr, 'fr');
 
 @NgModule({
   declarations: [

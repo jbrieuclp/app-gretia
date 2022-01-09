@@ -1,0 +1,44 @@
+<div class="row">
+  <mat-form-field class="col-sm-4">
+    <mat-select 
+      placeholder="Trier par"
+      [formControl]="orderByControl"
+    >
+      <mat-option 
+        *ngFor="let orderBy of orderByList"
+        [value]="orderBy"
+      > {{ orderBy.label }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<ng-container *ngIf="works.length || worksLoading; else noData">
+  <ng-container *ngIf="works.length; else loadingData">
+    <mat-accordion multi="true">
+      <mat-expansion-panel 
+        *ngFor="let group of groupElements;let first = first"
+        [expanded]="first"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ getTitle(group) }}
+          </mat-panel-title>
+          <mat-panel-description>
+            <span>
+              <small>{{ getWorkTimeByGroup(group) }} heure(s)</small>
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <app-projet-suiveuses-works 
+          [works]="getWorksByGroup(group)"
+          [orderBy]="orderByControl.value"
+        ></app-projet-suiveuses-works>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+</ng-container>
+
+<ng-template #noData>Aucun élément à afficher</ng-template>
+<ng-template #loadingData> Récupération des données en cours... </ng-template>

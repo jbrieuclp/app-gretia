@@ -98,17 +98,23 @@
 }
 
 .day div.day-time {
-  display: none;
+  display: block;
+  position: absolute;
+  top: 35px;
+  left: 2px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 17px;
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .day.selectedDate div.day-time,
-.day.today div.day-time {
-  display: block;
-  position: absolute;
-  top: 0px;
-  left: 40px;
-  text-align: left;
-  font-size: 13px;
+.day.today div.day-time,
+.day:hover div.day-time {
+  color: rgba(0, 0, 0, 1);
+  transition: color .25s ease-in-out;
+  -moz-transition: color .25s ease-in-out;
+  -webkit-transition: color .25s ease-in-out;
 }
 
 .day div.day-time mat-icon {
@@ -150,4 +156,17 @@ div.loader > div {
   height: 100%;
   display: inline-flex;
   align-items: center;
+}
+
+div.ym-selects {
+  display: inline-block;
+  margin: 0px 5px;
+}
+
+::ng-deep div.ym-selects .month-select .mat-form-field-wrapper {
+  width: 125px;
+}
+
+::ng-deep div.ym-selects .year-select .mat-form-field-wrapper {
+  width: 70px;
 }

@@ -1,0 +1,16 @@
+.mat-optgroup:hover {
+  background-color: aliceblue;
+  display: block;
+}
+
+::ng-deep .mat-progress-spinner, .mat-spinner {
+	display: inline-block;
+  margin-right: 10px;
+  vertical-align: -3px;
+}
+
+::ng-deep .mat-selected {
+  background: rgba(0,0,0,.12) !important;
+  color: #673ab7 !important;
+}
+

@@ -15,20 +15,16 @@ import { SuiveuseService } from '../suiveuse.service';
 })
 export class CalendarComponent implements OnInit, OnDestroy  {
 
-  get month(): Date {
-    return this.suiveuseS.displayMonth.getValue();
-  }
+  get month(): Date { return this.suiveuseS.displayMonthValue; }
   dates: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   months: Array<string> = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
   today: Date = moment().toDate();
+  selectYears: number[] = [moment().year()];
  
   _subscriptions: Subscription[] = [];
 
   /* Date selectionnée sur le calendrier */
-  get selectedDate() {
-    return this.suiveuseS.selectedDate;
-  }
-
+  get selectedDate() { return this.suiveuseS.selectedDate; }
   get loadingWork(): boolean { return this.suiveuseS.loading }
 
   constructor(
@@ -39,6 +35,8 @@ export class CalendarComponent implements OnInit, OnDestroy  {
   ) {}
   
   ngOnInit() {
+
+    this.setSelectYears();
 
     /**
     * Permet de passer une date dans l'URL
@@ -76,17 +74,37 @@ export class CalendarComponent implements OnInit, OnDestroy  {
     );
   }
 
+  private setSelectYears() {
+    const year = this.selectYears[0];
+
+    for (let i = 1; i <= 20; i++) {
+      this.selectYears.push(year-i);
+    }
+
+    for (let i = 1; i <= 3; i++) {
+      this.selectYears.unshift(year+i);
+    }
+  }
+
   setToday() {
     this.suiveuseS.displayMonth = moment().toDate();
     this.dateSelect(moment().toDate());
   }
 
   previousMonth(): void {
-    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonth.getValue()).subtract(1, 'month').toDate();
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonthValue).subtract(1, 'month').toDate();
   }
 
   nextMonth() {
-    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonth.getValue()).add(1, 'month').toDate();
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonthValue).add(1, 'month').toDate();
+  }
+
+  onMonthSelect(monthNumber) {
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonthValue).set('month', monthNumber).toDate();
+  }
+
+  onYearSelect(year) {
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonthValue).set('year', year).toDate();
   }
 
   getWorkByDate(date) {
@@ -106,8 +124,8 @@ export class CalendarComponent implements OnInit, OnDestroy  {
   **/
   private initMonths(): void {
     let dates: {weekNumber: number, days: Date[]}[] = [];
-    let firstDayMonth = moment(this.suiveuseS.displayMonth.getValue()).startOf('month').startOf('week');
-    let lastDayMonth = moment(this.suiveuseS.displayMonth.getValue()).endOf('month').endOf('week');
+    let firstDayMonth = moment(this.suiveuseS.displayMonthValue).startOf('month').startOf('week');
+    let lastDayMonth = moment(this.suiveuseS.displayMonthValue).endOf('month').endOf('week');
 
     while (!moment(firstDayMonth).isAfter(lastDayMonth, 'day')) {
       if ( dates.findIndex(e => e.weekNumber == firstDayMonth.week()) === -1 ) {

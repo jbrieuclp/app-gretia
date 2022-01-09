@@ -5,14 +5,14 @@ import { BehaviorSubject, Subject, of } from 'rxjs';
 import { filter, tap, map, switchMap } from 'rxjs/operators';
 
 import { ActionsRepository } from '../../../../repository/actions.repository'
-import { ActionCategory } from '../../../../repository/project.interface'
+import { WorkCategory } from '../../../../repository/project.interface'
 
 @Injectable()
 export class ActionCategoriesService {
 
 	public totalItems: number = 0;
-  public actionCategories: ActionCategory[] = [];
-	public itemSelected: BehaviorSubject<ActionCategory> = new BehaviorSubject(null);
+  public actionCategories: WorkCategory[] = [];
+	public itemSelected: BehaviorSubject<WorkCategory> = new BehaviorSubject(null);
 	public form: FormGroup;
 	public waiting: boolean = false;
 	//gestion affichages sur pages actions display list/form
@@ -28,7 +28,7 @@ export class ActionCategoriesService {
   	this.loadActionCategories();
   }
 
-  private get initialValues(): ActionCategory {
+  private get initialValues(): WorkCategory {
     return {
       orderBy: this.totalItems + 1
     };
@@ -85,7 +85,7 @@ export class ActionCategoriesService {
           })
         )
         .subscribe(
-          (action: ActionCategory) => this.itemSelected.next(action),
+          (action: WorkCategory) => this.itemSelected.next(action),
           (err) => {
             this.waiting = false;
             //this._commonService.translateToaster("error", "ErrorMessage");
@@ -104,7 +104,7 @@ export class ActionCategoriesService {
           })
         )
         .subscribe(
-          (action: ActionCategory) => this.itemSelected.next(action),
+          (action: WorkCategory) => this.itemSelected.next(action),
           (err) => {
             this.waiting = false;
             //this._commonService.translateToaster("error", "ErrorMessage");
@@ -113,7 +113,7 @@ export class ActionCategoriesService {
     }
   }
 
-  delete(item: ActionCategory): void {
+  delete(item: WorkCategory): void {
     this.actionR.delete(item['@id'])
       .pipe(
         tap(()=>this.itemSelected.next(null))
@@ -122,14 +122,14 @@ export class ActionCategoriesService {
   }
 
   loadActionCategories() {
-    this.actionR.actionCategories()
-      .pipe(
-        tap((data: any)=>this.totalItems = data["hydra:totalItems"]),
-        map((data: any): ActionCategory[]=>data["hydra:member"])
-      )
-      .subscribe(
-        (actionCategories: ActionCategory[]) => this.actionCategories = actionCategories
-      );
+    // this.actionR.actionCategories()
+    //   .pipe(
+    //     tap((data: any)=>this.totalItems = data["hydra:totalItems"]),
+    //     map((data: any): WorkCategory[]=>data["hydra:member"])
+    //   )
+    //   .subscribe(
+    //     (actionCategories: WorkCategory[]) => this.actionCategories = actionCategories
+    //   );
   }
 
   moveStepper(index: number) {

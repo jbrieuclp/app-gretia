@@ -1,0 +1,18 @@
+::ng-deep .mat-horizontal-stepper-header-container{
+    display: none !important;
+}
+
+::ng-deep .mat-list-item-content .mat-icon-button  {
+  width: 24px!important;
+  margin: 0!important;
+}
+
+.mat-list-item {
+  cursor: pointer;
+}
+
+.adding-button {
+  position: absolute; 
+  right: 15px;
+  z-index: 10;
+}

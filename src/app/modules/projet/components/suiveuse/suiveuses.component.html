@@ -3,7 +3,33 @@
 		<mat-card>
 			
 			<mat-card-content>
-				<app-projet-suiveuse-calendar></app-projet-suiveuse-calendar>
+				<div class="row">
+					<app-projet-control-person
+						class="col-6"
+						[form]="personForm"
+						id="compteId"
+						clearable="false"
+					></app-projet-control-person>
+					<div class="col-6">
+						<button 
+					  	class="float-right"
+					  	color="primary"
+					  	mat-raised-button 
+					  	(click)="stepper.selectedIndex = stepper.selectedIndex === 1 ? 0 : 1"
+					  >{{ stepper.selectedIndex === 1 ? 'Calendrier' : 'Filtres'}}</button>
+					</div>
+				</div>
+
+				<mat-divider></mat-divider>
+				<mat-horizontal-stepper #stepper>
+					<mat-step>
+						<app-projet-suiveuse-calendar></app-projet-suiveuse-calendar>
+					</mat-step>
+
+					<mat-step>
+						<app-project-works-filters></app-project-works-filters>
+				  </mat-step>
+				</mat-horizontal-stepper>
 			</mat-card-content>
 		</mat-card>
 
@@ -11,22 +37,44 @@
 
 	<div class="col-6">
 		<mat-card>
-			<mat-card-title
+<!-- 			<mat-card-title
 				class="text-left">
 				{{ (selectedDate | async) | date:'dd/MM/y' }}
-			</mat-card-title>
-			<mat-card-subtitle>
-				Ajouter un travail pour cette date
-			</mat-card-subtitle>
-			<mat-card-content>
-				<app-projet-suiveuses-work-form></app-projet-suiveuses-work-form>
-			</mat-card-content>
-		</mat-card>
-
-		<mat-card>
-			<mat-card-content>
 				
-				<app-projet-suiveuses-works></app-projet-suiveuses-works>
+			</mat-card-title> -->
+			<mat-card-content>
+				<div 
+					*ngIf="user.id === personForm.value"
+					class="adding-button"
+				>
+					<button 
+		        mat-mini-fab
+		        color="primary"
+		        matTooltip="Ajouter"
+		        [matMenuTriggerFor]="menu"
+		      ><mat-icon>add</mat-icon></button>
+		      <mat-menu #menu="matMenu">
+		      	<button 
+		          mat-menu-item
+		          (click)="addElement('work')"
+		        > <mat-icon>event</mat-icon> Travail </button>
+		        <button 
+		          mat-menu-item
+		          (click)="addElement('travel')"
+		        > <mat-icon>directions_car</mat-icon> Déplacement </button>
+		        <button 
+		          mat-menu-item
+		          color="primary"
+		          (click)="addElement('expense')"
+		        > <mat-icon>euro_symbol</mat-icon> Frais </button>
+		      </mat-menu>
+				</div>
+				
+				<app-projet-works-results></app-projet-works-results>
+
+				<!-- <app-projet-suiveuses-works></app-projet-suiveuses-works>
+				<app-project-worktime-travels></app-project-worktime-travels>
+				<app-project-worktime-expenses></app-project-worktime-expenses> -->
 
 			</mat-card-content>
 		</mat-card>

@@ -1,8 +1,18 @@
 <h5> {{ expense?.id ? 'Modifier' : 'Ajouter' }} un frais </h5>
+
 <form 
 	[formGroup]="form"
 	[style.fontSize.px]="14"
 >
+	<div class="row">
+		<app-projet-action-control 
+			class="col-sm-9"
+			[studyForm]="form.get('study')"
+			onlyStudy="true"
+			required="true"
+		></app-projet-action-control>
+	</div>
+
 	<div class="row">
 		<mat-form-field class="col-sm-6">
 			<mat-label> Fournisseur ou type </mat-label>
@@ -81,8 +91,9 @@
 			<mat-slide-toggle 
 				style="margin: 20px 15px;"
 				color="primary"
+				[checked]="HTForm_visibility"
 				(change)="sliderChange($event.checked)"
-			> Saisir le montant TTC </mat-slide-toggle>
+			> Saisir le montant HT </mat-slide-toggle>
 		</div>
 	</div>
 	
@@ -91,7 +102,7 @@
     <button 
       mat-raised-button
       style="margin-right: 10px;"
-      (click)="cancel()">
+      (click)="close()">
       Annuler
     </button>
     <app-submit-btn

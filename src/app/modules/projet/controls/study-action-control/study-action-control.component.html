@@ -1,0 +1,66 @@
+<mat-form-field>
+	<mat-label>
+		<mat-spinner 
+			*ngIf="loading"
+			diameter="20"
+			strokeWidth="2"
+		>
+		</mat-spinner>
+		{{ getText(displayAll ? 'Toutes les ${element}s' : 'Mes ${element}s') }}
+	</mat-label>
+	<button 
+		*ngIf="!loading"
+		mat-icon-button 
+		matPrefix 
+		[matTooltip]="getText(displayAll ? 'Afficher mes ${element}s' : 'Afficher toutes les ${element}s')"
+		(click)="displayAll = !displayAll"
+	>
+    <mat-icon>{{ displayAll ? 'groups' : 'person_outline' }}</mat-icon>
+  </button>
+  <input 
+	  type="text" 
+	  [placeholder]="getText('Rechercher et selectionner une ${element}')" 
+	  matInput 
+	  #autocompleteTrigger
+	  [required]="required" 
+	  [formControl]="inputTerm" 
+	  [matAutocomplete]="auto"
+	  (click)="onClick($event)"
+	>
+  <mat-autocomplete 
+  	#auto="matAutocomplete"
+  	[displayWith]="displayFn.bind(this)"
+  	(optionSelected)="onSelectOption($event.option.value)"
+  >
+  	<ng-container *ngIf="!selectStudySwitcher; else optionStudies">
+	  	<mat-optgroup 
+	  		*ngFor="let study of (displayStudies | async)" 
+	  		label="{{ study.code }} {{ study.label }}">
+		    <mat-option 
+		    	*ngFor="let action of getListActions(study)" 
+		    	[class.mat-selected] = "actionForm.value === action['@id']"
+		    	[value]="action['@id']"
+		    >
+		      <small>{{ action.label }}</small>
+		    </mat-option>
+		  </mat-optgroup>
+		</ng-container>
+		<ng-template #optionStudies>
+			<mat-option 
+	    	*ngFor="let study of (displayStudies | async)" 
+	    	[class.mat-selected] = "studyForm.value === study['@id']"
+	    	[value]="study['@id']"
+	    >
+	      <small>{{ study.code }} {{ study.label }}</small>
+	    </mat-option>
+		</ng-template>
+  </mat-autocomplete>
+  <mat-slide-toggle
+  	*ngIf="!onlyStudy"
+		matSuffix 
+		color="primary"
+		matTooltip="Forcer la selection d'une étude"
+		[checked]="selectStudySwitcher"
+		(change)="onChangeStudySwitcher($event.checked)"
+  >Selection d'une étude</mat-slide-toggle>
+</mat-form-field>

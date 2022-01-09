@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
 import { AppConfig } from '../../../shared/app.config';
-import { Antenne, Person, Function, Employee } from './project.interface';
+import { Antenne, Person, Function, Employee, EmployeeParameter } from './project.interface';
 
 @Injectable()
 export class EmployeeRepository extends ApiProjectRepository {
@@ -111,6 +111,18 @@ export class EmployeeRepository extends ApiProjectRepository {
   removeContrat(personne: Person, salarie: Employee): Observable<Person> {
     const url = `${this.httpUrlBase}/persons/${personne.id}/contrat/${salarie.id}`;
     return this.http.delete(url, HTTP_OPTIONS);
+  }
+
+  employeeParameters(params: any = {}): Observable<EmployeeParameter[]> {
+    const url = `${this.httpUrlBase}/employee-parameters`;
+    // const url = `${this.httpUrlBase}/expenses?${params}`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http
+      .get(url, http_options)
+      .pipe(
+        map((res: EmployeeParameter[]) => res),
+        retry(3)
+       );
   }
   
 }

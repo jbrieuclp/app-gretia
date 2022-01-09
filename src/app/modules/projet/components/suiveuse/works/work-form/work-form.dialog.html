@@ -1,0 +1,188 @@
+
+<form [formGroup]="form">
+	<div>
+		<app-projet-action-control 
+			[actionForm]="form.get('action')"
+			[studyForm]="form.get('study')"
+			required="true"
+		></app-projet-action-control>
+	</div>
+
+	<div class="row">
+		<app-projet-control-work-category
+			class="col-sm-4"
+			[form]="form.get('category')"
+			required
+		>	
+		</app-projet-control-work-category>
+	</div>
+
+	<div class="row">
+		<div class="col-8">
+			<app-projet-time-control [form]="form.get('duration')"></app-projet-time-control>
+		</div>
+
+		<div class="col-4">
+			<div>
+				<mat-checkbox
+			  	color="primary"
+			    formControlName="isNight"
+			  >
+			  	Heure de nuit
+			  </mat-checkbox>
+			</div>
+			<div *ngIf="form.get('isWe').value">
+				<b>Week-end pris en compte</b>
+			</div>
+		</div>
+	</div>
+
+	<mat-form-field>
+    <textarea
+	    matInput 
+	    placeholder="Détail"  
+			formControlName="detail"
+		>
+		</textarea> 
+  </mat-form-field>
+
+	<!-- <div>
+		<h6> 
+			Déplacement - Frais 
+			<button 
+				style="margin-left: 10px;"
+        mat-mini-fab
+        color="primary"
+        matTooltip="Ajouter"
+        [matMenuTriggerFor]="menu"
+      ><mat-icon>add</mat-icon></button>
+      <mat-menu #menu="matMenu">
+        <button 
+          mat-menu-item
+          (click)="addTravel()"
+        > <mat-icon>directions_car</mat-icon> Déplacement </button>
+        <button 
+          mat-menu-item
+          color="primary"
+          (click)="addExpense()"
+        > <mat-icon>euro_symbol</mat-icon> Frais </button>
+      </mat-menu>
+
+		</h6>
+
+		<div *ngIf="travels.length || expenses.length">
+	    <table class="table table-bordered table-sm travel-table">
+	    	<ng-container *ngIf="travels.length">
+		    	<thead>
+		    		<tr>
+		    			<th 
+			    			class="text-left"
+			    			colspan="4"
+			    		> <i> <b> Déplacements </b> </i> </th>
+			    	</tr>
+		    		<tr>
+		    			<th> Trajet </th>
+		    			<th> Durée (min) </th>
+		    			<th> Distance (km) </th>
+		    			<th></th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr *ngFor="let travel of travels; index as i">
+		    			<td> {{ travel.travel }} </td>
+		    			<td> {{ travel.duration }} </td>
+		    			<td> {{ travel.distance }} </td>
+		    			<td> 
+		    				<button 
+					        mat-icon-button
+					        class="setting-button"
+					        [matMenuTriggerFor]="menu"
+					      ><mat-icon>more_vert</mat-icon></button>
+					      <mat-menu #menu="matMenu">
+					        <button 
+					          mat-menu-item
+					          color="primary"
+					          (click)="editTravel(travel)"
+					        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+					        <button 
+					          mat-menu-item
+					          (click)="removeTravel(travel)"
+					        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+					      </mat-menu> 
+					    </td>
+		    		</tr>
+		    	</tbody>
+		    </ng-container>
+		    <ng-container *ngIf="expenses.length">
+		    	<thead>
+		    		<tr>
+		    			<th 
+			    			class="text-left"
+			    			colspan="4"
+			    		> 
+			    			<i><b> Frais </b></i> 
+			    		</th>
+			    	</tr>
+		    		<tr>
+		    			<th> Type </th>
+		    			<th> Fournisseur / Type </th>
+		    			<th> Coût TTC </th>
+		    			<th></th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		<tr *ngFor="let expense of expenses; index as i">
+		    			<td> {{ expense|json }} </td>
+		    			<td> {{ expense.provider }} </td>
+		    			<td class="text-center"> 
+		    				{{ expense.amountInclTax }} € 
+		    				<mat-icon [matTooltip]="expense.details">info</mat-icon>
+		    			</td>
+		    			<td> 
+		    				<button 
+					        mat-icon-button
+					        class="setting-button"
+					        [matMenuTriggerFor]="menu"
+					      ><mat-icon>more_vert</mat-icon></button>
+					      <mat-menu #menu="matMenu">
+					        <button 
+					          mat-menu-item
+					          color="primary"
+					          (click)="editExpense(expense)"
+					        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+					        <button 
+					          mat-menu-item
+					          (click)="removeExpense(expense)"
+					        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+					      </mat-menu> 
+					    </td>
+		    		</tr>
+		    	</tbody>
+		    </ng-container>
+	    </table>
+	  </div>
+	</div> -->
+
+	<div style="margin-top: 20px;">
+		<button
+			type="button"
+			mat-raised-button
+			type="button"
+			matTooltip="Remettre à zéro le formulaire"
+			(click)="reset()"
+		>
+		  Annuler
+		</button>
+		<app-submit-btn
+			type="button"
+			style="margin-left: 10px;"
+    	[disabled]="form.invalid"
+    	[waiting]="saving"
+    	matTooltip="Enregistrer"
+    	(onClick)="save()"
+    >
+    	{{ work ? 'Modifier' : 'Ajouter' }}
+    </app-submit-btn>
+	</div>
+
+</form>

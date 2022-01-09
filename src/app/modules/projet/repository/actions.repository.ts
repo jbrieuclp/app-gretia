@@ -6,7 +6,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Study, Employee, Action, ActionAttribution, Week, ActionCategory, Objective } from './project.interface';
+import { Study, Employee, Action, ActionAttribution, Week, Objective } from './project.interface';
 
 @Injectable()
 export class ActionsRepository extends ApiProjectRepository {
@@ -144,19 +144,5 @@ export class ActionsRepository extends ApiProjectRepository {
         map((res: Week[]) => res), 
         retry(3)
       );
-  }
-
-  /** GET list of ActionAttribution **/
-  actionCategories(params = {}): Observable<ActionCategory[]> {
-    const url = `${this.httpUrlBase}/action-categories`;
-    const options = {params: params};
-    return this.http
-      .get(url, options)
-      .pipe(
-        map((res: ActionCategory[]) => res), 
-        retry(3)
-      );
-  }
-
- 
+  } 
 }

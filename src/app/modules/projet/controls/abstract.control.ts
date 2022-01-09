@@ -12,7 +12,9 @@ export class AbstractControl implements OnInit, OnDestroy {
   private _required: boolean = false;
   @Input() set required(val: any) { this._required = ((val.toString()).toLowerCase() === 'false' ? false : true); };
   get required() { return this._required };
+
   @Input() appearance: string = 'legacy';
+  @Input() placeholder: string = '';
   loading: boolean = false;
   //options désactivées
   @Input() optionsDisabled: any[] = [];
@@ -30,12 +32,14 @@ export class AbstractControl implements OnInit, OnDestroy {
       this.form.setValue(this.form.value['@id'])
     }
 
-    this.form.valueChanges
-      .pipe(
-        filter((val: any) => val !== null && typeof val === 'object' && val['@id'] !== undefined),
-        map((val: any): string => val['@id'])
-      )
-      .subscribe(val => this.form.setValue(val));
+    this._subscriptions.push(
+      this.form.valueChanges
+        .pipe(
+          filter((val: any) => val !== null && typeof val === 'object' && val['@id'] !== undefined),
+          map((val: any): string => val['@id']),
+        )
+        .subscribe(val => this.form.setValue(val))
+    );
   }
 
   isDisabled(option): boolean {

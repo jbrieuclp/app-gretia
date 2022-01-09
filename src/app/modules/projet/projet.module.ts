@@ -40,11 +40,12 @@ import { LocalisationService } from './components/admin/admin-projet/localisatio
 import { LocalisationFormComponent } from './components/admin/admin-projet/localisation/localisation-form.component';
 import { LocalisationInfoComponent } from './components/admin/admin-projet/localisation/info.component';
 import { LocalisationControlComponent } from './controls/localisation-control/localisation-control.component';
+import { PersonControlComponent } from './controls/person-control/person-control.component';
 import { OrganismControlComponent } from './controls/organism-control/organism-control.component';
 import { ActionCategoriesComponent } from './components/admin/admin-projet/action-categories/action-categories.component';
 import { ActionCategoryInfoComponent } from './components/admin/admin-projet/action-categories/action-category/info.component';
 import { ActionCategoryFormComponent } from './components/admin/admin-projet/action-categories/action-category/action-category-form.component';
-import { ActionCategoryControlComponent } from './controls/action-category-control/action-category-control.component';
+import { WorkCategoryControlComponent } from './controls/work-category-control/work-category-control.component';
 import { ObjectiveControlComponent } from './controls/objective-control/objective-control.component';
 import { ChargeTypesComponent } from './components/admin/admin-projet/charge-type/charge-types.component';
 import { ChargeTypeInfoComponent } from './components/admin/admin-projet/charge-type/info/info.component';
@@ -83,14 +84,14 @@ import { ActionFormService } from './components/studies/study/actions/action/for
 import { ObjectiveFormService } from './components/studies/study/actions/action/objective/objective-form.service'
 import { ActionCategoriesService } from './components/admin/admin-projet/action-categories/action-categories.service';
 import { ActionService } from './components/studies/study/actions/action/action.service';
-import { WorkService } from './components/suiveuse/works/work.service';
 import { WeeksService } from './components/studies/study/actions/action/weeks/weeks.service';
 import { ProjectService } from './components/projects/project/project.service';
 import { ProjectFundersService } from './components/projects/project/funders/funders.service';
 import { ProjectSignatoriesService } from './components/projects/project/signatories/signatories.service';
 import { ProjectStudiesFundingsService } from './components/projects/project/studies-fundings/studies-fundings.service';
 import { WorkFormService } from './components/suiveuse/works/work-form/work-form.service';
-import { ExpenseFormService } from './components/suiveuse/works/work-form/expense-form/expense-form.service';
+import { ExpenseFormService } from './components/suiveuse/expenses/expense-form/expense-form.service';
+import { TravelFormService } from './components/suiveuse/travels/travel-form/travel-form.service';
 import { GlobalProjectService } from './components/global-project.service';
 
 //dialog
@@ -99,6 +100,7 @@ import { StudyFormDialog } from './components/studies/study/form/study-form.dial
 import { EmployeeControlComponent } from './controls/employee-control/employee-control.component';
 import { FundingTypeControlComponent } from './controls/funding-type-control/funding-type-control.component';
 import { ChargeTypeControlComponent } from './controls/charge-type-control/charge-type-control.component';
+import { ChargeTypeControlService } from './controls/charge-type-control/charge-type-control.service';
 import { ActionFormDialog } from './components/studies/study/actions/action/form/action-form.dialog';
 // import { ActionsChargesStudyComponent } from './components/studies/study/charges/actions-charges/actions-charges.component';
 import { StudyFundingsComponent } from './components/studies/study/fundings/fundings.component';
@@ -112,8 +114,8 @@ import { DailyCostFormDialog } from './components/projects/project/funders/daily
 import { StudyControlComponent } from './controls/study-control/study-control.component';
 import { SuiveusesComponent } from './components/suiveuse/suiveuses.component';
 import { WorksComponent } from './components/suiveuse/works/works.component';
-import { WorkFormComponent } from './components/suiveuse/works/work-form/work-form.component';
-import { ActionControlComponent } from './controls/action-control/action-control.component';
+import { WorkFormDialog } from './components/suiveuse/works/work-form/work-form.dialog';
+import { StudyActionControlComponent } from './controls/study-action-control/study-action-control.component';
 import { StudyComponent } from './components/studies/study/study.component';
 import { StudyDisplayComponent } from './components/studies/study/display/display.component';
 import { StudyActionsService } from './components/studies/study/actions/actions.service';
@@ -160,7 +162,7 @@ import { ProjectTypeControlComponent } from './controls/project-type-control/pro
 import { StudyChargesComponent } from './components/studies/study/charges/charges.component';
 // import { MontagesStudyComponent } from './components/studies/study/charges/montages.component';
 import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
-import { TravelFormDialog } from './components/suiveuse/works/work-form/travel-form/travel-form.dialog';
+import { TravelFormDialog } from './components/suiveuse/travels/travel-form/travel-form.dialog';
 import { TimeControlComponent } from './controls/time-control/time-control.component';
 import { ProvScheduleComponent } from './components/plans-charges/plan-charges/prov-schedule/prov-schedule.component';
 import { SchedulEditorDialog } from './components/plans-charges/plan-charges/prov-schedule/schedul-editor/schedul-editor.dialog';
@@ -171,7 +173,15 @@ import { StudyDeadlinesComponent } from './components/studies/study/deadlines/de
 import { StudyDeadlinesService } from './components/studies/study/deadlines/deadlines.service';
 import { StudyDeadlineFormDialog } from './components/studies/study/deadlines/form/deadline-form.dialog';
 import { DeadlineTypeControlComponent } from './controls/deadline-type-control/deadline-type-control.component';
-import { WorkExpenseFormDialog } from './components/suiveuse/works/work-form/expense-form/expense-form.dialog';
+import { ExpenseFormDialog } from './components/suiveuse/expenses/expense-form/expense-form.dialog';
+import { TravelsComponent } from './components/suiveuse/travels/travels.component';
+import { ExpensesComponent } from './components/suiveuse/expenses/expenses.component';
+import { WoksFiltersComponent } from './components/suiveuse/filters/filters.component';
+import { WorksResultComponent } from './components/suiveuse/result/works-result.component';
+import { TravelsResultComponent } from './components/suiveuse/result/travels-result.component';
+import { ExpensesResultComponent } from './components/suiveuse/result/expenses-result.component';
+import { WorkingTimeResultsComponent } from './components/suiveuse/result/results.component';
+import { WorkingTimeResultsService } from './components/suiveuse/result/results.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -229,7 +239,7 @@ export const MY_FORMATS = {
     ActionCategoryInfoComponent,
     ActionCategoriesComponent,
     ActionCategoryFormComponent,
-    ActionCategoryControlComponent,
+    WorkCategoryControlComponent,
     ObjectiveControlComponent,
     // ActionsChargesStudyComponent,
     StudyFundingsComponent,
@@ -248,8 +258,8 @@ export const MY_FORMATS = {
     StudyControlComponent,
     SuiveusesComponent,
     WorksComponent,
-    WorkFormComponent,
-    ActionControlComponent,
+    WorkFormDialog,
+    StudyActionControlComponent,
     StudyComponent,
     StudyDisplayComponent,
     ActionsComponent,
@@ -302,7 +312,16 @@ export const MY_FORMATS = {
     StudyDeadlinesComponent,
     StudyDeadlineFormDialog,
     DeadlineTypeControlComponent,
-    WorkExpenseFormDialog,
+    ExpenseFormDialog,
+    TravelsComponent,
+    ExpensesComponent,
+    PersonControlComponent,
+    WoksFiltersComponent,
+    WorksResultComponent,
+    WorkingTimeResultsComponent,
+    WorksResultComponent,
+    TravelsResultComponent,
+    ExpensesResultComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -323,7 +342,8 @@ export const MY_FORMATS = {
     ActionObjectiveFormDialog,
     ActionObjectiveAssignmentDialog,
     StudyDeadlineFormDialog,
-    WorkExpenseFormDialog,
+    ExpenseFormDialog,
+    WorkFormDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
@@ -358,7 +378,6 @@ export const MY_FORMATS = {
     WorksRepository,
     PersonRepository,
     ActionService,
-    WorkService,
     WeeksService,
     ProjectService,
     StudyFundingsService,
@@ -375,6 +394,9 @@ export const MY_FORMATS = {
     ObjectiveFormService,
     StudyDeadlinesService,
     ExpenseFormService,
+    TravelFormService,
+    ChargeTypeControlService,
+    WorkingTimeResultsService,
   ]
 })
 export class ProjetModule { }

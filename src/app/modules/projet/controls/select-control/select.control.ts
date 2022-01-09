@@ -3,9 +3,7 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 
 import { AbstractControl } from '../abstract.control';
 
-@Component({ 
-  template: '' 
-})
+@Component({ template: '' })
 export class SelectControl extends AbstractControl implements OnInit, OnDestroy {
 
   //etiquette pour la zone de saisie

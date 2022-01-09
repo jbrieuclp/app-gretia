@@ -11,50 +11,62 @@
 	</ng-container>
 	<ng-template #tableElement>
 		<table class="table">
-			<thead>
+			<!--thead>
 				<tr>
-					<th></th>
-					<th>Tache</th>
+					<th>Travail</th>
 					<th>Temps</th>
-					<th>Nuit</th>
-					<th>WE</th>
-					<th>Déplacement</th>
+					<th></th>
 				</tr>
-			</thead>
+			</thead-->
 			<tbody>
 				<tr *ngFor="let work of works">
 					<td>
-						<button 
-							mat-icon-button 
-							style="color: red;margin-right: 10px;"
-							(click)="deleteWork(work)"
+						<div 
+							*ngIf="orderBy.field !== 'workingDate'"
+							class="float-right"
 						>
-							<mat-icon>delete_outline</mat-icon>
-						</button>
+							<i>{{ work.workingDate | date:'dd/MM/yyyy' }}</i>
+						</div>
+						<div *ngIf="orderBy.field !== 'study'">
+							<span class="categ-label">Étude</span> <b>{{ work.study.label || '-' }}</b>
+						</div>
+						<div 
+							*ngIf="work.action && orderBy.field !== 'action'">
+							<span class="categ-label">Action</span>{{ work.action.label }}
+						</div>
+						<div *ngIf="orderBy.field !== 'category'">
+							<span class="categ-label">Catégorie</span> <i>{{ work.category?.label || '-' }}</i>
+						</div>
+					</td>
+					<td>
+						<div matTooltip="Temps passé">
+							{{ displayDuration(work.duration) }}
+							<small *ngIf="work.timeCoeff !== 1">
+								x{{ work.timeCoeff }} ({{ work.isWe ? 'Week-end' : 'Nuit' }})
+							</small>
+						</div>
+						<div 
+							*ngIf="work.timeCoeff !== 1"
+							matTooltip="Temps compté"
+						> <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
+					</td>
+					<td>
 						<button 
-							mat-icon-button 
-							color="primary"
-							(click)="editWork(work)"
-						>
-							<mat-icon>mode_edit_outline</mat-icon>
-						</button>
-					</td>
-					<td>
-						<div>{{ work.action?.category?.label || '-' }}</div>
-						<div><i>{{ work.action.study.label || '-' }}</i></div>
-					</td>
-					<td>{{ displayDuration(work.duration) }}</td>
-					<td>
-						<mat-icon>{{ work.isNight ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-					</td>
-					<td>
-						<mat-icon>{{ work.isWe ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-					</td>
-					<td>
-						<mat-icon 
-							[matBadge]="work.travels.length" 
-							matBadgeColor="primary"
-						> drive_eta </mat-icon>
+			        mat-icon-button
+			        class="setting-button"
+			        [matMenuTriggerFor]="menu"
+			      ><mat-icon>more_vert</mat-icon></button>
+			      <mat-menu #menu="matMenu">
+			        <button 
+			          mat-menu-item
+			          color="primary"
+			          (click)="editWork(work)"
+			        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+			        <button 
+			          mat-menu-item
+			          (click)="deleteWork(work)"
+			        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+			      </mat-menu> 
 					</td>
 				</tr>
 			</tbody>

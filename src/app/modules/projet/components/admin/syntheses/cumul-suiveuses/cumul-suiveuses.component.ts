@@ -94,6 +94,7 @@ export class CumulSuiveusesComponent implements OnInit {
   private getPersons(data): number[] { 
     return data
             .map(i => {return {'id_person': i.id_person, 'name': i.name, 'first_name': i.first_name}; }) //retourne le champ id_person
-            .filter((elem, index, self) => elem.id_person !== null && index === self.findIndex((t) => t.id_person === elem.id_person)); //dédoublonne
+            .filter((elem, index, self) => elem.id_person !== null && index === self.findIndex((t) => t.id_person === elem.id_person)) //dédoublonne
+            .sort();
   };
 }

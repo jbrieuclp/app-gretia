@@ -1,11 +1,11 @@
-th:nth-child(1),
 td:nth-child(1) {
-  width: 120px;
-  text-align: center;
+  padding: 5px 10px;
 }
 
-td:nth-child(1) > .mat-icon {
-  cursor: pointer;
+th:nth-child(2),
+td:nth-child(2) {
+  width: 90px;
+  text-align: center;
 }
 
 th:nth-child(3),
@@ -13,17 +13,29 @@ td:nth-child(3),
 th:nth-child(4),
 td:nth-child(4),
 th:nth-child(5),
-td:nth-child(5),
+td:nth-child(5) {
+  width: 80px;
+  text-align: center;
+}
+
 th:nth-child(6),
 td:nth-child(6) {
-  width: 80px;
+  width: 0px;
   text-align: center;
 }
 
 td {
 	vertical-align: middle;
+  font-size: 0.9em;
 }
 
 td mat-icon{
 	vertical-align: middle;
+}
+
+.categ-label {
+  width: 80px;
+  display: inline-block;
+  color: #888;
+  font-weight: 500;
 }

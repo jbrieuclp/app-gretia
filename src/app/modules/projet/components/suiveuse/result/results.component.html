@@ -1,0 +1,21 @@
+<mat-tab-group>
+  <mat-tab [label]="'Temps de travail ('+ works.length +')'">
+    <div style="padding: 10px 5px;">
+
+      <app-projet-works-works-result></app-projet-works-works-result>
+    </div>
+  </mat-tab>
+  <mat-tab [label]="'Déplacements ('+ travels.length +')'"> 
+    <div style="padding: 10px 5px;">
+      <app-projet-works-travels-result></app-projet-works-travels-result>
+    </div>
+  </mat-tab>
+  <mat-tab [label]="'Frais ('+ expenses.length +')'"> 
+    <div style="padding: 10px 5px;">
+      <app-projet-works-expenses-result></app-projet-works-expenses-result>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
+<ng-template #noData>Aucun élément à afficher</ng-template>
+<ng-template #loadingData> Récupération des données en cours... </ng-template>

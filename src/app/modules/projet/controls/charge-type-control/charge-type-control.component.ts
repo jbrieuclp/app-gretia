@@ -1,21 +1,21 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, Input, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 
-import { SelectControl } from '../select-control/select.control';
-import { ChargeTypeRepository } from '../../repository/charge-type.repository';
+import { AbstractControl } from '../abstract.control';
 import { ChargeType } from '../../repository/project.interface';
+import { ChargeTypeRepository } from '../../repository/charge-type.repository';
 
 @Component({
   selector: 'app-projet-control-charge-type',
-  templateUrl: '../select-control/select.control.html'
+  templateUrl: '../autocomplete-control/autocomplete.template.html'
 })
-export class ChargeTypeControlComponent extends SelectControl implements OnInit {
+export class ChargeTypeControlComponent extends AbstractControl implements OnInit, OnDestroy {
 
   label = "Type de charge";
-  loading: boolean = false;
   optionDisplayFn = (option) => option.label;
   value = (option) => option['@id'];
+  options: any[] = [];
 
   constructor(
     private chargeTypeR: ChargeTypeRepository
@@ -24,17 +24,26 @@ export class ChargeTypeControlComponent extends SelectControl implements OnInit 
   }
 
   ngOnInit() {
+
     super.ngOnInit();
-    this.getChargeTypes();
+
+    this.getChargeTypes()
+      .subscribe((chargeTypes:ChargeType[]) => this.options = chargeTypes);
   }
 
   getChargeTypes() {
     this.loading = true;
-    this.chargeTypeR.chargeTypes()
+
+    return this.chargeTypeR.chargeTypes()
       .pipe(
-        map((data: any): ChargeType[]=>data["hydra:member"]),
-        tap(() => this.loading = false)
-      )
-      .subscribe((chargeTypes:ChargeType[]) => this.options = chargeTypes);
+        map((data: any): ChargeType[] => data["hydra:member"]),
+        tap(() => this.loading = false),
+        map((chargeTypes: ChargeType[]) => chargeTypes.sort((a, b)=> a.orderBy - b.orderBy))
+      );
+      
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }

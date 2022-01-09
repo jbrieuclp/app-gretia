@@ -7,9 +7,9 @@ import { tap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { AuthService } from '../../../../shared/auth/authentication.service';
-import { EmployeeRepository } from '../../repository/employee.repository';
-import { Person } from '../../repository/project.interface';
+import { AuthService } from '@shared/auth/authentication.service';
+import { EmployeeRepository } from '@projet/repository/employee.repository';
+import { Person } from '@projet/repository/project.interface';
 import { PlanChargesService } from './plan-charges/plan-charges.service';
 
 @Component({

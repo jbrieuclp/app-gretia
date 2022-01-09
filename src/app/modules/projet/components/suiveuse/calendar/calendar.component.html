@@ -8,7 +8,39 @@
 		  <button mat-icon-button  (click)="nextMonth()">
 		    <mat-icon aria-label="Example icon-button with a heart icon">keyboard_arrow_right</mat-icon>
 		  </button>
-		  <span class="title">{{ months[month.getMonth()] }} {{month.getFullYear()}}</span>
+
+	  	<div class="ym-selects">
+				<mat-form-field class="month-select">
+				  <mat-select
+				  	(selectionChange)="onMonthSelect($event.value)"
+				  	[value]="month.getMonth()"
+				  >
+				    <mat-option 
+				    	*ngFor="let month of months; let idx = index" 
+				    	[value]="idx"
+				    >
+				      {{ month }}
+				    </mat-option>
+				  </mat-select>
+				</mat-form-field>
+			</div>
+			
+			<div class="ym-selects">
+				<mat-form-field class="year-select">
+				  <mat-select
+				  	(selectionChange)="onYearSelect($event.value)"
+				  	[value]="month.getFullYear()"
+				  >
+				    <mat-option 
+				    	*ngFor="let year of selectYears" 
+				    	[value]="year"
+				    >
+				      {{ year }}
+				    </mat-option>
+				  </mat-select>
+				</mat-form-field>
+			</div>
+
 		</div>
 		<div class="days-name">
 			<span>Lundi</span>
@@ -37,7 +69,9 @@
 						</span>
 
 						<div class="day-time">
-							<div matTooltip="Temps de travail en journée">
+							<div 
+								*ngIf="getWorkByDate(date)?.work_day"
+								matTooltip="Temps de travail en journée">
 								<mat-icon inline="true"> light_mode </mat-icon>
 								<span> {{ displayTime(getWorkByDate(date)?.work_day) }}</span>
 							</div>
@@ -51,26 +85,19 @@
 							</div>
 
 							<div 
-								*ngIf="getWorkByDate(date)?.travel"
+								*ngIf="getWorkByDate(date)?.travelTime"
 								matTooltip="Temps en déplacement"
 							>
 								<mat-icon inline="true"> directions_car </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.travel) }}</span>
+								<span> {{ displayTime(getWorkByDate(date)?.travelTime) }}</span>
 							</div>
-						</div>
-
-						<div 
-							class="recup-time"
-							matTooltip="Heures supplémentaires"
-						>
-							<span> {{ getWorkByDate(date)?.recup > 0 ? '+' : ''}}{{ displayTime(getWorkByDate(date)?.recup) }}</span>
 						</div>
 
 						<div 
 							class="working-time"
 							matTooltip="Temps total compté pour la journé"
 						>
-							<span> {{ displayTime(getWorkByDate(date)?.workingTime) }}</span>
+							<span> {{ displayTime(getWorkByDate(date)?.totalTime) }}</span>
 						</div>
 
 

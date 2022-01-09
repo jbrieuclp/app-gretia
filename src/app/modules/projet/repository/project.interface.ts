@@ -22,16 +22,6 @@ export interface ActionAttribution {
   "nbOfDays"?: number;
 }
 
-export interface ActionCategory {
-  "@id"?: string;
-  "@type"?: string;
-  "id"?: number;
-  "label"?: Study|string;
-  "description"?: string;
-  "orderBy"?: number;
-  "actions"?: Action[]|string[];
-}
-
 export interface Antenne {
   "@id"?: string;
   "@type"?: string;
@@ -132,13 +122,15 @@ export interface Expense {
   "@id"?: string;
   "@type"?: string;
   "id"?: number;
-  "work"?: Work|string;
+  "study"?: any;
   "chargeType"?: ChargeType|string;
   "provider"?: string;
   "details"?: string;
   "amountExclTax"?: number;
   "vat"?: number;
   "amountInclTax"?: number;
+  "travel"?: string;
+  "expenseDate"?: Date;
   "createdAt"?: Date;
   "createdBy"?: string;
   "updatedAt"?: Date;
@@ -369,7 +361,10 @@ export interface Travel {
   "@id"?: string;
   "@type"?: string;
   "id"?: number;
+  "study"?: any;
   "travel"?: string;
+  "travelDate"?: Date;
+  "employee"?: any;
   "duration"?: number;
   "distance"?: number;
   "createdAt"?: Date;
@@ -393,6 +388,7 @@ export interface Work {
   "@id"?: string;
   "@type"?: string;
   "id"?: number;
+  "study"?: any;
   "action"?: any;
   "category"?: any;
   "employee"?: any;
@@ -401,10 +397,20 @@ export interface Work {
   "detail"?: string;
   "isNight"?: boolean;
   "isWe"?: boolean;
+  "timeCoeff"?: number;
   "travels"?: any[];
   "expenses"?: any[];
   "createdAt"?: Date;
   "createdBy"?: string;
   "updatedAt"?: Date;
   "updatedBy"?: string;
+}
+
+export interface WorkCategory {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "label"?: Study|string;
+  "description"?: string;
+  "orderBy"?: number;
 }

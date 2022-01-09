@@ -1,0 +1,30 @@
+th:nth-child(2),
+td:nth-child(2),
+th:nth-child(3),
+td:nth-child(3),
+th:nth-child(4),
+td:nth-child(4)  {
+  width: 80px;
+  text-align: center;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 0px;
+  text-align: center;
+}
+
+td {
+	vertical-align: middle;
+}
+
+td mat-icon{
+	vertical-align: middle;
+}
+
+.categ-label {
+  width: 80px;
+  display: inline-block;
+  color: #888;
+  font-weight: 500;
+}

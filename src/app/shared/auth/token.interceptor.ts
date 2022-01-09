@@ -46,11 +46,11 @@ export class TokenInterceptor implements HttpInterceptor {
                     } else {
                       if (error.error instanceof Error) {
                         // A client-side or network error occurred. Handle it accordingly.
-                        this.globalsS.snackBar({msg: `Une erreur est survenue: ${error.error.message}`, color: 'red', duration: 0});
+                        this.globalsS.snackBar({msg: `Une erreur est survenue: ${error.error.message}`, color: 'red', duration: 2000});
                       } else {
                         // The backend returned an unsuccessful response code.
                         // The response body may contain clues as to what went wrong,
-                        this.globalsS.snackBar({msg: `Une erreur est survenue: ${error.status} - ${error.error['hydra:description']}`, color: 'red', duration: 0});
+                        this.globalsS.snackBar({msg: `Une erreur est survenue: ${error.status} - ${error.error['hydra:description']}`, color: 'red', duration: 2000});
                       }
 
                       // // ...optionally return a default fallback value so app can continue (pick one)

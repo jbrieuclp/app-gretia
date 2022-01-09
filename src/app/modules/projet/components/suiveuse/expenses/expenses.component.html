@@ -1,0 +1,45 @@
+<table class="table">
+	<thead>
+		<tr>
+			<th>Frais</th>
+			<th>Fournisseur</th>
+			<th>Coût TTC</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let expense of expenses">
+			<td>
+				<div *ngIf="orderBy.field !== 'chargeType'">
+					<span class="categ-label">Type</span> <b>{{ expense.chargeType.label }}</b>
+				</div>
+				<div *ngIf="orderBy.field !== 'study'">
+					<span class="categ-label">Étude</span> <b>{{ expense.study.label }}</b>
+				</div>
+				<div *ngIf="orderBy.field !== 'expenseDate'">
+					<span class="categ-label">Date</span> <b>{{ expense.expenseDate | date:'dd/MM/yyyy' }}</b>
+				</div>
+			</td>
+			<td>{{ expense.provider }}</td>
+			<td>{{ expense.amountInclTax }} €</td>
+			<td>
+				<button 
+	        mat-icon-button
+	        class="setting-button"
+	        [matMenuTriggerFor]="menu"
+	      ><mat-icon>more_vert</mat-icon></button>
+	      <mat-menu #menu="matMenu">
+	        <button 
+	          mat-menu-item
+	          color="primary"
+	          (click)="edit(expense)"
+	        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+	        <button 
+	          mat-menu-item
+	          (click)="delete(expense)"
+	        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+	      </mat-menu> 
+			</td>
+		</tr>
+	</tbody>
+</table>

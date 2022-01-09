@@ -1,0 +1,72 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+
+	<ng-container *ngIf="!travels.length; else tableElement">
+		<mat-list>
+		  <mat-divider></mat-divider>
+		  <mat-list-item>
+		    <p mat-line> Aucun déplacement ce jour </p>
+		  </mat-list-item>
+		  <mat-divider></mat-divider>
+		</mat-list>
+	</ng-container>
+	<ng-template #tableElement>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Déplacement</th>
+					<th>Temps</th>
+					<th>Distance</th>
+					<th>Conducteur</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let travel of travels">
+					<td>
+						<div *ngIf="orderBy.field !== 'study'">
+							<span class="categ-label">Étude</span> <b>{{ travel.study.label }}</b>
+						</div>
+						<div *ngIf="orderBy.field !== 'travelDate'">
+							<span class="categ-label">Date</span> <b>{{ travel.travelDate | date:'dd/MM/yyyy' }}</b>
+						</div>
+						<div>
+							<span class="categ-label">Détail</span> <b>{{ travel.travel || '-' }}</b>
+						</div>
+					</td>
+					<td>{{ displayDuration(travel.duration) }}</td>
+					<td>{{ travel.distance }} km</td>
+					<td>
+						<mat-icon>{{ travel.isDriver ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+					</td>
+					<!-- <td>
+						<mat-icon 
+							[matBadge]="work.travels.length" 
+							matBadgeColor="primary"
+						> drive_eta </mat-icon>
+					</td> -->
+					<td>
+						<button 
+			        mat-icon-button
+			        class="setting-button"
+			        [matMenuTriggerFor]="menu"
+			      ><mat-icon>more_vert</mat-icon></button>
+			      <mat-menu #menu="matMenu">
+			        <button 
+			          mat-menu-item
+			          color="primary"
+			          (click)="edit(travel)"
+			        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+			        <button 
+			          mat-menu-item
+			          (click)="delete(travel)"
+			        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+			      </mat-menu> 
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</ng-template>
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Récupération des deplacements effectués"></app-loader>
+</ng-template>

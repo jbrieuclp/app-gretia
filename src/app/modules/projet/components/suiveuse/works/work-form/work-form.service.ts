@@ -13,8 +13,6 @@ export class WorkFormService {
 
   public form: FormGroup;
   work: BehaviorSubject<Work> = new BehaviorSubject(null);
-  travels: Travel[] = [];
-  expenses: Expense[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -26,10 +24,8 @@ export class WorkFormService {
   private get initialValues(): any {
     const values = {
             isNight: false,
-            isWe: false,
+            isWe: this.isWeekend(this.suiveuseS.selectedDate.getValue()),
             workingDate: moment(this.suiveuseS.selectedDate.getValue()).format('YYYY-MM-DD'),
-            travels: [],
-            expenses: [],
           };
     return values;
   }
@@ -38,12 +34,17 @@ export class WorkFormService {
     //FORM
     this.form = this.fb.group({
       action: [null, [Validators.required]],
+      study: [null, [Validators.required]],
       category: [null, [Validators.required]],
       workingDate: [null, [Validators.required]],
-      duration: [null, [Validators.required, Validators.pattern('^[0-9]+\.?[0-9]*$')]],
+      duration: [null, [
+        Validators.required, 
+        Validators.pattern('^[0-9]+\.?[0-9]*$'),
+        Validators.min(0),
+      ]],
       detail: null,
       isNight: [null, [Validators.required]],
-      isWe: [null, [Validators.required]],
+      isWe: [null, [Validators.required]]
     });
 
 
@@ -56,10 +57,6 @@ export class WorkFormService {
             return data;
           } 
           return this.initialValues;
-        }),
-        tap((work: Work) => {
-          this.travels = work.travels;
-          this.expenses = work.expenses;
         })
       )
       .subscribe((data: any) => this.form.patchValue(data));
@@ -69,8 +66,8 @@ export class WorkFormService {
     return moment(date).isoWeekday() === 6 || moment(date).isoWeekday() === 7;
   }
 
-  reset() {
-    this.form.reset(this.initialValues);
-    this.form.get('isWe').setValue(this.isWeekend(this.suiveuseS.selectedDate.getValue()))
-  }
+  // reset() {
+  //   this.form.reset(this.initialValues);
+  //   this.form.get('isWe').setValue(this.isWeekend(this.suiveuseS.selectedDate.getValue()))
+  // }
 }

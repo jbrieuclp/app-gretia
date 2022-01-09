@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ConfirmationDialogComponent } from '../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { Action, ActionCategory } from '../../../../repository/project.interface';
+import { Action, WorkCategory } from '../../../../repository/project.interface';
 import { ActionCategoriesService } from './action-categories.service';
 
 @Component({
@@ -15,12 +15,12 @@ import { ActionCategoriesService } from './action-categories.service';
 })
 export class ActionCategoriesComponent implements OnInit {
 
-	get categories(): ActionCategory[] {
+	get categories(): WorkCategory[] {
     return this.actionCategoriesS.actionCategories;
   }
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
-  get category(): ActionCategory {
+  get category(): WorkCategory {
     return this.actionCategoriesS.itemSelected.getValue();
   }
 
@@ -33,7 +33,7 @@ export class ActionCategoriesComponent implements OnInit {
     this.actionCategoriesS.stepper = this.stepper;
   }
 
-  select(category: ActionCategory) {
+  select(category: WorkCategory) {
     this.actionCategoriesS.moveStepper(0);
     this.actionCategoriesS.itemSelected.next(category);
   }

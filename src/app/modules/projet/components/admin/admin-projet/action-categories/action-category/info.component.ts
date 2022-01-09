@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ConfirmationDialogComponent } from '../../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
-import { ActionCategory } from '../../../../../repository/project.interface';
+import { WorkCategory } from '../../../../../repository/project.interface';
 import { ActionCategoriesService } from '../action-categories.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { ActionCategoriesService } from '../action-categories.service';
 })
 export class ActionCategoryInfoComponent implements OnInit {
 
-  public category: ActionCategory;
+  public category: WorkCategory;
 
   constructor(
   	public dialog: MatDialog,
@@ -29,12 +29,12 @@ export class ActionCategoryInfoComponent implements OnInit {
   		.subscribe(category=>this.category = category);
   }
 
-  edit(category: ActionCategory) {
+  edit(category: WorkCategory) {
     this.actionCategoriesS.itemSelected.next(category);
     this.actionCategoriesS.moveStepper(1);
   }
 
-  delete(category: ActionCategory) {
+  delete(category: WorkCategory) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: `Confirmer la suppression de la valeur "${category.label}" ?`

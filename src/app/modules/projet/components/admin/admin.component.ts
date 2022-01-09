@@ -7,7 +7,7 @@ import { FormControl } from "@angular/forms";
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  form = new FormControl();
+
   constructor() { }
 
   ngOnInit() {

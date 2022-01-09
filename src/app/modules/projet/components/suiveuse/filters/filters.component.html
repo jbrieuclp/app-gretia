@@ -1,0 +1,71 @@
+<h6 style="margin-top: 15px;">Rechercher dans cette suiveuse</h6>
+<form [formGroup]="form">
+	<div class="row">
+		<div class="col col-lg-8">
+
+			<app-projet-action-control 
+				[actionForm]="form.get('action')"
+				[studyForm]="form.get('study')"
+			></app-projet-action-control>
+
+			<div class="row">
+			  <mat-form-field class="col-6">
+			  	<mat-label>De...</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="startP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="workingDate[after]"
+				  >
+				  <mat-datepicker-toggle matSuffix [for]="startP"></mat-datepicker-toggle>
+				  <mat-datepicker #startP></mat-datepicker>
+				</mat-form-field>
+
+			  <mat-form-field class="col-6">
+			  	<mat-label>à...</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="endP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="workingDate[before]">
+				  <mat-datepicker-toggle matSuffix [for]="endP"></mat-datepicker-toggle>
+				  <mat-datepicker #endP></mat-datepicker>
+				</mat-form-field>
+			</div>
+
+			<app-projet-control-work-category
+				[form]="form.get('category')"
+			>	
+			</app-projet-control-work-category>
+
+			<mat-form-field>
+		    <input 
+		    	id="detail"
+			    matInput 
+			    placeholder="Rechercher dans les détails"  
+					formControlName="detail"
+				>
+		  </mat-form-field>
+		</div>
+	</div>
+
+	<div style="margin-top: 20px;">
+		<button
+			type="button"
+			mat-raised-button
+			type="button"
+			matTooltip="Remise à zero du formulaire"
+			(click)="reset()"
+		>
+		  Reset
+		</button>
+		<app-submit-btn
+			type="button"
+			style="margin-left: 10px;"
+    	[waiting]="saving"
+    	(onClick)="search()"
+    >
+    	Rechercher
+    </app-submit-btn>
+	</div>
+</form>
