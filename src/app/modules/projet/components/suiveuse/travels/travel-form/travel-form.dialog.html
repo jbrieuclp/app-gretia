@@ -1,5 +1,5 @@
-<h5> {{ travel?.id ? 'Modifier' : 'Ajouter' }} un déplacement au {{ day|date:'d MMMM yyyy':undefined:'fr' }}</h5>
-{{form.value|json}}
+<h5> {{ travel?.id ? 'Modifier' : 'Ajouter' }} un déplacement à la date du {{ day|date:'d MMMM yyyy':undefined:'fr' }}</h5>
+
 <div 
 	*ngIf="chargeTypeLoading"
 	class="alert alert-primary" 

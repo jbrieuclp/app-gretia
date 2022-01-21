@@ -176,6 +176,9 @@ import { DeadlineTypeControlComponent } from './controls/deadline-type-control/d
 import { ExpenseFormDialog } from './components/suiveuse/expenses/expense-form/expense-form.dialog';
 import { TravelsComponent } from './components/suiveuse/travels/travels.component';
 import { ExpensesComponent } from './components/suiveuse/expenses/expenses.component';
+import { HolidaysComponent } from './components/suiveuse/holidays/holidays.component';
+import { HolidayFormService } from './components/suiveuse/holidays/holiday-form/holiday-form.service';
+import { HolidayFormDialog } from './components/suiveuse/holidays/holiday-form/holiday-form.dialog';
 import { WoksFiltersComponent } from './components/suiveuse/filters/filters.component';
 import { WorksResultComponent } from './components/suiveuse/result/works-result.component';
 import { TravelsResultComponent } from './components/suiveuse/result/travels-result.component';
@@ -322,6 +325,8 @@ export const MY_FORMATS = {
     WorksResultComponent,
     TravelsResultComponent,
     ExpensesResultComponent,
+    HolidaysComponent,
+    HolidayFormDialog,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -344,6 +349,7 @@ export const MY_FORMATS = {
     StudyDeadlineFormDialog,
     ExpenseFormDialog,
     WorkFormDialog,
+    HolidayFormDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
@@ -397,6 +403,7 @@ export const MY_FORMATS = {
     TravelFormService,
     ChargeTypeControlService,
     WorkingTimeResultsService,
+    HolidayFormService,
   ]
 })
 export class ProjetModule { }

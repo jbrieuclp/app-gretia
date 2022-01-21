@@ -108,6 +108,7 @@ export interface Employee {
   "contractEnd"?: string;
   "rate"?: number;
   "removable"?: boolean;
+  "holidays"?: any[];
 }
 
 export interface EmployeeParameter {
@@ -135,6 +136,7 @@ export interface Expense {
   "createdBy"?: string;
   "updatedAt"?: Date;
   "updatedBy"?: string;
+  "removable"?: boolean;
 }
 
 export interface Function {
@@ -177,6 +179,21 @@ export interface FundingTypeRef {
   "description"?: string;
   "orderBy"?: number;
   "fundingTypes"?: FundingType[];
+};
+
+export interface Holiday {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "employee"?: any;
+  "holidayDate"?: Date;
+  "morning"?: boolean;
+  "evening"?: boolean;
+  "quantity"?: number;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
 };
 
 export interface LoadPlan {
@@ -287,6 +304,15 @@ export interface Recup {
   "employee"?: any;
   "dateRecup"?: Date;
   "quantity"?: number;
+}
+
+export interface RefDay {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "date"?: Date;
+  "weekend"?: boolean;
+  "notWorked"?: boolean;
 }
 
 export interface Signatory {

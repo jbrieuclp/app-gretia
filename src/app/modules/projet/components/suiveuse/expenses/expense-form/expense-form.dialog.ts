@@ -32,9 +32,11 @@ export class ExpenseFormDialog implements OnInit {
 
   form: FormGroup;
   get amountTTCForm(): FormControl { return this.expenseFormS.amountTTCForm; };
-  expense: Expense = {};
+  get expense(): Expense { return this.expenseFormS.expense.getValue(); };
   HTForm_visibility: boolean = false;
   saving: boolean = false;
+
+  get selectedDate() { return this.suiveuseS.selectedDate.getValue(); };
 
   constructor(
     public dialogRef: MatDialogRef<ExpenseFormDialog>,
@@ -73,7 +75,7 @@ export class ExpenseFormDialog implements OnInit {
     this.saving = true;
     let data = Object.assign((this.expense !== null ? this.expense : {}), this.form.value);
 
-    let api = (data['@id'] ? this.workR.patch(data['@id'], data) : this.workR.postMyTravels(data));
+    let api = (data['@id'] ? this.workR.patch(data['@id'], data) : this.workR.postMyExpenses(data));
     api.pipe(
       tap(() => this.saving = false),
       tap((expense) => {

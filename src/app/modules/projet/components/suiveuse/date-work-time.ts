@@ -1,9 +1,12 @@
-import { Work, Recup, Travel } from '@projet/repository/project.interface';
+import { Work, Recup, Travel, Holiday } from '@projet/repository/project.interface';
 
 export class DateWorkTime {
   date: Date; 
   works: Work[] = [];
   travels: Travel[] = [];
+  _holiday: Holiday = null;
+  set holiday(holiday: Holiday) { this._holiday = holiday; };
+  get holiday() { return this._holiday; };
 
 
   constructor(date: Date) {
@@ -29,6 +32,7 @@ export class DateWorkTime {
       this.travels.push(travel);
     }
   }
+
 
   get work_day() {
     return this.works
@@ -77,6 +81,12 @@ export class DateWorkTime {
     return this.works
                   .filter(work => work.isWe === false && work.isNight === true)
                   .map(work => work.timeCoeff)[0];
+  }
+
+  get holidayQuantity() {
+    return this.travels
+                  .map(travel => travel.duration)
+                  .reduce((a, b) => a + b, 0);
   }
 
 };

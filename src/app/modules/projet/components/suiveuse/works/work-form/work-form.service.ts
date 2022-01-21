@@ -50,10 +50,16 @@ export class WorkFormService {
 
     this.work.asObservable()
       .pipe(
+        tap(() => this.form.reset()),
         map((work): any => {
           if (work !== null) {
             const data = Object.assign({}, work);
-            data.action = data.action['@id'];
+            if (data.action) {
+              data.action = data.action['@id'];
+            }
+            if (data.study) {
+              data.study = data.study['@id'];
+            }
             return data;
           } 
           return this.initialValues;
@@ -65,9 +71,4 @@ export class WorkFormService {
   private isWeekend(date): boolean {
     return moment(date).isoWeekday() === 6 || moment(date).isoWeekday() === 7;
   }
-
-  // reset() {
-  //   this.form.reset(this.initialValues);
-  //   this.form.get('isWe').setValue(this.isWeekend(this.suiveuseS.selectedDate.getValue()))
-  // }
 }

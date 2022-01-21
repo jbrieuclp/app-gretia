@@ -11,7 +11,7 @@ import { PersonRepository } from '@projet/repository/person.repository';
 import { EmployeeRepository } from '@projet/repository/employee.repository';
 import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
 import { WorksRepository } from '@projet/repository/works.repository';
-import { Work, Travel } from '@projet/repository/project.interface';
+import { Work, Travel, Holiday } from '@projet/repository/project.interface';
 import { DateWorkTime } from './date-work-time';
 
 @Injectable()
@@ -58,10 +58,10 @@ export class SuiveuseService {
               'compteId': compteId
             }}
         ),
-  			switchMap((params): Observable<DateWorkTime[]> => this.getDataByPeriod(params)),
         tap(() => this.workByDay = []),
+  			switchMap((params): Observable<DateWorkTime[]> => this.getDataByPeriod(params)),
   		)
-        .subscribe((val: DateWorkTime[]) => this.workByDay = val);
+        .subscribe(() => this.loading = false);
 
 
     this.authService.getUser().asObservable()
@@ -71,14 +71,17 @@ export class SuiveuseService {
       .subscribe(userId => this.personForm.setValue(userId))
   }
 
-  getDataByPeriod(params, loader: boolean = true): Observable<any> {
+  getDataByPeriod(params): Observable<any> {
+    this.loading = true;
+
     return forkJoin(
-      this.getWorks(params, loader),
-      this.getTravels(params, loader),
+      this.getWorks(params),
+      this.getTravels(params),
+      this.getHolidays(params),
     )
       .pipe(
-        map(([works, travels]: [Work[], Travel[]]): DateWorkTime[] => {
-          let dates: DateWorkTime[] = [];
+        tap(([works, travels, holidays]: [Work[], Travel[], Holiday[]]) => {
+          const dates: DateWorkTime[] = this.workByDay;
           works.forEach((work: Work) => {
             //si l'objet DateWorkTime correspondant à la date du Work n'existe pas on le créer
             if (dates.findIndex(d => moment(d.date).isSame(moment(work.workingDate), 'day')) === -1) {
@@ -101,53 +104,65 @@ export class SuiveuseService {
             date.addTravel(travel);
           });
 
-          return dates;
+          holidays.forEach((holiday: Holiday) => {
+            //si l'objet DateWorkTime correspondant à la date du Holiday n'existe pas on le créer
+            if (dates.findIndex(d => moment(d.date).isSame(moment(holiday.holidayDate), 'day')) === -1) {
+              dates.push(new DateWorkTime(moment(holiday.holidayDate).toDate()));
+            }
+
+            const date = dates.find(d => moment(d.date).isSame(moment(holiday.holidayDate), 'day'));
+            date.holiday = holiday;
+          });
         })
       )
     ;
   }
 
   refreshDayData(day): void {
-    // this.getDataByPeriod(day, day, false)
-    //   .pipe(
-    //     map((val: DateWorkTime[]): DateWorkTime => val.shift()),
-    //     map((val: DateWorkTime): [DateWorkTime, number] => {
-    //       return [
-    //         val,
-    //         this.workByDay.findIndex(elem => moment(elem.date).format('YYYY-MM-DD') === moment(day).format('YYYY-MM-DD'))
-    //       ]
-    //     }),
-    //     filter(([val, idx]: [DateWorkTime, number])  => idx !== -1),
-    //   )
-    //   .subscribe(([val, idx]: [DateWorkTime, number]) => this.workByDay[idx] = val)
+    const idx = this.workByDay.findIndex(e => moment(day).isSame(moment(e.date), 'day'));
+    if (idx !== -1) {
+      this.workByDay.splice(idx, 1);
+    }
+
+    this.getDataByPeriod(
+      {
+        'startDate': moment(day).format('YYYY-MM-DD'), 
+        'endDate': moment(day).format('YYYY-MM-DD'),
+        'compteId': this.personForm.value
+      }
+    )
+      .subscribe(() => this.loading = false);
   }
 
-  getWorks(params, loader: boolean): Observable<Work[]> {
-    if (loader) {
-      this.loading = true;
-    }
+  getWorks(params): Observable<Work[]> {
     return this.worksR.works({
         'workingDate[after]': params.startDate, 
         'workingDate[before]': params.endDate,
         'compteId': params.compteId
       })
       .pipe(
-        tap(() => this.loading = false),
         map((data: any) => data["hydra:member"])
       );
   }  
 
-  getTravels(params, loader: boolean): Observable<Travel[]> {
-    if (loader) {
-      this.loading = true;
-    }
+  getTravels(params): Observable<Travel[]> {
     return this.worksR.travels({
         'travelDate[after]': params.startDate, 
         'travelDate[before]': params.endDate,
         'compteId': params.compteId
       })
       .pipe(
-        tap(() => this.loading = false),
+        map((data: any) => data["hydra:member"])
+      );
+  }  
+
+  getHolidays(params): Observable<Holiday[]> {
+    return this.worksR.holidays({
+        'holidayDate[after]': params.startDate, 
+        'holidayDate[before]': params.endDate,
+        'compteId': params.compteId
+      })
+      .pipe(
         map((data: any) => data["hydra:member"])
       );
   }  

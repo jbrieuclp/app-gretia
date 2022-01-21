@@ -1,9 +1,10 @@
-
+<h5> {{ selectedDate|date:'EEEE d MMMM yyyy':undefined:'fr' }} </h5>
 <form [formGroup]="form">
 	<div>
 		<app-projet-action-control 
 			[actionForm]="form.get('action')"
 			[studyForm]="form.get('study')"
+			onlyStudy="true"
 			required="true"
 		></app-projet-action-control>
 	</div>
@@ -45,123 +46,6 @@
 		>
 		</textarea> 
   </mat-form-field>
-
-	<!-- <div>
-		<h6> 
-			Déplacement - Frais 
-			<button 
-				style="margin-left: 10px;"
-        mat-mini-fab
-        color="primary"
-        matTooltip="Ajouter"
-        [matMenuTriggerFor]="menu"
-      ><mat-icon>add</mat-icon></button>
-      <mat-menu #menu="matMenu">
-        <button 
-          mat-menu-item
-          (click)="addTravel()"
-        > <mat-icon>directions_car</mat-icon> Déplacement </button>
-        <button 
-          mat-menu-item
-          color="primary"
-          (click)="addExpense()"
-        > <mat-icon>euro_symbol</mat-icon> Frais </button>
-      </mat-menu>
-
-		</h6>
-
-		<div *ngIf="travels.length || expenses.length">
-	    <table class="table table-bordered table-sm travel-table">
-	    	<ng-container *ngIf="travels.length">
-		    	<thead>
-		    		<tr>
-		    			<th 
-			    			class="text-left"
-			    			colspan="4"
-			    		> <i> <b> Déplacements </b> </i> </th>
-			    	</tr>
-		    		<tr>
-		    			<th> Trajet </th>
-		    			<th> Durée (min) </th>
-		    			<th> Distance (km) </th>
-		    			<th></th>
-		    		</tr>
-		    	</thead>
-		    	<tbody>
-		    		<tr *ngFor="let travel of travels; index as i">
-		    			<td> {{ travel.travel }} </td>
-		    			<td> {{ travel.duration }} </td>
-		    			<td> {{ travel.distance }} </td>
-		    			<td> 
-		    				<button 
-					        mat-icon-button
-					        class="setting-button"
-					        [matMenuTriggerFor]="menu"
-					      ><mat-icon>more_vert</mat-icon></button>
-					      <mat-menu #menu="matMenu">
-					        <button 
-					          mat-menu-item
-					          color="primary"
-					          (click)="editTravel(travel)"
-					        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
-					        <button 
-					          mat-menu-item
-					          (click)="removeTravel(travel)"
-					        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
-					      </mat-menu> 
-					    </td>
-		    		</tr>
-		    	</tbody>
-		    </ng-container>
-		    <ng-container *ngIf="expenses.length">
-		    	<thead>
-		    		<tr>
-		    			<th 
-			    			class="text-left"
-			    			colspan="4"
-			    		> 
-			    			<i><b> Frais </b></i> 
-			    		</th>
-			    	</tr>
-		    		<tr>
-		    			<th> Type </th>
-		    			<th> Fournisseur / Type </th>
-		    			<th> Coût TTC </th>
-		    			<th></th>
-		    		</tr>
-		    	</thead>
-		    	<tbody>
-		    		<tr *ngFor="let expense of expenses; index as i">
-		    			<td> {{ expense|json }} </td>
-		    			<td> {{ expense.provider }} </td>
-		    			<td class="text-center"> 
-		    				{{ expense.amountInclTax }} € 
-		    				<mat-icon [matTooltip]="expense.details">info</mat-icon>
-		    			</td>
-		    			<td> 
-		    				<button 
-					        mat-icon-button
-					        class="setting-button"
-					        [matMenuTriggerFor]="menu"
-					      ><mat-icon>more_vert</mat-icon></button>
-					      <mat-menu #menu="matMenu">
-					        <button 
-					          mat-menu-item
-					          color="primary"
-					          (click)="editExpense(expense)"
-					        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
-					        <button 
-					          mat-menu-item
-					          (click)="removeExpense(expense)"
-					        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
-					      </mat-menu> 
-					    </td>
-		    		</tr>
-		    	</tbody>
-		    </ng-container>
-	    </table>
-	  </div>
-	</div> -->
 
 	<div style="margin-top: 20px;">
 		<button

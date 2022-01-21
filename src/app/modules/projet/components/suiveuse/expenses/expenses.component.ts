@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
+import { tap } from 'rxjs/operators';
 
 import { SuiveuseService } from '../suiveuse.service';
 import { ExpenseFormService } from './expense-form/expense-form.service';
@@ -8,6 +9,7 @@ import { Expense } from '../../../repository/project.interface';
 import { ApiProjectRepository } from '../../../repository/api-project.repository';
 import { ConfirmationDialogComponent } from '../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { GlobalsService } from '../../../../../shared/services/globals.service';
+import { WorkingTimeResultsService } from '../result/results.service';
 
 @Component({
   selector: 'app-project-worktime-expenses',
@@ -29,6 +31,7 @@ export class ExpensesComponent implements OnInit {
     public dialog: MatDialog,
     public apiR: ApiProjectRepository,
     private globalS: GlobalsService,
+    private workingTimeResultsS: WorkingTimeResultsService,
   ) { }
 
   ngOnInit() {
@@ -56,8 +59,10 @@ export class ExpensesComponent implements OnInit {
       if(result) {
         this.apiR.delete(expense['@id'])
           .pipe(
-            // tap(() => this.expensesS.refreshWorks(this.selectedDate.getValue())),
-            // tap(() => this.suiveuseS.refreshDayData(work.workingDate)),
+            tap(() => {
+              this.workingTimeResultsS.removeWorkFromResult(expense['@id']);
+              this.suiveuseS.refreshDayData(expense.expenseDate)
+            }),
           )
           .subscribe(() => this.globalS.snackBar({msg: "Frais supprimé"}));
       }

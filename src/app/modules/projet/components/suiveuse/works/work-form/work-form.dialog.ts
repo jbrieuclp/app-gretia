@@ -27,6 +27,8 @@ export class WorkFormDialog implements OnInit, OnDestroy {
   saving: boolean = false;
   get work(): Work { return this.workFormS.work.getValue(); };
 
+  get selectedDate() { return this.suiveuseS.selectedDate.getValue(); };
+
   constructor(
   	private fb: FormBuilder,
     public dialogRef: MatDialogRef<WorkFormDialog>,
@@ -81,7 +83,6 @@ export class WorkFormDialog implements OnInit, OnDestroy {
           this.workingTimeResultsS.works.push(work);
         }
       }),
-      // tap(() => this.workS.refreshWorks(this.suiveuseS.selectedDate.getValue())),
       tap((work) => this.suiveuseS.refreshDayData(work.workingDate)),
       tap(() => this.reset()),
 		)

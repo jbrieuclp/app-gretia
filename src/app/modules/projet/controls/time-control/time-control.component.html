@@ -5,9 +5,14 @@
 	    <input 
 	    	id="durationForm"
 	    	matInput 
+	    	type="number"
+	    	min="0"
+	    	max="12"
+	    	step="0.25"
 		    placeholder="Ex : 1.25 pour 1h15"
 		    autocomplete="off"
-		    [formControl]="durationForm">
+		    [formControl]="durationForm"
+		  >
 		  <mat-error>Renseignez au quart d'heure (0.25, 0.5 ou 0.75)</mat-error>
 	  </mat-form-field>
 	</ng-container>
@@ -23,6 +28,10 @@
 			    <input 
 			    	id="hour"
 			    	matInput 
+			    	type="number"
+			    	min="0"
+			    	max="12"
+			    	step="1"
 				    placeholder="Ex: 1" 
 				    formControlName="hour" 
 				    [matAutocomplete]="autoHour"
@@ -30,6 +39,7 @@
 			    <mat-autocomplete #autoHour>
 			      <mat-option 
 			      	*ngFor="let option of optionsHour" 
+			      	[class.mat-selected] = "timeForm.get('hour').value === option"
 			      	[value]="option"
 			      >
 			        {{ option }}
@@ -41,6 +51,10 @@
 			    <input 
 			    	id="minute"
 			    	matInput 
+			    	type="number"
+			    	min="0"
+			    	max="45"
+			    	step="15"
 				    placeholder="Ex: 15" 
 				    formControlName="minute" 
 				    [matAutocomplete]="autoMinute"
@@ -48,6 +62,7 @@
 			    <mat-autocomplete #autoMinute>
 			      <mat-option 
 			      	*ngFor="let option of optionsMinute" 
+			      	[class.mat-selected] = "timeForm.get('minute').value === option"
 			      	[value]="option"
 			      >
 			        {{ option }}

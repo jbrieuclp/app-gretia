@@ -8,7 +8,7 @@ import 'moment/locale/fr'  // without this line it didn't work
 
 import { SuiveuseService } from '../suiveuse.service';
 import { WorksRepository } from '@projet/repository/works.repository';
-import { Work, Expense, Travel } from '@projet/repository/project.interface';
+import { Work, Expense, Travel, Holiday } from '@projet/repository/project.interface';
 
 @Injectable()
 export class WorkingTimeResultsService {
@@ -21,6 +21,9 @@ export class WorkingTimeResultsService {
 
   expenses: Expense[] = [];
   expensesLoading: boolean = false;
+
+  holidays: Holiday[] = [];
+  holidaysLoading: boolean = false;
 
   get personForm() { return this.suiveuseS.personForm; }
   get selectedDate() { return this.suiveuseS.selectedDate; }
@@ -48,7 +51,7 @@ export class WorkingTimeResultsService {
       .pipe(
         switchMap(() => this.getResults())
       )
-      .subscribe((val) => console.log(val));
+      .subscribe((val) => {return;});
   }
 
   getResults(params?: any): Observable<any> {
@@ -121,4 +124,40 @@ export class WorkingTimeResultsService {
         tap((expenses: Expense[]) => this.expenses = expenses)
       );
   } 
+
+  getHolidays(params?: any): Observable<Holiday[]> {
+    this.holidaysLoading = true;
+    this.holidays = [];
+    
+    if (params === undefined) {
+      params = {
+        compteId: this.personForm.value,
+        'holidayDate[after]': moment(this.selectedDate.getValue()).format('YYYY-MM-DD'),
+        'holidayDate[before]': moment(this.selectedDate.getValue()).format('YYYY-MM-DD'),
+      }
+    }
+
+    return this.worksR.holidays(params)
+      .pipe(
+        // tap(() => this.searching = false),
+        tap(() => this.holidaysLoading = false),
+        map((data: any): Holiday[] => data["hydra:member"]),
+        tap((holidays: Holiday[]) => this.holidays = holidays)
+      );
+  } 
+
+  removeWorkFromResult(id) {
+    const idx = this.works.findIndex(e => e['@id'] === id);
+    if (idx !== -1) { this.works.splice(idx, 1); }
+  }
+
+  removeTravelFromResult(id) {
+    const idx = this.travels.findIndex(e => e['@id'] === id);
+    if (idx !== -1) { this.travels.splice(idx, 1); }
+  }
+
+  removeExpenseFromResult(id) {
+    const idx = this.expenses.findIndex(e => e['@id'] === id);
+    if (idx !== -1) { this.expenses.splice(idx, 1); }
+  }
 }

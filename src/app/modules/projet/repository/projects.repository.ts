@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Organism, Project, Funder, Signatory, ProjectDeadline, DeadlineType, StudyFunding, ProjectType } from './project.interface';
+import { Organism, Project, Funder, Signatory, ProjectDeadline, DeadlineType, StudyFunding, ProjectType, RefDay } from './project.interface';
 
 @Injectable()
 export class ProjectsRepository extends ApiProjectRepository {
@@ -194,5 +194,17 @@ export class ProjectsRepository extends ApiProjectRepository {
         map((res: ProjectType[]) => res), 
         retry(3)
       );
+  }
+
+  refDays(params: any = {}): Observable<RefDay[]> {
+    const url = `${this.httpUrlBase}/ref-days`;
+    // const url = `${this.httpUrlBase}/expenses?${params}`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http
+      .get(url, http_options)
+      .pipe(
+        map((res: RefDay[]) => res),
+        retry(3)
+       );
   }
 }

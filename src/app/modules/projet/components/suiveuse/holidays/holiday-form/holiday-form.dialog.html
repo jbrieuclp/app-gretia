@@ -1,0 +1,122 @@
+<h5> {{ holiday?.id ? 'Modifier un congé' : 'Poser des congés' }} </h5>
+
+<form 
+	[style.fontSize.px]="14"
+>
+	<div class="row">
+	  <mat-form-field class="col-6">
+	  	<mat-label>Du...</mat-label>
+		  <input 
+		  	matInput 
+		  	[matDatepicker]="startP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	[formControl]="startDateForm"
+		  	[max]="endDateForm.value"
+		  >
+		  <mat-datepicker-toggle matSuffix [for]="startP"></mat-datepicker-toggle>
+		  <mat-datepicker #startP></mat-datepicker>
+		</mat-form-field>
+
+	  <mat-form-field class="col-6">
+	  	<mat-label>au...</mat-label>
+		  <input 
+		  	matInput 
+		  	[matDatepicker]="endP" 
+		  	placeholder="jj/mm/aaaa" 
+		  	[formControl]="endDateForm"
+		  	[min]="startDateForm.value"
+		  >
+		  <mat-datepicker-toggle matSuffix [for]="endP"></mat-datepicker-toggle>
+		  <mat-datepicker 
+		  	#endP
+		  ></mat-datepicker>
+		</mat-form-field>
+	</div>
+
+	<ng-container *ngIf="loading === false; else loadingTemplate">
+		<table 
+			*ngIf="holidayForms.length"
+			class="table table-borderless"
+		>
+			<thead>
+				<tr>
+					<td 
+						class="table-success"
+						colspan="3"
+					>Congé déjà posé</td>
+				</tr>
+				<tr>
+					<th></th>
+					<th>Matin</th>
+					<th>Après-midi</th>
+				</tr>
+			</thead>
+			<tbody>
+				<ng-container *ngFor="let hf of holidayForms">
+					<tr 
+						[formGroup]="hf.form"
+						[class.table-secondary]="hf.form.disabled"
+						[class.table-success]="hf.holiday !== undefined"
+					>
+						<td class="text-right">{{ displayDate(hf.form.get('holidayDate').value) }}</td>
+						<td>
+							<mat-checkbox 
+								color="primary"
+								formControlName="morning"
+							></mat-checkbox>
+						</td>
+						<td>
+							<mat-checkbox 
+								color="primary"
+								formControlName="evening"
+							></mat-checkbox>
+						</td>
+					</tr>
+				</ng-container>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">Jours demandés: {{ accumulatedDays }}</td>
+				</tr>
+			</tfoot>
+		</table>
+
+		<div 
+		  *ngIf="holidayForms.length === 0"
+		  class="alert alert-warning" 
+		  role="alert"
+		>
+		  Veuillez définir la période des congés
+		</div>
+			
+	</ng-container>
+	
+
+	<div style="margin-top: 10px;">
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="close()">
+      Annuler
+    </button>
+    <app-submit-btn
+    	[disabled]="holidayForms.length === 0 || loading"
+    	[text]="holiday?.id ? 'Modifier' : 'Valider'"
+    	[waiting]="saving"
+    	(onClick)="submit()"
+    >
+    	<mat-icon>done</mat-icon> <span>{{ holiday?.id ? 'Modifier' : 'Valider' }}</span>
+    </app-submit-btn>
+  </div>
+</form>
+
+
+<ng-template #loadingTemplate>
+	<div 
+	  *ngIf="holidayForms.length === 0"
+	  class="alert alert-primary" 
+	  role="alert"
+	>
+		Récupération des informations
+	</div>
+</ng-template>

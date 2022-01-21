@@ -34,7 +34,7 @@
 						</div>
 					</td>
 					<td>{{ displayDuration(travel.duration) }}</td>
-					<td>{{ travel.distance }} km</td>
+					<td>{{ travel.distance ? travel.distance + 'km' : '-' }}</td>
 					<td>
 						<mat-icon>{{ travel.isDriver ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
 					</td>

@@ -52,7 +52,8 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
       .subscribe((actions: Action[]) => this.actions.next(actions));
 
     if (this.onlyStudy) {
-      this.selectStudySwitcher = true;
+      this.onChangeStudySwitcher(true);
+      // this.selectStudySwitcher = true;
     }
   }
 

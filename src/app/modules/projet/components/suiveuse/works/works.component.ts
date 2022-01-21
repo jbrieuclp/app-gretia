@@ -12,6 +12,7 @@ import { WorkFormService } from './work-form/work-form.service';
 import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 import { WorkFormDialog } from './work-form/work-form.dialog';
+import { WorkingTimeResultsService } from '../result/results.service';
 
 @Component({
   selector: 'app-projet-suiveuses-works',
@@ -31,6 +32,8 @@ export class WorksComponent implements OnInit {
     public dialog: MatDialog,
     private suiveuseR: SuiveuseRepository,
     private globalS: GlobalsService,
+    private suiveuseS: SuiveuseService,
+    private workingTimeResultsS: WorkingTimeResultsService,
   ) { }
 
   ngOnInit() {
@@ -59,14 +62,16 @@ export class WorksComponent implements OnInit {
   deleteWork(work) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: `Confirmer la suppression de ${work.duration}h de ${work.action.category.label} pour ${work.action.study.label}" ?`
+      data: `Confirmer la suppression de ${work.duration}h de ${work.category.label} pour ${work.study.label}" ?`
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         this.suiveuseR.delete(work['@id'])
           .pipe(
-            // tap(() => this.worksS.refreshWorks(this.selectedDate.getValue())),
-            // tap(() => this.suiveuseS.refreshDayData(work.workingDate)),
+            tap(() => {
+              this.workingTimeResultsS.removeWorkFromResult(work['@id']);
+              this.suiveuseS.refreshDayData(work.workingDate)
+            }),
           )
           .subscribe(() => this.globalS.snackBar({msg: "Travail supprimée"}));
       }

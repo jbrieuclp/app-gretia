@@ -68,6 +68,19 @@
 							{{ date|date:'d' }}
 						</span>
 
+						<div 
+							*ngIf="getWorkByDate(date)?.holiday !== null"
+							class="day-holiday"
+							matTooltip="Prise de congé"
+						>
+							<mat-icon> beach_access </mat-icon>
+							<div>
+								<span *ngIf="getWorkByDate(date).holiday.morning && !getWorkByDate(date).holiday.evening">Matin</span>
+								<span *ngIf="!getWorkByDate(date).holiday.morning && getWorkByDate(date).holiday.evening">Après-midi</span>
+								<span *ngIf="getWorkByDate(date).holiday.morning && getWorkByDate(date).holiday.evening">Jour</span>
+							</div>
+						</div>
+
 						<div class="day-time">
 							<div 
 								*ngIf="getWorkByDate(date)?.work_day"

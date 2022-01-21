@@ -75,7 +75,7 @@ export class TravelFormDialog implements OnInit {
         }
       }),
       tap((travel) => this.suiveuseS.refreshDayData(travel.travelDate)),
-      tap(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')})),
+      tap(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')+" - Recharger la journée pour mettre à jour les frais associés"})),
     )
     .subscribe(
       () => this.close(),

@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Action, Employee, Work, WorkCategory, Travel, Expense, Recup } from './project.interface';
+import { Action, Employee, Work, WorkCategory, Travel, Expense, Recup, Holiday } from './project.interface';
 
 
 @Injectable()
@@ -103,9 +103,23 @@ export class WorksRepository extends ApiProjectRepository {
       );
   }
 
-  /** POST create new Work **/
+  /** POST create new Travel **/
   postMyTravels(data: Travel): Observable<Travel> {
     const url = `${this.httpUrlBase}/travels/me`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+  /** POST create new Expense **/
+  postMyExpenses(data: Expense): Observable<Expense> {
+    const url = `${this.httpUrlBase}/expenses/me`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+    /** POST create new Holiday **/
+  postMyHolidays(data: Holiday): Observable<Holiday> {
+    const url = `${this.httpUrlBase}/holidays/me`;
     const sources = JSON.stringify(data);
     return this.http.post(url, sources, HTTP_OPTIONS);
   }
@@ -142,6 +156,18 @@ export class WorksRepository extends ApiProjectRepository {
       .get(url, http_options)
       .pipe(
         map((res: Recup[]) => res),
+        retry(3)
+       );
+  }
+
+  holidays(params: any = {}): Observable<Holiday[]> {
+    const url = `${this.httpUrlBase}/holidays`;
+    // const url = `${this.httpUrlBase}/expenses?${params}`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http
+      .get(url, http_options)
+      .pipe(
+        map((res: Holiday[]) => res),
         retry(3)
        );
   }

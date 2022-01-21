@@ -1,4 +1,4 @@
-<h5> {{ expense?.id ? 'Modifier' : 'Ajouter' }} un frais </h5>
+<h5> {{ expense?.id ? 'Modifier' : 'Ajouter' }} un frais à la date du {{ selectedDate|date:'d MMMM yyyy':undefined:'fr' }}</h5>
 
 <form 
 	[formGroup]="form"
@@ -108,7 +108,8 @@
     <app-submit-btn
     	[disabled]="!form.valid"
     	[text]="expense?.id ? 'Modifier' : 'Ajouter'"
-    	(onClick)="add()"
+    	[waiting]="saving"
+    	(onClick)="save()"
     >
     	<mat-icon>done</mat-icon> <span>{{ expense?.id ? 'Modifier' : 'Ajouter' }}</span>
     </app-submit-btn>
