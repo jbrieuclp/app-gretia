@@ -16,6 +16,9 @@ export class ChargeTypeControlComponent extends AbstractControl implements OnIni
   optionDisplayFn = (option) => option.label;
   value = (option) => option['@id'];
   options: any[] = [];
+  private _clearable: boolean = true;
+  @Input() set clearable(val: any) { this._clearable = ((val.toString()).toLowerCase() === 'false' ? false : true); };
+  get clearable() { return this._clearable };
 
   constructor(
     private chargeTypeR: ChargeTypeRepository

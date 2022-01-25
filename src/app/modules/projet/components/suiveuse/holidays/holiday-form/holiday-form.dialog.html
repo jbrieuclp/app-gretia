@@ -1,4 +1,4 @@
-<h5> {{ holiday?.id ? 'Modifier un congé' : 'Poser des congés' }} </h5>
+<h5> Modifier ou poser des congés </h5>
 
 <form 
 	[style.fontSize.px]="14"
@@ -101,11 +101,11 @@
     </button>
     <app-submit-btn
     	[disabled]="holidayForms.length === 0 || loading"
-    	[text]="holiday?.id ? 'Modifier' : 'Valider'"
+    	[text]="'Enregistrer'"
     	[waiting]="saving"
     	(onClick)="submit()"
     >
-    	<mat-icon>done</mat-icon> <span>{{ holiday?.id ? 'Modifier' : 'Valider' }}</span>
+    	<mat-icon>done</mat-icon> <span>Enregistrer</span>
     </app-submit-btn>
   </div>
 </form>

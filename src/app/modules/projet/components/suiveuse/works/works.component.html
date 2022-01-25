@@ -1,78 +1,72 @@
-<ng-container *ngIf="!loading; else loadingTemplate">
-
-	<ng-container *ngIf="!works.length; else tableElement">
-		<mat-list>
-		  <mat-divider></mat-divider>
-		  <mat-list-item>
-		    <p mat-line> Aucun travail ce jour </p>
-		  </mat-list-item>
-		  <mat-divider></mat-divider>
-		</mat-list>
-	</ng-container>
-	<ng-template #tableElement>
-		<table class="table">
-			<!--thead>
-				<tr>
-					<th>Travail</th>
-					<th>Temps</th>
-					<th></th>
-				</tr>
-			</thead-->
-			<tbody>
-				<tr *ngFor="let work of works">
-					<td>
-						<div 
-							*ngIf="orderBy.field !== 'workingDate'"
-							class="float-right"
-						>
-							<i>{{ work.workingDate | date:'dd/MM/yyyy' }}</i>
-						</div>
-						<div *ngIf="orderBy.field !== 'study'">
-							<span class="categ-label">Étude</span> <b>{{ work.study.label || '-' }}</b>
-						</div>
-						<div 
-							*ngIf="work.action && orderBy.field !== 'action'">
-							<span class="categ-label">Action</span>{{ work.action.label }}
-						</div>
-						<div *ngIf="orderBy.field !== 'category'">
-							<span class="categ-label">Catégorie</span> <i>{{ work.category?.label || '-' }}</i>
-						</div>
-					</td>
-					<td>
-						<div matTooltip="Temps passé">
-							{{ displayDuration(work.duration) }}
-							<small *ngIf="work.timeCoeff !== 1">
-								x{{ work.timeCoeff }} ({{ work.isWe ? 'Week-end' : 'Nuit' }})
-							</small>
-						</div>
-						<div 
-							*ngIf="work.timeCoeff !== 1"
-							matTooltip="Temps compté"
-						> <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
-					</td>
-					<td>
-						<button 
-			        mat-icon-button
-			        class="setting-button"
-			        [matMenuTriggerFor]="menu"
-			      ><mat-icon>more_vert</mat-icon></button>
-			      <mat-menu #menu="matMenu">
-			        <button 
-			          mat-menu-item
-			          color="primary"
-			          (click)="editWork(work)"
-			        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
-			        <button 
-			          mat-menu-item
-			          (click)="deleteWork(work)"
-			        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
-			      </mat-menu> 
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</ng-template>
+<ng-container *ngIf="!works.length; else tableElement">
+	<mat-list>
+	  <mat-divider></mat-divider>
+	  <mat-list-item>
+	    <p mat-line> Aucun travail ce jour </p>
+	  </mat-list-item>
+	  <mat-divider></mat-divider>
+	</mat-list>
 </ng-container>
-<ng-template #loadingTemplate>
-	<app-loader message="Récupération des actions réalisées"></app-loader>
+<ng-template #tableElement>
+	<table class="table">
+		<!--thead>
+			<tr>
+				<th>Travail</th>
+				<th>Temps</th>
+				<th></th>
+			</tr>
+		</thead-->
+		<tbody>
+			<tr *ngFor="let work of works">
+				<td>
+					<div 
+						*ngIf="orderBy.field !== 'workingDate'"
+						class="float-right"
+					>
+						<i>{{ work.workingDate | date:'dd/MM/yyyy' }}</i>
+					</div>
+					<div *ngIf="orderBy.field !== 'study'">
+						<span class="categ-label">Étude</span> <b>{{ work.study.label || '-' }}</b>
+					</div>
+					<div 
+						*ngIf="work.action && orderBy.field !== 'action'">
+						<span class="categ-label">Action</span>{{ work.action.label }}
+					</div>
+					<div *ngIf="orderBy.field !== 'category'">
+						<span class="categ-label">Catégorie</span> <i>{{ work.category?.label || '-' }}</i>
+					</div>
+				</td>
+				<td>
+					<div matTooltip="Temps passé">
+						{{ displayDuration(work.duration) }}
+						<small *ngIf="work.timeCoeff !== 1">
+							x{{ work.timeCoeff }} ({{ work.isWe ? 'Week-end' : 'Nuit' }})
+						</small>
+					</div>
+					<div 
+						*ngIf="work.timeCoeff !== 1"
+						matTooltip="Temps compté"
+					> <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
+				</td>
+				<td>
+					<button 
+		        mat-icon-button
+		        class="setting-button"
+		        [matMenuTriggerFor]="menu"
+		      ><mat-icon>more_vert</mat-icon></button>
+		      <mat-menu #menu="matMenu">
+		        <button 
+		          mat-menu-item
+		          color="primary"
+		          (click)="editWork(work)"
+		        > <mat-icon style="color: #683ab7;">mode_edit_outline</mat-icon> Modifier </button>
+		        <button 
+		          mat-menu-item
+		          (click)="deleteWork(work)"
+		        > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+		      </mat-menu> 
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </ng-template>
