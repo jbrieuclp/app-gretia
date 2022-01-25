@@ -61,12 +61,12 @@ export class EmployeeControlComponent implements OnInit, OnDestroy {
   displayLabel(person, employee = null): string {
     if (this.historique) {
       if (employee.contractEnd === null) {
-        return `${ person.firstName } (poste actuel - débuté le ${ moment(employee.contractStart).format('MM/DD/YYYY') })`;
+        return `${ person.firstname } (poste actuel - débuté le ${ moment(employee.contractStart).format('MM/DD/YYYY') })`;
       } else {
-        return `${ person.firstName } (ancien poste - du ${ moment(employee.contractStart).format('MM/DD/YYYY') } au ${ moment(employee.contractEnd).format('MM/DD/YYYY') })`;
+        return `${ person.firstname } (ancien poste - du ${ moment(employee.contractStart).format('MM/DD/YYYY') } au ${ moment(employee.contractEnd).format('MM/DD/YYYY') })`;
       }
     } else {
-      return `${ person.firstName } ${ person.name }`;
+      return `${ person.firstname } ${ person.name }`;
     }
   }
 

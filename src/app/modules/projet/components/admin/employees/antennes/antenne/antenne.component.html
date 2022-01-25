@@ -26,7 +26,7 @@
 				<tbody>
 					<ng-container *ngIf="antenne.employees.length; else noData">
 						<tr *ngFor="let employee of antenne.employees">
-							<td>{{ employee.person.name }} {{ employee.person.firstName }}</td>
+							<td>{{ employee.person.name }} {{ employee.person.firstname }}</td>
 							<td>{{ employee.rate }}%</td>
 						</tr>
 					</ng-container>

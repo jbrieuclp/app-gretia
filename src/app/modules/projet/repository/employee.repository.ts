@@ -94,7 +94,7 @@ export class EmployeeRepository extends ApiProjectRepository {
 
   /** POST create new Person **/
   createEmployee(data: Employee): Observable<Employee> {
-    const url = `${this.httpUrlBase}/salaries`;
+    const url = `${this.httpUrlBase}/employees`;
     const sources = JSON.stringify(data);
     return this.http.post(url, sources, HTTP_OPTIONS);
   }
@@ -108,8 +108,8 @@ export class EmployeeRepository extends ApiProjectRepository {
   }
 
   /** DELETE remove Employee to Person **/
-  removeContrat(personne: Person, salarie: Employee): Observable<Person> {
-    const url = `${this.httpUrlBase}/persons/${personne.id}/contrat/${salarie.id}`;
+  removeContrat(personne: Person, employee: Employee): Observable<Person> {
+    const url = `${this.httpUrlBase}/persons/${personne.id}/contrat/${employee.id}`;
     return this.http.delete(url, HTTP_OPTIONS);
   }
 

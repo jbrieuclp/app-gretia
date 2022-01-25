@@ -7,7 +7,7 @@
     <mat-list *ngIf="!loading">
       <ng-container *ngIf="managers.length; else noData">
         <mat-list-item *ngFor="let manager of managers">
-          {{ manager.person.name }} {{ manager.person.firstName }}
+          {{ manager.person.name }} {{ manager.person.firstname }}
         </mat-list-item>
       </ng-container>
       <ng-template #noData>

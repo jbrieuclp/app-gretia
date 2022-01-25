@@ -16,7 +16,7 @@
 	  	<ng-container *ngIf="historique; else withoutGroup">
 		  	<mat-optgroup 
 		  		*ngFor="let person of persons" 
-		  		label="{{ person.firstName }} {{ person.name }}">
+		  		label="{{ person.firstname }} {{ person.name }}">
 			    <mat-option *ngFor="let employee of person.employees" [value]="employee['@id']">
 			      {{ displayLabel(person, employee) }}
 			    </mat-option>

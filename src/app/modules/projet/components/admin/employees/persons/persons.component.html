@@ -22,7 +22,7 @@
 							<mat-list>
 								<ng-container *ngIf="(persons||[]).length; else noPerson">
 
-									<ng-container *ngFor="let person of persons|sortBy:'asc':'id'; let last = last;">
+									<ng-container *ngFor="let person of persons|sortBy:'asc':'name'; let last = last;">
 
 									  <mat-list-item 
 									  	displayMouseOver 
@@ -37,7 +37,7 @@
 											    <mat-icon>edit</mat-icon>
 											  </button>
 											</span>
-									  	<span class="value">{{ person.name }} {{ person.firstName }} ({{ person.alias }})</span>
+									  	<span class="value">{{ person.name }} {{ person.firstname }} ({{ person.alias }})</span>
 									  </mat-list-item>
 									  <mat-divider *ngIf="!last"></mat-divider>
 

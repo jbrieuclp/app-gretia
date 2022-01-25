@@ -54,7 +54,7 @@ export class PersonService {
     //FORM
     this.form = this.fb.group({
       name: [null, Validators.required],
-      firstName: [null, Validators.required],
+      firstname: [null, Validators.required],
       alias: [null, Validators.required]
     });
 

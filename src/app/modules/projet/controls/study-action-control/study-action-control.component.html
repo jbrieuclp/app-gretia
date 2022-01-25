@@ -51,7 +51,7 @@
 	    	[class.mat-selected] = "studyForm.value === study['@id']"
 	    	[value]="study['@id']"
 	    >
-	      <small>{{ study.code }} {{ study.label }}</small>
+	      <small><span style="color: #999;">{{ study.code }} - </span> {{ study.label }}</small>
 	    </mat-option>
 		</ng-template>
   </mat-autocomplete>
