@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { tap } from "rxjs/operators";
+import { tap, map } from "rxjs/operators";
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
@@ -19,14 +19,30 @@ export class CumulSuiveusesComponent implements OnInit {
   dates: string[] = [];
   weeks: string[] = [];
   persons: any[] = [];
-  displayCategories: string[] = ['expected_time', 'duration', 'night_duration', 'travel_duration', 'total', 'recup'];
+  displayCategories: any[] = [
+    {id: 'expectedTime', label:'Temp attendu', displayFn: (val) => Math.round(val / 60 * 100) / 100}, 
+    {id: 'duration', label: 'Heure journalière', displayFn: (val) => Math.round(val / 60 * 100) / 100}, 
+    {id: 'nightDuration', label: 'Heure de nuit', displayFn: (val) => Math.round(val / 60 * 100) / 100}, 
+    {id: 'travelDuration', label: 'Heure de déplacement', displayFn: (val) => Math.round(val / 60 * 100) / 100}, 
+    {id: 'holidayQuantity', label:'Congé', displayFn: (val) => val}, 
+    {id: 'total', label:'Total', displayFn: (val) => Math.round(val / 60 * 100) / 100}, 
+    {id: 'recup', label:'Recup', displayFn: (val) => Math.round(val / 60 * 100) / 100}
+  ];
   waiting: boolean = false;
+  downloading: boolean = false;
+
+  tableContainerH: number;
 
   constructor(
     private fb: FormBuilder,
     private suiveuseR: SuiveuseRepository
   ) { 
     moment.locale('fr');
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.tableContainerH = window.innerHeight-310;
   }
 
   ngOnInit() {
@@ -37,18 +53,71 @@ export class CumulSuiveusesComponent implements OnInit {
   }
 
   getWorks() {
+    this.onResize(null);
     this.waiting = true;
     this.suiveuseR.cumulative({
-      "startAt": moment(this.form.get('start').value).format('YYYY-MM-DD'), 
-      "endAt": moment(this.form.get('end').value).format('YYYY-MM-DD')
+      "date[after]": moment(this.form.get('start').value).format('YYYY-MM-DD'), 
+      "date[before]": moment(this.form.get('end').value).format('YYYY-MM-DD')
     })
       .pipe(
         tap(() => this.waiting = false),
+        map((data: any): Function[] => data["hydra:member"]),
         tap((data) => this.dates = this.getDates(data)),
         tap((data) => this.weeks = this.getWeeks(data)),
         tap((data) => this.persons = this.getPersons(data))
       )
-      .subscribe(res => this.data = res);
+      .subscribe(
+        res => this.data = res,
+        (err) => this.waiting = false
+      );
+  }
+
+  downloadCsv() {
+    this.downloading = true;
+    this.suiveuseR.getCumulativeExport({
+      "date[after]": moment(this.form.get('start').value).format('YYYY-MM-DD'), 
+      "date[before]": moment(this.form.get('end').value).format('YYYY-MM-DD')
+    })
+      .pipe(
+        map((res: any): [any, string] => {
+          const filename = `suiveuses_${moment(this.form.get('start').value).format('YYYYMMDD')}_${moment(this.form.get('end').value).format('YYYYMMDD')}.csv`;
+          return [res, filename];
+        }),
+        tap(() => this.downloading = false)
+      )
+      .subscribe(
+        ([res, filename]: [any, string]) => this.saveFile(res, filename),
+        (err) => this.downloading = false
+      );
+  }
+
+  /**
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
+  downLoadFile(data: any, type: string) {
+    console.log(data);
+    let blob = new Blob([data], {type: type});
+    console.log(blob);
+    let url = window.URL.createObjectURL(blob);
+    let pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+        alert( 'Please disable your Pop-up blocker and try again.');
+    }
+  }
+
+  saveFile(blob, filename) {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 0)
   }
 
   selectPersonalRecup(date, key: string, person: any) {
@@ -58,23 +127,23 @@ export class CumulSuiveusesComponent implements OnInit {
 
   getTimeValue(person, date, category): number {
     return this.data
-      .filter(elem => elem.date === date && elem.id_person === person.id_person)
-      .map(elem => (+elem[category]) / 60)
+      .filter(elem => elem.date === date && elem.idPerson === person.idPerson)
+      .map(elem => category.displayFn(+elem[category.id]))
       .map(time => time === 0 ? null : time);
   }
 
   getWeekCumulTime(person, week, category) {
     let time = this.data
-      .filter(elem => `${moment(elem.date).year()}-${elem.week_number}` === week && elem.id_person === person.id_person)
-      .map(elem => +elem[category])
+      .filter(elem => `${moment(elem.date).year()}-${elem.weekNumber}` === week && elem.idPerson === person.idPerson)
+      .map(elem => category.displayFn(+elem[category.id]))
       .reduce((a, b) => a + b, 0);
 
-    return time === 0 ? null : time / 60;
+    return time === 0 ? null : time;
   }
 
   isWorked(date): boolean {
     let day = this.data.find(elem => elem.date === date);
-    return day !== null ? day.is_we || day.is_not_worked : false;
+    return day !== null ? day.isWe || day.isNotWorked : false;
   }
 
   private getDates(data): any[] { 
@@ -86,15 +155,15 @@ export class CumulSuiveusesComponent implements OnInit {
 
   private getWeeks(data): any[] { 
     return data
-            .map(i => `${moment(i.date).year()}-${i.week_number}`) //retourne la semaine
+            .map(i => `${moment(i.date).year()}-${i.weekNumber}`) //retourne la semaine
             .filter((elem, index, self) => index === self.indexOf(elem)) //dédoublonne
             .sort(); 
   };
 
   private getPersons(data): number[] { 
     return data
-            .map(i => {return {'id_person': i.id_person, 'name': i.name, 'first_name': i.first_name}; }) //retourne le champ id_person
-            .filter((elem, index, self) => elem.id_person !== null && index === self.findIndex((t) => t.id_person === elem.id_person)) //dédoublonne
+            .map(i => {return {'idPerson': i.idPerson, 'name': i.name, 'firstname': i.firstname}; }) //retourne le champ idPerson
+            .filter((elem, index, self) => elem.idPerson !== null && index === self.findIndex((t) => t.idPerson === elem.idPerson)) //dédoublonne
             .sort();
   };
 }

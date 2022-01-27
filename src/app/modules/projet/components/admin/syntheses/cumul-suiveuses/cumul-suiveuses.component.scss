@@ -1,8 +1,40 @@
-.table tbody tr:nth-child(6n) {
+.table-container {
+	overflow: auto;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+	width: 300px;;
+}
+
+.table tbody tr:nth-child(7n) {
 	border-bottom: 2px solid #000;
 }
 
 
 td.not-worked {
 	background-color: #ceaf8f;
+}
+
+thead th {
+	top: 0;
+	position: sticky;
+	z-index: 20;
+	background-color: #fff;
+}
+
+.fixed-header {
+	z-index: 50!important;
+}
+
+.col-name {
+	left: 0px;
+	position: sticky;
+	background-color: #fff;
+}
+
+.col-label {
+	left: 80px;
+	position: sticky;
+	background-color: #fff;
 }
