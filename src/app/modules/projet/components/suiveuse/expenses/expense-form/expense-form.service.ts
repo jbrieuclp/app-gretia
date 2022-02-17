@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
 import { SuiveuseService } from '../../suiveuse.service';
-import { Expense } from '../../../../repository/project.interface';
+import { Expense, ExpenseProof } from '../../../../repository/project.interface';
 
 @Injectable()
 export class ExpenseFormService {
@@ -14,6 +14,7 @@ export class ExpenseFormService {
   public form: FormGroup;
   public amountTTCForm: FormControl;
   expense: BehaviorSubject<Expense> = new BehaviorSubject(null);
+  proofs: ExpenseProof[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -45,9 +46,22 @@ export class ExpenseFormService {
       amountExclTax: [null, []],
       vat: [null, []],
       amountInclTax: [null, [Validators.required]],
+      files: this.fb.array([]),
     });
 
     this.amountTTCForm = new FormControl();
+  }
+
+  get files() : FormArray {
+    return this.form.get("files") as FormArray
+  }
+
+  addFile() {
+    this.files.push(new FormControl(''));
+  }
+
+  removeFile(i:number) {
+    this.files.removeAt(i);
   }
 
   private setObservables() {
@@ -56,8 +70,10 @@ export class ExpenseFormService {
         tap(() => this.form.reset()),
         map((expense): any => {
           if (expense !== null) {
+            // this.files = expense.files;
             const data = Object.assign({}, expense);
             data.study = data.study['@id'];
+            this.proofs = [...expense.proofs];
             return data;
           } 
           return this.initialValues;
@@ -98,6 +114,7 @@ export class ExpenseFormService {
   }
 
   reset() {
+    this.proofs = [];
     this.expense.next(null);
   }
 }

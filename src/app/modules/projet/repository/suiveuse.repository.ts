@@ -94,6 +94,18 @@ export class SuiveuseRepository extends ApiProjectRepository {
   }
 
   /** GET list of Work **/
+  getDateWorkTime(params = {}): Observable<any[]> {
+    const url = `${this.httpUrlBase}/date-work-times`;
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http
+      .get(url, http_options)
+      .pipe(
+        map((res: any[]) => res), 
+        retry(3)
+      );
+  }
+
+  /** GET list of Work **/
   getCumulativeExport(params = {}): Observable<ArrayBuffer> {
     const url = `${this.httpUrlBase}/cumulatives/export`;
     const http_options = Object.assign({}, HTTP_OPTIONS, {params: params, responseType: 'blob' as 'json'});

@@ -131,12 +131,27 @@ export interface Expense {
   "vat"?: number;
   "amountInclTax"?: number;
   "travel"?: string;
+  "proofs"?: any[];
   "expenseDate"?: Date;
   "createdAt"?: Date;
   "createdBy"?: string;
   "updatedAt"?: Date;
   "updatedBy"?: string;
   "removable"?: boolean;
+}
+
+export interface ExpenseProof {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "expense"?: any;
+  "fileName"?: string;
+  "filePath"?: string;
+  "originalFileName"?: string;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
 }
 
 export interface Function {

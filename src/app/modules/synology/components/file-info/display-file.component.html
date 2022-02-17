@@ -1,0 +1,34 @@
+<ng-container *ngIf="!error; else errorTemplate">
+
+	<span 
+		style="margin-right: 10px;"
+	  [matTooltip]="file.path"
+	>
+	  {{ fileName }}
+	</span>
+
+	<button 
+		*ngIf="downloadable || deletable"
+    mat-icon-button
+    class="setting-button"
+    [matMenuTriggerFor]="menu"
+  ><mat-icon>more_vert</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <button 
+    	*ngIf="downloadable"
+      mat-menu-item
+      color="primary"
+      (click)="download()"
+    > <mat-icon style="color: #683ab7;">file_download</mat-icon> Télécharger <small style="color: #555;">({{ fileSize }})</small></button>
+    <button 
+    	*ngIf="deletable"
+      mat-menu-item
+      (click)="delete()"
+    > <mat-icon style="color: red;">delete_outline</mat-icon> Supprimer </button>
+  </mat-menu> 
+</ng-container>
+<ng-template #errorTemplate>
+	<div class="file-error">Le fichier "{{ fileName }}" est introuvable</div>
+	<div class="path-error">Emplacement : {{ file.path }}</div>
+
+</ng-template>

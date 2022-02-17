@@ -111,10 +111,17 @@ export class WorksRepository extends ApiProjectRepository {
   }
 
   /** POST create new Expense **/
-  postMyExpenses(data: Expense): Observable<Expense> {
-    const url = `${this.httpUrlBase}/expenses/me`;
-    const sources = JSON.stringify(data);
-    return this.http.post(url, sources, HTTP_OPTIONS);
+  postMyExpenses(data: any, params: any): Observable<any> {
+    const url = `${this.httpUrlBase}/expenses/me?subfolder=${params.subfolder}&sid=${params.sid}`;
+    let sources; let http_options;
+    if (data instanceof FormData) {
+      sources = data;
+      http_options = Object.assign({}, HTTP_OPTIONS, HTTP_OPTIONS.headers.delete('Content-Type'));
+    } else {
+      sources = JSON.stringify(data);
+      http_options = Object.assign({}, HTTP_OPTIONS);
+    }
+    return this.http.post(url, sources, http_options);
   }
 
     /** POST create new Holiday **/

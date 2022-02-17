@@ -29,27 +29,46 @@ export class ApiProjectRepository {
   /** PUT personnes par ID (cd_nom) **/
   get(id: string, params = {}): Observable<any> {
     const url = `${this.url_backend}${id}`;
-    const options = {params: params};
-    return this.http.get(url, options);
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http.get(url, http_options);
+  }
+
+  post(id: string, data: any, query_params: any = {}): Observable<any> {
+    let getParams = new URLSearchParams(query_params).toString();
+    getParams = getParams != '' ? '?' + getParams : '';
+    
+    const url = `${this.url_backend}${id}${getParams}`;
+    let sources; let http_options;
+    if (data instanceof FormData) {
+      sources = data;
+      http_options = Object.assign({}, HTTP_OPTIONS, HTTP_OPTIONS.headers.delete('Content-Type'));
+    } else {
+      sources = JSON.stringify(data);
+      http_options = Object.assign({}, HTTP_OPTIONS);
+    }
+    return this.http.post(url, sources, http_options);
   }
 
   patch(id: string, data: any): Observable<any> {
     const url = `${this.url_backend}${id}`;
-    const sources = JSON.stringify(data);
-    return this.http.patch(url, sources, HTTP_OPTIONS);
+    const sources = (data instanceof FormData) ? data : JSON.stringify(data);
+    const http_options = Object.assign({}, HTTP_OPTIONS);
+    return this.http.patch(url, sources, http_options);
   }
 
   /** PUT personnes par ID (cd_nom) **/
-  put(id: string, update: any): Observable<any> {
+  put(id: string, data: any): Observable<any> {
     const url = `${this.url_backend}${id}`;
-    const options = JSON.stringify(update);
-    return this.http.put(url, options);
+    const sources = (data instanceof FormData) ? data : JSON.stringify(data);
+    const http_options = Object.assign({}, HTTP_OPTIONS);
+    return this.http.put(url, sources, http_options);
   }
 
   /** DELETE delete Localisation **/
-  delete(id): Observable<any> {
+  delete(id, params = {}): Observable<any> {
     const url = `${this.url_backend}${id}`;
-    return this.http.delete(url, HTTP_OPTIONS);
+    const http_options = Object.assign({}, HTTP_OPTIONS, {params: params});
+    return this.http.delete(url, http_options);
   }
 
   // /** DELETE personnes par ID (cd_nom) **/

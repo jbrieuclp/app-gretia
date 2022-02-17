@@ -8,6 +8,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 //modules
+import { SynologyModule } from '../synology/synology.module';
 import { ProjetRoutingModule } from './projet-routing.module';
 
 //directives
@@ -47,6 +48,7 @@ import { ActionCategoryInfoComponent } from './components/admin/admin-projet/act
 import { ActionCategoryFormComponent } from './components/admin/admin-projet/action-categories/action-category/action-category-form.component';
 import { WorkCategoryControlComponent } from './controls/work-category-control/work-category-control.component';
 import { ObjectiveControlComponent } from './controls/objective-control/objective-control.component';
+import { FileControlComponent } from './controls/file-control/file-control.component';
 import { ChargeTypesComponent } from './components/admin/admin-projet/charge-type/charge-types.component';
 import { ChargeTypeInfoComponent } from './components/admin/admin-projet/charge-type/info/info.component';
 import { ChargeTypeRefFormComponent } from './components/admin/admin-projet/charge-type/form/charge-type-ref-form.component';
@@ -206,6 +208,7 @@ export const MY_FORMATS = {
     SharedModule,
     EditorModule,
     ProjetRoutingModule,
+    SynologyModule,
   ],
   declarations: [
   	ProjetInitComponent,
@@ -327,6 +330,7 @@ export const MY_FORMATS = {
     ExpensesResultComponent,
     HolidaysComponent,
     HolidayFormDialog,
+    FileControlComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,

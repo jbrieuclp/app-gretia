@@ -1,0 +1,11 @@
+<mat-list>
+	<mat-list-item *ngFor="let file of files"> 
+		<app-synology-display-file
+			[file]="file"
+			[downloadable]="downloadable"
+			[deletable]="deletable"
+			[removeOnSynogy]="removeOnSynogy"
+			(onDelete)="deleteFileFromList($event)"
+		></app-synology-display-file>
+	</mat-list-item>
+</mat-list>

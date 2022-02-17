@@ -108,7 +108,7 @@ export class CalendarComponent implements OnInit, OnDestroy  {
   }
 
   getWorkByDate(date) {
-    return this.suiveuseS.workByDay.find(w => moment(w.date).isSame(moment(date), 'day'));
+    return this.suiveuseS.dateWorkTime.find(w => moment(w.date).isSame(moment(date), 'day'));
   }
 
   dateSelect(date): void {

@@ -9,7 +9,6 @@ import { AppConfig } from '../../../../shared/app.config';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Authorization': 'my-auth-token'
   })
 };
 

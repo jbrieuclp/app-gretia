@@ -39,3 +39,11 @@ td mat-icon{
   color: #888;
   font-weight: 500;
 }
+
+.work-detail {
+  display: inline-block;
+  font-style: italic;
+  width: calc(100% - 80px);
+  vertical-align: top;
+  text-align: justify;
+}

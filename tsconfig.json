@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@shared/*" : ["src/app/shared/*"],
-      "@projet/*" : ["src/app/modules/projet/*"]
+      "@projet/*" : ["src/app/modules/projet/*"],
+      "@synology/*" : ["src/app/modules/synology/*"]
     }
   }
 }

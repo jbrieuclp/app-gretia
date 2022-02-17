@@ -4,13 +4,31 @@
 			
 			<mat-card-content>
 				<div class="row">
-					<app-projet-control-person
-						class="col-6"
-						[form]="personForm"
-						id="compteId"
-						clearable="false"
-					></app-projet-control-person>
-					<div class="col-6">
+						<app-projet-control-person
+							class="col-5"
+							[form]="personForm"
+							id="compteId"
+							clearable="false"
+						></app-projet-control-person>
+
+						<div 
+							*ngIf="!isAuthUserData"
+							class="col-2"
+						>
+							<button
+						  	mat-mini-fab
+						  	matTooltip="Retourner à ma suiveuse"
+						  	color="primary"
+						  	(click)="personForm.setValue(user.id)"
+						  >
+						  	<mat-icon>face</mat-icon>
+							</button>
+						</div>
+
+					<div 
+						class="col-5"
+						[class.offset-2]="isAuthUserData"
+					>
 						<button 
 					  	class="float-right"
 					  	color="primary"
@@ -30,6 +48,18 @@
 						<app-project-works-filters></app-project-works-filters>
 				  </mat-step>
 				</mat-horizontal-stepper>
+
+				<div *ngIf="workByDate">
+					<h5>Détail du jour</h5>
+					<div>
+						<div>Date : {{ workByDate?.date|date:'dd/MM/y' }}</div>
+						<div *ngIf="workByDate.workTime">Temps de travail : {{ displayTime(workByDate.workTime) }}</div>
+						<div *ngIf="workByDate.workNightTime">Temps de travail de nuit : {{ displayTime(workByDate.workNightTime) }}</div>
+						<div *ngIf="workByDate.travelTime">Temps de transport : {{ displayTime(workByDate.travelTime) }}</div>
+						<div *ngIf="workByDate.totalTime">Temps compté total : {{ displayTime(workByDate.totalTime) }}</div>
+						<div *ngIf="workByDate.recup !== null">Recup : {{ displayTime(workByDate.recup) }}</div>
+					</div>
+				</div>
 			</mat-card-content>
 		</mat-card>
 
@@ -37,14 +67,9 @@
 
 	<div class="col-6">
 		<mat-card>
-<!-- 			<mat-card-title
-				class="text-left">
-				{{ (selectedDate | async) | date:'dd/MM/y' }}
-				
-			</mat-card-title> -->
 			<mat-card-content>
 				<div 
-					*ngIf="user.id === personForm.value"
+					*ngIf="isAuthUserData"
 					class="adding-button"
 				>
 					<button 
@@ -56,15 +81,18 @@
 		      <mat-menu #menu="matMenu">
 		      	<button 
 		          mat-menu-item
+		          [disabled]="isFuture"
 		          (click)="addElement('work')"
 		        > <mat-icon>event</mat-icon> Travail </button>
 		        <button 
 		          mat-menu-item
+		          [disabled]="isFuture"
 		          (click)="addElement('travel')"
 		        > <mat-icon>directions_car</mat-icon> Déplacement </button>
 		        <button 
 		          mat-menu-item
 		          color="primary"
+		          [disabled]="isFuture"
 		          (click)="addElement('expense')"
 		        > <mat-icon>euro_symbol</mat-icon> Frais </button>
 		        <button 

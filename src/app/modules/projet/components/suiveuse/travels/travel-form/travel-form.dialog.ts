@@ -3,7 +3,7 @@ import { AUTO_STYLE, animate, state, style, transition, trigger } from '@angular
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, filter, tap } from 'rxjs/operators';
+import { map, filter, tap, switchMap } from 'rxjs/operators';
 import _ from 'lodash';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
@@ -75,6 +75,7 @@ export class TravelFormDialog implements OnInit {
         }
       }),
       tap((travel) => this.suiveuseS.refreshDayData(travel.travelDate)),
+      switchMap(() => this.workingTimeResultsS.getExpenses()),
       tap(() => this.globalS.snackBar({msg: "Travail "+(data['@id'] ? 'modifié' : 'ajouté')+" - Recharger la journée pour mettre à jour les frais associés"})),
     )
     .subscribe(

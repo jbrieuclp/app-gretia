@@ -28,6 +28,8 @@ export class WorksComponent implements OnInit {
                                   ? 1 : -1) };
   @Input() orderBy: any;
 
+  get isAuthUserData() { return this.suiveuseS.isAuthUserData };
+
   constructor(
     public dialog: MatDialog,
     private suiveuseR: SuiveuseRepository,
@@ -55,6 +57,7 @@ export class WorksComponent implements OnInit {
     dialogConfig.width = '750px';
     dialogConfig.position = {top: '70px'};
     dialogConfig.disableClose = true;
+    dialogConfig.panelClass = 'dialog-95';
 
     const dialogRef = this.dialog.open(WorkFormDialog, dialogConfig);
   }

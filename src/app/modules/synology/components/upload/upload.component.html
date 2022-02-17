@@ -1,0 +1,81 @@
+<input 
+  #fileInput
+	type="file" 
+	class="file-input"
+  [accept]="requiredFileType"
+  (change)="onFileSelected($event)" 
+>
+
+<div class="file-upload">
+
+  <span 
+    style="margin-right: 10px;"
+    matTooltip="complete_path ? complete_path : 'Ajouter une pièce jointe'"
+  >
+    {{ fileName || "Ajouter une pièce jointe" }}
+  </span>
+
+  <button 
+  	*ngIf="fileInfo.state === null || fileInfo.state === 'canceled'"
+  	mat-mini-fab 
+  	color="primary" 
+  	class="upload-btn"
+    (click)="fileInput.click()"
+  >
+    <mat-icon>attach_file</mat-icon>
+
+  </button>
+
+  <button 
+    *ngIf="fileInfo.state === 'select'"
+    mat-icon-button
+    matTooltip="Enlever ce fichier"
+    color="warn" 
+    class="upload-btn"
+    (click)="reset()"
+  >
+    <mat-icon>clear</mat-icon>
+
+  </button>
+
+  <button 
+	 	*ngIf="fileInfo.state === 'uploading'||fileInfo.state === 'deleting'"
+  	mat-icon-button
+  	class="bnt-progress"
+  	[matTooltip]="savingType === 'onSelect' ? 'Opération en cours' : 'Annuler le transfert'"
+  	(click)="cancelUpload()"
+  >
+    <mat-icon *ngIf="fileInfo.state === 'uploading' && savingType === 'onSelect'">clear</mat-icon>
+	  <mat-progress-spinner
+	    class="spinner"
+	    color="primary"
+	    [mode]="uploadProgress == 100 || fileInfo.state === 'deleting' ? 'indeterminate' : 'determinate'"
+	    diameter="40"
+			strokeWidth="5"
+	    [value]="uploadProgress">
+	  </mat-progress-spinner>
+  </button>
+
+
+  <mat-icon 
+  	#ripple
+  	*ngIf="fileInfo.state === 'done' && !isDeletable"
+  	matRipple
+  	matTooltip="Fichier importé"
+  	class="btn-done" 
+  	matRippleDisabled="true" 
+  	matRippleUnbounded="true" 
+  >done</mat-icon>
+
+  <button 
+    *ngIf="fileInfo.state === 'done' && isDeletable"
+    mat-mini-fab
+    class="btn-remove"
+    color="warn"
+    matTooltip="Annuler et supprimer le fichier"
+    (click)="deleteFile()"
+  >
+    <mat-icon>delete_outline</mat-icon>
+  </button>
+
+</div>

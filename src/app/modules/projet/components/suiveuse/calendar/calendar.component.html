@@ -59,7 +59,7 @@
 						[ngClass]="
 							{
 								'other-month': date.getMonth() !== month.getMonth(), 
-								'weekend': (idx + 1) % 6 === 0 || (idx + 1) % 7 === 0,
+								'weekend': (idx + 1) % 6 === 0 || (idx + 1) % 7 === 0 || getWorkByDate(date)?.notWorked,
 								'today': ((date|date:'y-MM-dd') === (today|date:'y-MM-dd')),
 								'selectedDate': ((date|date:'y-MM-dd') === ((selectedDate|async)|date:'y-MM-dd'))
 							}"
@@ -75,26 +75,26 @@
 						>
 							<mat-icon> beach_access </mat-icon>
 							<div>
-								<span *ngIf="getWorkByDate(date).holiday.morning && !getWorkByDate(date).holiday.evening">Matin</span>
-								<span *ngIf="!getWorkByDate(date).holiday.morning && getWorkByDate(date).holiday.evening">Après-midi</span>
-								<span *ngIf="getWorkByDate(date).holiday.morning && getWorkByDate(date).holiday.evening">Jour</span>
+								<span *ngIf="getWorkByDate(date).holiday === 'morning'">Matin</span>
+								<span *ngIf="!getWorkByDate(date).holiday === 'evening'">Après-midi</span>
+								<span *ngIf="getWorkByDate(date).holiday === 'all'">Jour</span>
 							</div>
 						</div>
 
 						<div class="day-time">
 							<div 
-								*ngIf="getWorkByDate(date)?.work_day"
+								*ngIf="getWorkByDate(date)?.workTime"
 								matTooltip="Temps de travail en journée">
 								<mat-icon inline="true"> light_mode </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.work_day) }}</span>
+								<span> {{ displayTime(getWorkByDate(date)?.workTime) }}</span>
 							</div>
 
 							<div 
-								*ngIf="getWorkByDate(date)?.work_night"
+								*ngIf="getWorkByDate(date)?.workNightTime"
 								[matTooltip]="'Coefficient appliqué la nuit : x' + getWorkByDate(date).coeff_night"
 							>
 								<mat-icon inline="true"> nightlight </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.work_night) }}</span>
+								<span> {{ displayTime(getWorkByDate(date)?.workNightTime) }}</span>
 							</div>
 
 							<div 

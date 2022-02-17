@@ -91,22 +91,6 @@ export class CumulSuiveusesComponent implements OnInit {
       );
   }
 
-  /**
-   * Method is use to download file.
-   * @param data - Array Buffer data
-   * @param type - type of the document.
-   */
-  downLoadFile(data: any, type: string) {
-    console.log(data);
-    let blob = new Blob([data], {type: type});
-    console.log(blob);
-    let url = window.URL.createObjectURL(blob);
-    let pwa = window.open(url);
-    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-        alert( 'Please disable your Pop-up blocker and try again.');
-    }
-  }
-
   saveFile(blob, filename) {
     const a = document.createElement('a');
     document.body.appendChild(a);

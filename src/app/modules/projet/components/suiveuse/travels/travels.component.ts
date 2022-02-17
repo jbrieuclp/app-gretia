@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 
 import { SuiveuseService } from '../suiveuse.service';
 import { TravelFormService } from './travel-form/travel-form.service';
@@ -25,6 +25,8 @@ export class TravelsComponent implements OnInit {
                                   ? 1 : -1) };
   @Input() orderBy: any;
 
+  get isAuthUserData() { return this.suiveuseS.isAuthUserData };
+
   constructor(
     private suiveuseS: SuiveuseService,
     private travelFormS: TravelFormService,
@@ -46,6 +48,7 @@ export class TravelsComponent implements OnInit {
     dialogConfig.width = '750px';
     dialogConfig.position = {top: '70px'};
     dialogConfig.disableClose = true;
+    dialogConfig.panelClass = 'dialog-95';
 
     const dialogRef = this.dialog.open(TravelFormDialog, dialogConfig);
   }
@@ -60,9 +63,10 @@ export class TravelsComponent implements OnInit {
         this.apiR.delete(travel['@id'])
           .pipe(
             tap(() => {
-              this.workingTimeResultsS.removeWorkFromResult(travel['@id']);
+              this.workingTimeResultsS.removeTravelFromResult(travel['@id']);
               this.suiveuseS.refreshDayData(travel.travelDate)
             }),
+            switchMap(() => this.workingTimeResultsS.getExpenses())
           )
           .subscribe(() => this.globalS.snackBar({msg: "Déplacement supprimé"}));
       }

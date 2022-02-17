@@ -19,6 +19,7 @@ export class SuiveuseService {
 
   /* Date selectionnée sur le calendrier */
   selectedDate: BehaviorSubject<Date> = new BehaviorSubject(moment().toDate());
+  selectedDateWorkTime: BehaviorSubject<any> = new BehaviorSubject(null);
 
   _displayMonth: BehaviorSubject<Date> = new BehaviorSubject(moment().toDate());
   set displayMonth(value: any) { this._displayMonth.next(value); }
@@ -27,8 +28,13 @@ export class SuiveuseService {
 
   personForm: FormControl = new FormControl();
 
-  workByDay: DateWorkTime[] = [];
+  _dateWorkTime: BehaviorSubject<any[]> = new BehaviorSubject([]);
+  set dateWorkTime(value) { this._dateWorkTime.next(value); };
+  get dateWorkTime() { return this._dateWorkTime.value; };
+  get $dateWorkTime() { return this._dateWorkTime; };
   loading: boolean = false;
+
+  get isAuthUserData(): boolean { return this.personForm.value === this.authService.getUser().getValue().id };
 
   constructor(
   	private suiveuseR: SuiveuseRepository,
@@ -53,15 +59,25 @@ export class SuiveuseService {
       .pipe(
         map(([compteId, dates]) => {
           return {
-              'startDate': moment(dates[0]).format('YYYY-MM-DD'), 
-              'endDate': moment(dates[1]).format('YYYY-MM-DD'),
+              'date[after]': moment(dates[0]).format('YYYY-MM-DD'), 
+              'date[before]': moment(dates[1]).format('YYYY-MM-DD'),
               'compteId': compteId
             }}
         ),
-        tap(() => this.workByDay = []),
-  			switchMap((params): Observable<DateWorkTime[]> => this.getDataByPeriod(params)),
+        tap(() => this.dateWorkTime = []),
+  			switchMap((params): Observable<any[]> => this.getDataByPeriod(params)),
+        tap((data) => this.dateWorkTime = data)
   		)
         .subscribe(() => this.loading = false);
+
+    combineLatest(
+      this.selectedDate.asObservable(),
+      this.$dateWorkTime.asObservable()
+    )
+      .pipe(
+        map(([date, dateWorkTime]: [Date, any[]]): any => dateWorkTime.find(e => moment(e.date).isSame(moment(date), 'day')))
+      )
+      .subscribe((dateWorkTime) => this.selectedDateWorkTime.next(dateWorkTime));
 
 
     this.authService.getUser().asObservable()
@@ -74,63 +90,29 @@ export class SuiveuseService {
   getDataByPeriod(params): Observable<any> {
     this.loading = true;
 
-    return forkJoin(
-      this.getWorks(params),
-      this.getTravels(params),
-      this.getHolidays(params),
-    )
+    return this.suiveuseR.getDateWorkTime(params)
       .pipe(
-        tap(([works, travels, holidays]: [Work[], Travel[], Holiday[]]) => {
-          const dates: DateWorkTime[] = this.workByDay;
-          works.forEach((work: Work) => {
-            //si l'objet DateWorkTime correspondant à la date du Work n'existe pas on le créer
-            if (dates.findIndex(d => moment(d.date).isSame(moment(work.workingDate), 'day')) === -1) {
-              dates.push(new DateWorkTime(moment(work.workingDate).toDate()));
-            }
-
-            const date = dates.find(d => moment(d.date).isSame(moment(work.workingDate), 'day'));
-
-            // récupération de l'objet DateWorkTime correspondant à la date du work
-            date.addWork(work);
-          });
-
-          travels.forEach((travel: Travel) => {
-            //si l'objet DateWorkTime correspondant à la date du Work n'existe pas on le créer
-            if (dates.findIndex(d => moment(d.date).isSame(moment(travel.travelDate), 'day')) === -1) {
-              dates.push(new DateWorkTime(moment(travel.travelDate).toDate()));
-            }
-
-            const date = dates.find(d => moment(d.date).isSame(moment(travel.travelDate), 'day'));
-            date.addTravel(travel);
-          });
-
-          holidays.forEach((holiday: Holiday) => {
-            //si l'objet DateWorkTime correspondant à la date du Holiday n'existe pas on le créer
-            if (dates.findIndex(d => moment(d.date).isSame(moment(holiday.holidayDate), 'day')) === -1) {
-              dates.push(new DateWorkTime(moment(holiday.holidayDate).toDate()));
-            }
-
-            const date = dates.find(d => moment(d.date).isSame(moment(holiday.holidayDate), 'day'));
-            date.holiday = holiday;
-          });
-        })
-      )
-    ;
+        map((data: any) => data["hydra:member"]),
+      );
   }
 
   refreshDayData(day): void {
-    const idx = this.workByDay.findIndex(e => moment(day).isSame(moment(e.date), 'day'));
+    const idx = this.dateWorkTime.findIndex(e => moment(day).isSame(moment(e.date), 'day'));
     if (idx !== -1) {
-      this.workByDay.splice(idx, 1);
+      this.dateWorkTime.splice(idx, 1);
     }
 
     this.getDataByPeriod(
       {
-        'startDate': moment(day).format('YYYY-MM-DD'), 
-        'endDate': moment(day).format('YYYY-MM-DD'),
+        'date[after]': moment(day).format('YYYY-MM-DD'), 
+        'date[before]': moment(day).format('YYYY-MM-DD'),
         'compteId': this.personForm.value
       }
     )
+      .pipe(
+        map((res: any[]): any => res[0]),
+        tap((res) => this.dateWorkTime.push(res))
+      )
       .subscribe(() => this.loading = false);
   }
 

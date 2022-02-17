@@ -1,10 +1,11 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th>Frais</th>
-			<th>Fournisseur</th>
-			<th>Coût TTC</th>
 			<th></th>
+			<th>Fournisseur</th>
+			<th>PJ</th>
+			<th>Coût TTC</th>
+			<th *ngIf="isAuthUserData"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -21,6 +22,24 @@
 				</div>
 			</td>
 			<td>{{ expense.provider }}</td>
+			<td *ngIf="isAuthUserData">
+				<button 
+	        mat-icon-button
+	        class="setting-button"
+	        [matMenuTriggerFor]="attachmentMenu"
+	      ><mat-icon [matBadge]="expense.proofs.length">attachment</mat-icon>
+	    	</button>
+	      <mat-menu #attachmentMenu="matMenu">
+	        <button 
+	        	*ngFor="let proof of expense.proofs"
+	          mat-menu-item
+	          color="primary"
+	          matTooltip="Télécharger le fichier"
+	          matTooltipPosition="before"
+	          (click)="downloadFile(proof)"
+	        > <mat-icon style="color: #683ab7;">file_download</mat-icon> {{ proof.originalFileName }} </button>
+	      </mat-menu> 
+			</td>
 			<td>{{ expense.amountInclTax }} €</td>
 			<td>
 				<button 

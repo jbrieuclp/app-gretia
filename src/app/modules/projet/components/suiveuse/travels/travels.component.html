@@ -15,7 +15,7 @@
 				<th>Temps</th>
 				<th>Distance</th>
 				<th>Conducteur</th>
-				<th></th>
+				<th *ngIf="isAuthUserData"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -42,7 +42,7 @@
 						matBadgeColor="primary"
 					> drive_eta </mat-icon>
 				</td> -->
-				<td>
+				<td *ngIf="isAuthUserData">
 					<button 
 		        mat-icon-button
 		        class="setting-button"

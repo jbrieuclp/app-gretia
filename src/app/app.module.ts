@@ -2,11 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './shared/auth/token.interceptor';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { JwtModule } from '@auth0/angular-jwt'
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from './shared/auth/token.interceptor';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { registerLocaleData } from '@angular/common';
@@ -20,6 +19,7 @@ import { MagicTaxrefModule } from './modules/magic-taxref/magic-taxref.module';
 import { ProjetModule } from './modules/projet/projet.module';
 import { CartoModule } from './modules/carto/carto.module';
 import { ImportModule } from './modules/import/import.module';
+import { SynologyModule } from './modules/synology/synology.module';
 
 //services
 import { AuthService } from './shared';
@@ -58,6 +58,7 @@ registerLocaleData(localeFr, 'fr');
     ProjetModule,
     CartoModule,
     ImportModule,
+    SynologyModule,
     AppRoutingModule
   ],
   providers: [
@@ -70,7 +71,8 @@ registerLocaleData(localeFr, 'fr');
     AuthGuard
   ],
   exports: [
-    SharedModule
+    SharedModule,
+    SynologyModule
   ],
   bootstrap: [AppComponent]
 })

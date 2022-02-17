@@ -1,0 +1,25 @@
+.file-input {
+  display: none;
+}
+
+.btn-done {
+  color: #17b917;
+  font-size: 30px;
+  vertical-align: sub;
+  font-weight: bold;
+}
+
+.mat-progress-spinner, .mat-spinner {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.bnt-progress mat-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  line-height: 42px;
+  font-size: 25px;
+  color: red;
+}

@@ -1,0 +1,62 @@
+<mat-tree 
+	[dataSource]="dataSource" 
+	[treeControl]="treeControl"
+>
+	<!-- Repertoire --> 
+  <mat-tree-node 
+  	*matTreeNodeDef="let node; when: hasChild" 
+  	matTreeNodePadding
+  >
+    <button 
+    	mat-icon-button
+      matTreeNodeToggle
+    >
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <mat-icon style="margin-right: 5px;">folder_open</mat-icon>
+    {{node.item.name}}
+    <mat-progress-bar 
+    	*ngIf="node.isLoading"
+      mode="indeterminate"
+      class="example-tree-progress-bar"
+    ></mat-progress-bar>
+  </mat-tree-node>
+
+	<!-- Fichiers --> 
+  <mat-tree-node 
+  	*matTreeNodeDef="let node" 
+  	matTreeNodePadding
+  >
+    <button 
+    	mat-icon-button 
+    	disabled
+    ></button>
+    {{node.item.name}}
+    <button 
+    	mat-icon-button 
+  		(click)="downloadFile(node.item)"
+  	>
+  		<mat-icon>file_download</mat-icon>
+  	</button>
+  </mat-tree-node>
+
+  <!-- Repertoire vide --> 
+  <!-- <mat-tree-node 
+    *matTreeNodeDef="let node; when: isEmpty" 
+    matTreeNodePadding
+  >
+    <button 
+      mat-icon-button 
+      disabled
+    ></button>
+    {{node.item.name}}
+    <button 
+      mat-icon-button 
+      (click)="downloadFile(node.item)"
+    >
+      <mat-icon>file_download</mat-icon>
+    </button>
+  </mat-tree-node> -->
+</mat-tree>

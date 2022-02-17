@@ -1,0 +1,40 @@
+<input 
+  #fileInput
+	type="file" 
+	class="file-input"
+  [accept]="requiredFileType"
+  (change)="onFileSelected($event)" 
+>
+
+<div class="file-upload">
+
+  <span 
+    style="margin-right: 10px;"
+    matTooltip="complete_path ? complete_path : 'Ajouter une pièce jointe'"
+  >
+    {{ fileName || "Ajouter une pièce jointe" }}
+  </span>
+
+  <button 
+  	*ngIf="fileName === ''"
+  	mat-mini-fab 
+  	color="primary" 
+  	class="upload-btn"
+    (click)="fileInput.click()"
+  >
+    <mat-icon>attach_file</mat-icon>
+
+  </button>
+
+  <button 
+    *ngIf="fileName !== ''"
+    mat-icon-button
+    matTooltip="Enlever ce fichier"
+    color="warn" 
+    class="upload-btn"
+    (click)="reset()"
+  >
+    <mat-icon>clear</mat-icon>
+
+  </button>
+</div>

@@ -35,6 +35,10 @@
 					<div *ngIf="orderBy.field !== 'category'">
 						<span class="categ-label">Catégorie</span> <i>{{ work.category?.label || '-' }}</i>
 					</div>
+					<div>
+						<span class="categ-label">Détail</span> 
+						<div class=work-detail>{{ work.detail != '' ? work.detail : '-' }}</div>
+					</div>
 				</td>
 				<td>
 					<div matTooltip="Temps passé">
@@ -48,7 +52,7 @@
 						matTooltip="Temps compté"
 					> <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
 				</td>
-				<td>
+				<td *ngIf="isAuthUserData">
 					<button 
 		        mat-icon-button
 		        class="setting-button"

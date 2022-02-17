@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 import { SuiveuseService } from './suiveuse.service';
 import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
@@ -23,7 +24,13 @@ export class SuiveusesComponent {
     return this.suiveuseS.selectedDate;
   }
 
+  get isFuture(): boolean {
+    return moment().isSameOrBefore(this.selectedDate.value);;
+  }
+
   get user() { return this.authService.getUser().getValue(); }
+
+  get isAuthUserData() { return this.suiveuseS.isAuthUserData };
 
   ELEMENTS: any = {
     'work': WorkFormDialog,
@@ -33,6 +40,10 @@ export class SuiveusesComponent {
   };
 
   get personForm(): FormControl { return this.suiveuseS.personForm };
+
+  get workByDate() {
+    return this.suiveuseS.selectedDateWorkTime.value;
+  }
 
   constructor(
     public dialog: MatDialog,
@@ -56,5 +67,9 @@ export class SuiveusesComponent {
     dialogConfig.panelClass = 'dialog-95';
 
     const dialogRef = this.dialog.open(this.ELEMENTS[element], dialogConfig);
+  }
+
+  displayTime(duration) {
+    return duration !== null ? Math.trunc(duration/60) + "h" + (duration%60 !== 0 ? duration%60 :'') : "-";
   }
 }

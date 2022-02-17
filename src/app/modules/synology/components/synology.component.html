@@ -1,0 +1,18 @@
+<mat-card>
+	<mat-card-title #title>
+		<ng-content select="[synology-title]"></ng-content>
+	</mat-card-title>
+	<ng-container *ngIf="!title.hasChildNodes()">
+	  <mat-card-title>Lien GRETIA-Box</mat-card-title>
+	</ng-container>
+	<mat-card-content>
+		<ng-container *ngIf="sid; else loginTemplate">
+			<ng-container *ngIf="synologyContentRef">
+	      <ng-container *ngTemplateOutlet="synologyContentRef"></ng-container>
+	    </ng-container>
+		</ng-container>
+		<ng-template #loginTemplate>
+			<app-synology-connect></app-synology-connect>
+		</ng-template>
+	</mat-card-content>
+</mat-card>

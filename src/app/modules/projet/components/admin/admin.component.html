@@ -1,3 +1,27 @@
+<form [formGroup]="form">
+	<!-- <app-projet-control-file 
+		[form]="form.get('file')"
+	></app-projet-control-file> -->
+	<div formArrayName="files">
+	  <div *ngFor="let file of files.controls; let i=index">
+	  	<div [formGroupName]="i">
+				<app-projet-control-file 
+					[form]="file"
+				></app-projet-control-file>
+			</div>
+	  </div>
+	</div>
+	<button type="button" (click)="submit()">Submit</button>
+</form>
+<!-- <app-synology>
+	<ng-template synology-content>
+		<app-synology-upload 
+			folder="/home/Drive"
+			fileNamePrefix="20220210_"
+		></app-synology-upload>
+		<app-synology-list folder="/home/Drive"></app-synology-list>
+  </ng-template>
+</app-synology> -->
 <h4>Administration des différentes listes et menus</h4>
 
 <div class="row">

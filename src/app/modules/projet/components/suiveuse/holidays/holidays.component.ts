@@ -41,6 +41,7 @@ export class HolidaysComponent implements OnInit {
     dialogConfig.width = '750px';
     dialogConfig.position = {top: '70px'};
     dialogConfig.disableClose = true;
+    dialogConfig.panelClass = 'dialog-95';
 
     const dialogRef = this.dialog.open(HolidayFormDialog, dialogConfig);
   }

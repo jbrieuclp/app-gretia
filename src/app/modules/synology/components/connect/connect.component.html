@@ -1,0 +1,40 @@
+<form [formGroup]="form">
+	<mat-form-field>
+    <input
+    	id="login"
+    	matInput 
+    	placeholder="Login de connexion au NAS" 
+    	formControlName="login"
+    >
+  </mat-form-field>
+
+  <mat-form-field>
+    <input 
+    	id="pwd"
+    	matInput 
+    	placeholder="Mot de passe du NAS" 
+    	formControlName="pwd"
+    	type="password"
+    >
+  </mat-form-field>
+
+  <div>
+    <mat-checkbox 
+      color="primary"
+      [formControl]="saveForm"
+    >Sauvegarder mes informations de connexion au NAS</mat-checkbox>
+  </div>
+
+  <div style="margin-top: 20px;">
+		<app-submit-btn
+			type="button"
+    	[disabled]="form.invalid"
+    	[waiting]="connecting"
+    	matTooltip="Connexion"
+    	(onClick)="connect()"
+    >
+    	Se connecter
+    </app-submit-btn>
+
+	</div>
+</form>

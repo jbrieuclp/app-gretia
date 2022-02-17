@@ -26,6 +26,7 @@ export class TokenInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
     if (WHITE_LIST.indexOf(this.extractHostname(request.url)) === -1) {
       request = request.clone({
         setHeaders: {
