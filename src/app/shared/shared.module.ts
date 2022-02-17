@@ -44,6 +44,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { KeysPipe } from './pipes/keys.pipe';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { SortByPipe } from './pipes/sort-by.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 //Directives
 import { ColorDifferenceDirective } from './directives/color-difference.directive';
@@ -98,6 +99,7 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     KeysPipe,
     TimeFormatPipe,
     SortByPipe,
+    TruncatePipe,
     ColorDifferenceDirective,
     LoaderComponent,
     SubmitBtnComponent,
@@ -150,6 +152,7 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     KeysPipe,
     TimeFormatPipe,
     SortByPipe,
+    TruncatePipe,
     ColorDifferenceDirective,
     LoaderComponent,
     SubmitBtnComponent,
