@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AuthService } from '../../../../../../../shared/auth/authentication.service';
+import { AuthService } from '@shared/auth/authentication.service';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { ActionsRepository } from '../../../../../repository/actions.repository';
-import { SuiveuseRepository } from '../../../../../repository/suiveuse.repository';
-import { Action, Week, LoadPlan } from '../../../../../repository/project.interface';
-import { PlanChargesService } from '../../plan-charges.service';
+import { ActionsRepository } from '@projet/repository/actions.repository';
+import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
+import { Action, Week, LoadPlan } from '@projet/repository/project.interface';
+import { PlansChargesService } from '../../plans-charges.service';
 
 @Component({
   selector: 'app-project-plan-schedul-editor',
@@ -23,8 +23,8 @@ export class SchedulEditorDialog implements OnInit {
   months: any[] = [];
   loadPlans: LoadPlan[] = [];
   get user() { return this.authService.getUser().getValue(); };
-  get person() { return this.planChargesS.person.getValue(); };
-  get currentYear(): number { return this.planChargesS.year.getValue(); };
+  get person() { return this.plansChargesS.person; };
+  get currentYear(): number { return this.plansChargesS.year; };
   
   loading: boolean = false;
   disableInput: boolean = false;
@@ -34,7 +34,7 @@ export class SchedulEditorDialog implements OnInit {
     public dialogRef: MatDialogRef<SchedulEditorDialog>,
     public actionsR: ActionsRepository,
     public suiveuseR: SuiveuseRepository,
-    public planChargesS: PlanChargesService
+    public plansChargesS: PlansChargesService
   ) { }
 
   ngOnInit() {

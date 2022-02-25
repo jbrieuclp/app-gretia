@@ -10,15 +10,15 @@
 			<tbody>
 				<tr>
 					<td> Jours ouvrés </td>
-					<td> {{ planChargesS.openDays | async }} </td>
+					<td> {{ stats.openDays }} </td>
 				</tr>
 				<tr>
 					<td> Jours fériés </td>
-					<td> {{ planChargesS.notWorked | async }} </td>
+					<td> {{ stats.notWorked }} </td>
 				</tr>
 				<tr>
 					<td> Week-end </td>
-					<td> {{ planChargesS.weekends | async }} </td>
+					<td> {{ stats.weekends }} </td>
 				</tr>
 			</tbody>
 		</table>

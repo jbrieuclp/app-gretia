@@ -153,9 +153,10 @@ import { DeadlineFormComponent } from './components/projects/project/deadlines/d
 import { AntenneControlComponent } from './controls/antenne-control/antenne-control.component';
 import { ActionComponent } from './components/studies/study/actions/action/action.component';
 import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
+import { PlansChargesService } from './components/plans-charges/plans-charges.service';
 import { PlanChargesComponent } from './components/plans-charges/plan-charges/plan-charges.component';
-import { GlobalStatsComponent } from './components/plans-charges/plan-charges/global-stats.component';
-import { PDCPersonInfoComponent } from './components/plans-charges/plan-charges/person-info/person-info.component';
+import { GlobalStatsComponent } from './components/plans-charges/global-stats/global-stats.component';
+import { PDCPersonInfoComponent } from './components/plans-charges/person-info/person-info.component';
 import { ProjectDisplayComponent } from './components/projects/project/display/display.component';
 import { AbstractControl } from './controls/abstract.control';
 import { AutocompleteControl } from './controls/autocomplete-control/autocomplete.control';
@@ -166,8 +167,8 @@ import { StudyChargesComponent } from './components/studies/study/charges/charge
 import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
 import { TravelFormDialog } from './components/suiveuse/travels/travel-form/travel-form.dialog';
 import { TimeControlComponent } from './controls/time-control/time-control.component';
-import { ProvScheduleComponent } from './components/plans-charges/plan-charges/prov-schedule/prov-schedule.component';
-import { SchedulEditorDialog } from './components/plans-charges/plan-charges/prov-schedule/schedul-editor/schedul-editor.dialog';
+import { ProvScheduleComponent } from './components/plans-charges/prov-schedule/prov-schedule.component';
+import { SchedulEditorDialog } from './components/plans-charges/prov-schedule/schedul-editor/schedul-editor.dialog';
 import { ActionObjectiveFormDialog } from './components/studies/study/actions/action/objective/objective-form.dialog';
 import { ActionObjectiveAssignmentDialog } from './components/studies/study/actions/action/objective/objective-assignment.dialog';
 import { StudyResultsComponent } from './components/studies/study/results/results.component';
@@ -408,6 +409,7 @@ export const MY_FORMATS = {
     ChargeTypeControlService,
     WorkingTimeResultsService,
     HolidayFormService,
+    PlansChargesService,
   ]
 })
 export class ProjetModule { }

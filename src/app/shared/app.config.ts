@@ -5,6 +5,6 @@ export const AppConfig = {
 	URL_API_CARTO: 'http://localhost:8000/api/carto',
 	URL_PROJET: 'http://localhost:8000/api/project',
 	URL_BACKEND: 'http://localhost:8000',
-	URL_API_IMPORT: 'http://api.gretia.org/import',
+	URL_API_IMPORT: 'http://localhost:8000/api/import',
 	URL_SYNOLOGY: 'http://localhost:8000/api/synology'
 };

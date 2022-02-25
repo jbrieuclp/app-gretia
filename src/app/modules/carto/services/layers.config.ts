@@ -19,7 +19,7 @@ const attributionIGN = {html: '<a href="http://www.ign.fr/" target="_blank"><img
 };
 
 const epsg3857 = proj.get('EPSG:3857');
-const keyIGN = 'v0bxp1xur57ztiai9djszgjw';
+const keyIGN = 'zbmh0bqkgl1a6yfhdj6myh5k';
 const resolutions = [156543.03392804097,78271.51696402048,39135.75848201024,19567.87924100512,9783.93962050256,4891.96981025128,2445.98490512564,1222.99245256282,611.49622628141,305.748113140705,152.8740565703525,76.43702828517625,38.21851414258813,19.109257071294063,9.554628535647032,4.777314267823516,2.388657133911758,1.194328566955879,0.5971642834779395,0.29858214173896974,0.14929107086948487,0.07464553543474244];
 const matrixIds = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
 
@@ -49,7 +49,7 @@ export const layers = [
                     extent: epsg3857.getExtent(),
                     source: new WMTS({
                         attributions: [attributionIGN],
-                        url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                        url: `https://wxs.ign.fr/decouverte/geoportail/wmts`,
                         layer: 'ORTHOIMAGERY.ORTHOPHOTOS',
                         matrixSet: 'PM',
                         format: 'image/jpeg',
@@ -75,7 +75,7 @@ export const layers = [
                     extent: epsg3857.getExtent(),
                     source: new WMTS({
                         attributions: [attributionIGN],
-                        url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                        url: `https://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
                         layer: 'GEOGRAPHICALGRIDSYSTEMS.MAPS',
                         matrixSet: 'PM',
                         format: 'image/jpeg',
@@ -151,7 +151,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.PNR',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -177,7 +177,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.PNM',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -203,7 +203,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.RN',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -229,7 +229,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.RB',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -255,8 +255,8 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
-                    layer: 'PROTECTEDAREAS.ZPS',
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
+                    layer: 'PROTECTEDAREAS.SIC',
                     matrixSet: 'PM',
                     format: 'image/png',
                     name: "IGN - Sites Natura 2000 (Directive Habitats)",
@@ -281,8 +281,8 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
-                    layer: 'PROTECTEDAREAS.SIC',
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
+                    layer: 'PROTECTEDAREAS.ZPS',
                     matrixSet: 'PM',
                     format: 'image/png',
                     name: "IGN - Sites Natura 2000 (Directive Oiseaux)",
@@ -307,7 +307,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.ZNIEFF1',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -333,7 +333,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.ZNIEFF2',
                     matrixSet: 'PM',
                     format: 'image/png',
@@ -359,7 +359,7 @@ export const layers = [
                 extent: epsg3857.getExtent(),
                 source: new WMTS({
                     attributions: [attributionIGN],
-                    url: `http://wxs.ign.fr/${keyIGN}/geoportail/wmts`,
+                    url: `https://wxs.ign.fr/environnement/geoportail/r/wms`,
                     layer: 'PROTECTEDAREAS.RAMSAR',
                     matrixSet: 'PM',
                     format: 'image/png',

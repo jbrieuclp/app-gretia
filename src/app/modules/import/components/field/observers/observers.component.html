@@ -23,93 +23,102 @@
 </div>
 
 <mat-card>
-	<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
-	  <mat-step label="Correspondance" state="phone">
-	  	<ng-container *ngIf="bad_observers && bad_observers !== null; else spinnerbloc">
+		<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
+		  <mat-step label="Correspondance" state="phone">
+				<ng-container *ngIf="!loading; else loadingTemplate">
+			  	<ng-container *ngIf="bad_observers && bad_observers !== null; else spinnerbloc">
 
-	  		<ul 
-	  		  *ngIf="bad_observers.length"
-	  			class="list-group">
-					<li class="list-group-item active"><strong>Liste des observateurs sans correspondance en base ({{ bad_observers.length }})</strong></li>
-					<li 
-						*ngFor="let observer of bad_observers"
-						#li
-						class="list-group-item list-group-item-danger li-obseur pointer" 
-						app-import-edit-observer
-						[observer]=observer
-						(click)="li.openForm()">
-				</ul>
+			  		<ul 
+			  		  *ngIf="bad_observers.length"
+			  			class="list-group">
+							<li class="list-group-item active"><strong>Liste des observateurs sans correspondance en base ({{ bad_observers.length }})</strong></li>
+							<li 
+								*ngFor="let observer of bad_observers"
+								#li
+								class="list-group-item list-group-item-danger li-obseur pointer" 
+								app-import-edit-observer
+								[observer]=observer
+								(click)="li.openForm()">
+							</li>
+						</ul>
 
-				<p *ngIf="!bad_observers.length">Aucun observateur ne pose problème !</p>
-	  	</ng-container>
-	  	
+						<p *ngIf="!bad_observers.length">Aucun observateur ne pose problème !</p>
+			  	</ng-container>
+			  </ng-container>
+		  	
 
-	    <div>
-	      <button mat-raised-button matStepperNext>Next</button>
-	    </div>
-	  </mat-step>
-	  <mat-step label="Ajout en base" state="chat" *ngIf="!bad_observers || bad_observers.length">
+		    <div>
+		      <button mat-raised-button matStepperNext>Next</button>
+		    </div>
+		  </mat-step>
+		  <mat-step label="Ajout en base" state="chat" *ngIf="!bad_observers || bad_observers.length">
+		  	<ng-container *ngIf="!loading; else loadingTemplate">
+			  	<ng-container *ngIf="bad_observers && bad_observers !== null; else spinnerbloc">
+			  		<h5>Ajout des observateurs manquant à la base</h5>
+			  		<table class="table">
+			  			<thead>
+			  				<tr>
+			  					<th>Observateur</th>
+			  					<th>Nom</th>
+			  					<th>Prenom</th>
+			  					<th></th>
+			  				</tr>
+			  			</thead>
+			  			<tbody>
+			  				<tr *ngFor="let observer of bad_observers"
+			  					app-import-add-observer
+			  					[(observer)]="observer"
+			  				></tr>
+			  			</tbody>
+			  		</table>
 
-	  	<ng-container *ngIf="bad_observers && bad_observers !== null; else spinnerbloc">
-	  		<h5>Ajout des observateurs manquant à la base</h5>
-	  		<table class="table">
-	  			<thead>
-	  				<tr>
-	  					<th>Observateur</th>
-	  					<th>Nom</th>
-	  					<th>Prenom</th>
-	  					<th></th>
-	  				</tr>
-	  			</thead>
-	  			<tbody>
-	  				<tr *ngFor="let observer of bad_observers"
-	  					app-import-add-observer
-	  					[(observer)]="observer"
-	  				></tr>
-	  			</tbody>
-	  		</table>
+			  	</ng-container>
+			  </ng-container>
 
-	  	</ng-container>
+		    <div>
+		      <button mat-raised-button matStepperPrevious>Back</button>
+		      <button mat-raised-button matStepperNext>Next</button>
+		    </div>
+		  </mat-step>
+		  <mat-step label="Récupération des ID GeoNature">
+		  	<ng-container *ngIf="!loading; else loadingTemplate">
+			  	<ng-container *ngIf="good_observers_multi_bd.length; else verificationOk_Block">
+					  <h5>Noms correspondant à plusieurs observateurs en BD - A faire vérifier par l'administrateur</h5>
+				    <div *ngFor="let observer of good_observers_multi_bd">
+							{{ observer.observer }}
+						</div>
+					</ng-container>
+					<ng-template #verificationOk_Block>
+						Tout est bon !
+						<button 
+							matTooltip="Lancer la récupération des ID des observateur" 
+							mat-raised-button 
+							color="primary"
+							(click)="recuperationID()"
+							[disabled]="saving">
+							<mat-spinner 
+			  				*ngIf="saving"
+								diameter="25"
+								strokeWidth="2">
+							</mat-spinner>
+							Récuperer
+						</button>
+					</ng-template>
+				</ng-container>
+		  </mat-step>
 
-	    <div>
-	      <button mat-raised-button matStepperPrevious>Back</button>
-	      <button mat-raised-button matStepperNext>Next</button>
-	    </div>
-	  </mat-step>
-	  <mat-step label="Récupération des ID GeoNature">
-	  	<ng-container *ngIf="good_observers_multi_bd.length; else verificationOk_Block">
-			  <h5>Noms correspondant à plusieurs observateurs en BD - A faire vérifier par l'administrateur</h5>
-		    <div *ngFor="let observer of good_observers_multi_bd">
-					{{ observer.observer }}
-				</div>
-			</ng-container>
-			<ng-template #verificationOk_Block>
-				Tout est bon !
-				<button 
-					matTooltip="Lancer la récupération des ID des observateur" 
-					mat-raised-button 
-					color="primary"
-					(click)="recuperationID()"
-					[disabled]="saving">
-					<mat-spinner 
-	  				*ngIf="saving"
-						diameter="25"
-						strokeWidth="2">
-					</mat-spinner>
-					Récuperer
-				</button>
-			</ng-template>
-	  </mat-step>
-
-	  <!-- Icon overrides. -->
-	  <ng-template matStepperIcon="phone">
-	    <mat-icon>call_end</mat-icon>
-	  </ng-template>
-	  <ng-template matStepperIcon="chat">
-	    <mat-icon>forum</mat-icon>
-	  </ng-template>
-	</mat-horizontal-stepper>
+		  <!-- Icon overrides. -->
+		  <ng-template matStepperIcon="phone">
+		    <mat-icon>call_end</mat-icon>
+		  </ng-template>
+		  <ng-template matStepperIcon="chat">
+		    <mat-icon>forum</mat-icon>
+		  </ng-template>
+		</mat-horizontal-stepper>
 </mat-card>
 <ng-template #spinnerbloc>
 	<div style="display: inline-block;"><mat-spinner></mat-spinner></div>Récupération des données
 </ng-template>
+
+
+<ng-template #loadingTemplate>Récupération des données</ng-template>

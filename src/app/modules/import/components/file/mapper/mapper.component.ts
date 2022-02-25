@@ -48,14 +48,12 @@ export class FileMapperComponent implements OnInit, OnDestroy {
   removeMapping(field) {
     this.importS.deleteField(field.id)
           .subscribe(
-            (result: boolean) => {
-              if (result)  {
+            () => {
                 this.fileS.refreshFields();
                 field.id = null;
                 field.description = null;
                 field.fieldFSD = null;
                 field.check = null;
-              }
             },
             error => { /*this.errors = error.error;*/ }
           );

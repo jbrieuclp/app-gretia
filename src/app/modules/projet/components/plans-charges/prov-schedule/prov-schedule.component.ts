@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { filter } from 'rxjs/operators';
 
-import { AuthService } from '../../../../../../shared/auth/authentication.service';
-import { PlanChargesService } from '../plan-charges.service';
+import { AuthService } from '@shared/auth/authentication.service';
+import { PlansChargesService } from '../plans-charges.service';
 import { SchedulEditorDialog } from './schedul-editor/schedul-editor.dialog';
 
 @Component({
@@ -14,11 +14,11 @@ import { SchedulEditorDialog } from './schedul-editor/schedul-editor.dialog';
 export class ProvScheduleComponent implements OnInit {
 
   get user() { return this.authService.getUser().getValue(); };
-  get selectedPerson() { return this.planChargesS.person.getValue(); };
+  get selectedPerson() { return this.plansChargesS.person; };
 
   constructor(
     private authService: AuthService,
-    private planChargesS: PlanChargesService, 
+    private plansChargesS: PlansChargesService, 
     public dialog: MatDialog,
   ) { }
 

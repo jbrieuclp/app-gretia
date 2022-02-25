@@ -4,9 +4,9 @@ import { switchMap, tap, filter } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
-import { PlanChargesService } from '../plan-charges.service';
-import { PersonRepository } from '../../../../repository/person.repository';
-import { Work, Action, Study, Employee } from '../../../../repository/project.interface';
+import { PlansChargesService } from '../plans-charges.service';
+import { PersonRepository } from '@projet/repository/person.repository';
+import { Work, Action, Study, Employee } from '@projet/repository/project.interface';
 
 @Component({
   selector: 'app-projet-pdc-person-info',
@@ -17,18 +17,18 @@ export class PDCPersonInfoComponent implements OnInit {
 
   workedRepartition: any[] = [];
   loading: boolean = false;
-  get year() { return this.planChargesS.year.getValue(); };
+  get year() { return this.plansChargesS.year; };
 
   constructor(
-    private planChargesS: PlanChargesService, 
+    private plansChargesS: PlansChargesService, 
     private personR: PersonRepository, 
   ) { }
 
   ngOnInit() {
     combineLatest(
-      this.planChargesS.person.asObservable()
+      this.plansChargesS.$person
         .pipe(filter(person => person !== null)),
-      this.planChargesS.year.asObservable()
+      this.plansChargesS.$year
         .pipe(filter(year => year !== null))
     )
       .pipe(
@@ -111,13 +111,13 @@ export class PDCPersonInfoComponent implements OnInit {
   }
 
   getUsedDaysByParam(employee, param) {
-    let duration = this.planChargesS.studies.getValue()
+    let duration = this.plansChargesS.studies
       .filter((s: Study) => `PERCENT_DAYS_${s.type}` === param)
       .map((s: Study) => 
         s.actions
           .map((a: Action): number => 
             a.works
-              .filter((w: Work) => w.employee.person === this.planChargesS.person.getValue()['@id'])
+              .filter((w: Work) => w.employee.person === this.plansChargesS.person['@id'])
               .filter((w: Work) => {
                 if (employee.contractEnd !== null) {
                   return moment(w.workingDate).isBetween(employee.contractStart.date, employee.contractEnd.date, undefined, '[]')
@@ -137,9 +137,9 @@ export class PDCPersonInfoComponent implements OnInit {
     let duration = 0;
     study.actions.forEach((a: Action) => {
 
-      if ( a.works && this.planChargesS.person.getValue()) {
+      if ( a.works && this.plansChargesS.person) {
         const personWorks = a.works
-          .filter((work: Work) => work.employee.person === this.planChargesS.person.getValue()['@id'])
+          .filter((work: Work) => work.employee.person === this.plansChargesS.person['@id'])
           .map((work: Work) => work.duration);
 
         if ( personWorks.length ) {

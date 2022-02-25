@@ -31,6 +31,6 @@ export class FileInsertComponent implements OnInit {
                       //filtre des champs qui ne sont pas intégrable dans la synthèse
                       return fields.filter(field => field.fieldFSD.exportLib !== null);
                     })
-                  ).subscribe(fields=>{console.log(fields); this.fields = fields});
+                  ).subscribe(fields=>this.fields = fields);
   }
 }

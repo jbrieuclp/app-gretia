@@ -13,10 +13,10 @@ import * as format from 'ol/format';
 import * as proj from 'ol/proj';
 import { Draw } from 'ol/interaction';
 
-import { ImportService } from '../../../services/import.service';
-import { FileService } from '../../../services/file.service';
+import { ImportService } from '@import/services/import.service';
+import { FileService } from '@import/services/file.service';
 import { LocalisationService } from './localisation.service';
-import { CartoService } from '../../../../carto/services/carto.service';
+import { CartoService } from '@carto/services/carto.service';
 
 @Component({
   selector: 'app-import-field-localisations',

@@ -67,16 +67,21 @@ export class FormMapperComponent implements OnInit {
   }
 
   submit(event) {
+    console.log(this.field, event.option.value)
   	if (this.field.fichier !== null && event.option.value !== undefined) {
   		if ( this.field.id === null) {
-	  		let values = {champ: this.field.champ, fieldFSD: event.option.value.id}
+	  		let values = {
+          fichier: this.field.fichier, 
+          champ: this.field.champ, 
+          fieldFSD: event.option.value['@id']
+        };
 	  		this.importS.postField(this.field.fichier.id, values)
 	  									.subscribe(field => {
 	  										this.field = field;
 	  										this.fieldChange.emit(this.field);
 	  									});
 	  	} else {
-	  		this.importS.patchFieldFSD(this.field.id, event.option.value.id)
+	  		this.importS.patch(this.field['@id'], {fieldFSD: event.option.value['@id']})
 	  									.subscribe(field => {
 	  										this.field = field;
 	  										this.fieldChange.emit(this.field);

@@ -3,7 +3,7 @@
   font-weight: 300;
 }
 
-::ng-deep .mat-card {
+.mat-card {
 	padding-top: 0px!important;
 }
 

@@ -27,7 +27,7 @@ export class TableComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.tableS.sort = this.sort;
     this.tableS.paginator = this.paginator;
-  	this.tableS.getDataSource(this.fichier_id, this.filter);
+  	this.tableS.getDataSource(this.filter);
   }
  
 }

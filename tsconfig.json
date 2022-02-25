@@ -20,7 +20,10 @@
     ],
     "paths": {
       "@shared/*" : ["src/app/shared/*"],
+      "@carto/*" : ["src/app/modules/carto/*"],
+      "@import/*" : ["src/app/modules/import/*"],
       "@projet/*" : ["src/app/modules/projet/*"],
+      "@taxref/*" : ["src/app/modules/magic-taxref/*"],
       "@synology/*" : ["src/app/modules/synology/*"]
     }
   }

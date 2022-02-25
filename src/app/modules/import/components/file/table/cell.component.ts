@@ -38,7 +38,7 @@ export class CellComponent implements OnInit {
   submit() {
   	let request = {};
   	request[this.key] = this.formValue;
-  	this.importS.patchTableCell(this.tableS.fichier_id, this.row.adm_id_import, request)
+  	this.importS.patchTableCell(this.tableS.fichierId, this.row.adm_id_import, request)
   							.subscribe(
   								result => {
 	  								this.displayForm = false;

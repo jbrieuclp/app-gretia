@@ -1,48 +1,46 @@
-<div class="row">
-	<div class="col-md-2">
-		<app-projet-pdc-global-stats></app-projet-pdc-global-stats>
-	</div>
+<table 
+	mat-table 
+	[dataSource]="studies" 
+	class="example-table"
+  matSort 
+  matSortActive="code" 
+  matSortDisableClear 
+  matSortDirection="desc"
+>
+  <!-- Code Column -->
+  <ng-container matColumnDef="code">
+    <th mat-header-cell *matHeaderCellDef>Code</th>
+    <td mat-cell *matCellDef="let row">{{row.code}}</td>
+  </ng-container>
 
-	<div class="col-md-2">
-		<mat-accordion *ngIf="person">
-		  <mat-expansion-panel>
-		    <mat-expansion-panel-header>
-		      <mat-panel-title>
-		        État congés - récups
-		      </mat-panel-title>
-		    </mat-expansion-panel-header>
-		    <ng-container *ngIf="!loading; else loadingTemplate">
-					<table class="table">
-						<tr>
-							<td>Congés N</td>
-							<td>{{ person.cpYear }} jour(s)</td>
-						</tr>
-						<tr>
-							<td>Congés N-1</td>
-							<td>{{ person.cpPrevYear }} jour(s)</td>
-						</tr>
-						<tr>
-							<td>Recup</td>
-							<td>{{ person.recup / 60 | number: '1.0-2' }} heure(s)</td>
-						</tr>
-					</table>
-				</ng-container>
-				<ng-template #loadingTemplate>
-			    <app-loader message="Chargement en cours"></app-loader>
-			  </ng-template>
-		  </mat-expansion-panel>
-		</mat-accordion>
-			
-	</div>
+  <!-- Études Column -->
+  <ng-container matColumnDef="label">
+    <th mat-header-cell *matHeaderCellDef>Études</th>
+    <td mat-cell *matCellDef="let row">{{row.label}}</td>
+  </ng-container>
+
+  <!-- State Column -->
+  <!-- <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef>State</th>
+    <td mat-cell *matCellDef="let row">{{row.state}}</td>
+  </ng-container> -->
+
+  <!-- Created Column -->
+  <!-- <ng-container matColumnDef="created">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+      Created
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
+  </ng-container> -->
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 
 
-
-	<div class="col-md-8">
-		<app-projet-pdc-person-info></app-projet-pdc-person-info>
-	</div>
-</div>
-
-<div>
+<!-- <div>
 	<mat-card>
 		<table class="table table-sm">
 			<thead>
@@ -68,6 +66,6 @@
 			</tbody>
 		</table>
 	</mat-card>
-</div>
+</div> -->
 
-<app-projet-plans-prov-schedule *ngIf="person"></app-projet-plans-prov-schedule>
+<!-- <app-projet-plans-prov-schedule *ngIf="person"></app-projet-plans-prov-schedule> -->

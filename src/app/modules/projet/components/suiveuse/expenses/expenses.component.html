@@ -23,22 +23,34 @@
 			</td>
 			<td>{{ expense.provider }}</td>
 			<td *ngIf="isAuthUserData">
-				<button 
-	        mat-icon-button
-	        class="setting-button"
-	        [matMenuTriggerFor]="attachmentMenu"
-	      ><mat-icon [matBadge]="expense.proofs.length">attachment</mat-icon>
-	    	</button>
-	      <mat-menu #attachmentMenu="matMenu">
-	        <button 
-	        	*ngFor="let proof of expense.proofs"
-	          mat-menu-item
-	          color="primary"
-	          matTooltip="Télécharger le fichier"
-	          matTooltipPosition="before"
-	          (click)="downloadFile(proof)"
-	        > <mat-icon style="color: #683ab7;">file_download</mat-icon> {{ proof.originalFileName }} </button>
-	      </mat-menu> 
+				<ng-container *ngIf="expense.proofs.length; else noAttachmentTemplate">
+					<button 
+		        mat-icon-button
+		        class="setting-button"
+		        [matMenuTriggerFor]="attachmentMenu"
+		      >
+		      	<mat-icon [matBadge]="expense.proofs.length">attachment</mat-icon>
+		    	</button>
+		      <mat-menu #attachmentMenu="matMenu">
+		        <button 
+		        	*ngFor="let proof of expense.proofs"
+		          mat-menu-item
+		          color="primary"
+		          matTooltip="Télécharger le fichier"
+		          matTooltipPosition="before"
+		          (click)="downloadFile(proof)"
+		        > <mat-icon style="color: #683ab7;">file_download</mat-icon> {{ proof.originalFileName }} </button>
+		      </mat-menu> 
+				</ng-container>
+				<ng-template #noAttachmentTemplate>
+					<button 
+		        mat-icon-button
+		        class="setting-button"
+		        style="cursor: default;"
+		      >
+		      	<mat-icon [matBadge]="expense.proofs.length">attachment</mat-icon>
+		    	</button>
+				</ng-template>
 			</td>
 			<td>{{ expense.amountInclTax }} €</td>
 			<td>

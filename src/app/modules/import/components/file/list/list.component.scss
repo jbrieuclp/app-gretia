@@ -13,3 +13,38 @@ table {
 .checkbox-filter {
 	display: block;
 }
+
+
+
+
+/* Structure */
+.list-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.table-container {
+  height: auto;
+  height: calc(100vh - 215px);
+  overflow: overlay;
+  padding-bottom: 56px;
+}
+
+.table-container .mat-paginator  {
+	position: absolute; 
+	width: 100%;
+	bottom: 0;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

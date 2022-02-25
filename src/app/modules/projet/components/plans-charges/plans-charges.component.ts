@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { tap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -10,7 +9,7 @@ import 'moment/locale/fr'  // without this line it didn't work
 import { AuthService } from '@shared/auth/authentication.service';
 import { EmployeeRepository } from '@projet/repository/employee.repository';
 import { Person } from '@projet/repository/project.interface';
-import { PlanChargesService } from './plan-charges/plan-charges.service';
+import { PlansChargesService } from './plans-charges.service';
 
 @Component({
   selector: 'app-projet-plans-charges',
@@ -25,14 +24,16 @@ export class PlansChargesComponent implements OnInit, OnDestroy {
   personControl = new FormControl('', [Validators.required]);
   loading: boolean = false;
   _subscriptions: Subscription[] = [];
+  get person() { return this.plansChargesS.person; };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
+    // private location: Location,
     private employeeR: EmployeeRepository,
     private authService: AuthService, 
-    private planChargesS: PlanChargesService, 
+    // private planChargesS: PlanChargesService, 
+    private plansChargesS: PlansChargesService, 
   ) { }
 
   ngOnInit() {
@@ -41,7 +42,15 @@ export class PlansChargesComponent implements OnInit, OnDestroy {
 
     this._subscriptions.push(
       combineLatest(
-        this.route.params.pipe(distinctUntilChanged()),
+        this.route.queryParams.pipe(distinctUntilChanged())
+          .pipe(
+            map((param: any): {person: number, year: number} => {
+              return {
+                person: !isNaN(+param.person) ? +param.person : null, 
+                year: !isNaN(+param.year) ? +param.year : +(moment().year())
+              };
+            })
+          ),
         this.persons.asObservable(),
         this.authService.getUser().asObservable()
           .pipe(
@@ -52,18 +61,18 @@ export class PlansChargesComponent implements OnInit, OnDestroy {
           map(([params, persons, user])=>{
             let person;
             if (params.person) {
-              person = persons.find(p=>p.id === Number(params.person));
+              person = persons.find(p=>p.id === params.person);
             } else {
               person = persons.find(p=>p.compteId === user.id);
             }
 
-            return [person, params.year ? Number(params.year) : Number(moment().year())]
+            return [person, params.year]
           }),
           filter(([person, year])=>person !== undefined),
           distinctUntilChanged(),
           tap(([person, year])=>{
-            this.planChargesS.year.next(year);
-            this.planChargesS.person.next(person);
+            this.plansChargesS.year = year;
+            this.plansChargesS.person = person;
           }),
         )
         .subscribe(([person, year])=>{
@@ -81,7 +90,15 @@ export class PlansChargesComponent implements OnInit, OnDestroy {
           ),
         this.yearsControl.valueChanges
       )
-        .subscribe(([person, year])=>this.router.navigate(['/projet/plan-de-charges/', person.id, year]))
+        .subscribe(([person, year])=>{
+          this.router.navigate(
+            [], 
+            {
+              relativeTo: this.route,
+              queryParams: { person: person.id, year: year },
+              queryParamsHandling: 'merge'
+            });
+         })
     );
   }
 

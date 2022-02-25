@@ -20,70 +20,95 @@
   </div>
 </div>
 
-<table 
-  mat-table 
-  [dataSource]="dataSource" 
-  matSort
-  class="mat-elevation-z8">
+<div class="list-container mat-elevation-z8">
+  <div 
+    *ngIf="loading"
+    class="loading-shade"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
 
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+  <div class="table-container">
 
-  <!-- Position Column -->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
+    <table 
+      mat-table 
+      [dataSource]="dataSource" 
+      matSort
+      matSortActive="dateImport" 
+      matSortDisableClear
+      matSortDirection="desc"
+    >
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="table">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
-    <td mat-cell *matCellDef="let element"> 
-    	<a [routerLink]="['./fichier', element.id]" 
-    		matTooltip="Travailler sur le fichier {{element.table}}"
-    	><b>{{element.table}}</b></a>
-    </td>
-  </ng-container>
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="fileName">
-    <th mat-header-cell *matHeaderCellDef> Fichier </th>
-    <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
-  </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="avancement">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Avancement </th>
-    <td mat-cell *matCellDef="let element">
-    	<ng-container *ngIf="element.champs.length; else noFieldMappingBlock">
-    		{{ element.nb_field_ok }} / {{ element.champs.length }} ({{ ( (element.nb_field_ok / element.champs.length) * 100 ) | number:'1.0-0' }}%)
-    	</ng-container>
-    	<ng-template #noFieldMappingBlock> - </ng-template>
-    </td>
-  </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="table">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
+        <td mat-cell *matCellDef="let element"> 
+        	<a [routerLink]="['./fichier', element.id]" 
+        		matTooltip="Travailler sur le fichier {{element.table}}"
+        	><b>{{element.table}}</b></a>
+        </td>
+      </ng-container>
 
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="dateImport">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date d'import </th>
-    <td mat-cell *matCellDef="let element"> {{element.dateImport | date:'yyyy-MM-dd' }} </td>
-  </ng-container>
+      <!-- Weight Column -->
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef> Fichier </th>
+        <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+      </ng-container>
 
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="clos">
-    <th mat-header-cell *matHeaderCellDef> Cloturé </th>
-    <td mat-cell *matCellDef="let element"> 
-    	<button 
-      mat-icon-button 
-      color="primary" 
-      aria-label="bouton icone avec une croix ou un V"
-      (click)="changeStatus(element)">
-    		<span [ngClass]="element.clos ? 'done' : 'pending'">
-    			<mat-icon>{{ element.clos ? 'done' : 'clear' }}</mat-icon>
-    		</span>
-		  </button>
-		 </td>
-  </ng-container>
+      <!-- Weight Column -->
+      <ng-container matColumnDef="avancement">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Avancement </th>
+        <td mat-cell *matCellDef="let element">
+        	<ng-container *ngIf="element.fields.length; else noFieldMappingBlock">
+        		{{ element.numberFieldDone }} / {{ element.fields.length }} ({{ ( (element.numberFieldDone / element.fields.length) * 100 ) | number:'1.0-0' }}%)
+        	</ng-container>
+        	<ng-template #noFieldMappingBlock> - </ng-template>
+        </td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="dateImport">
+        <th 
+          mat-header-cell 
+          *matHeaderCellDef 
+          mat-sort-header
+        > Date d'import </th>
+        <td mat-cell *matCellDef="let element"> {{element.dateImport | date:'yyyy-MM-dd' }} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="clos">
+        <th mat-header-cell *matHeaderCellDef> Cloturé </th>
+        <td mat-cell *matCellDef="let element"> 
+        	<button 
+          mat-icon-button 
+          color="primary" 
+          aria-label="bouton icone avec une croix ou un V"
+          (click)="changeStatus(element)">
+        		<span [ngClass]="element.clos ? 'done' : 'pending'">
+        			<mat-icon>{{ element.clos ? 'done' : 'clear' }}</mat-icon>
+        		</span>
+    		  </button>
+    		 </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator 
+      [length]="resultsLength" 
+      [pageSize]="50"
+      [pageSizeOptions]="[10, 50, 100, 200, 500]"
+    ></mat-paginator>
+  </div>
+</div>

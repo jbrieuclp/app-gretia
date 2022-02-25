@@ -48,7 +48,7 @@ export class FileImportComponent implements OnInit {
     .subscribe(fichier => {
     	this.router.navigate(['../fichier', fichier.id], { relativeTo: this.route });
       }, 
-      error => this.error = error.error.message
+      error => this.error = error.error['hydra:description']
     );
   }
 

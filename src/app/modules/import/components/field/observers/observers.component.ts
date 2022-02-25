@@ -23,6 +23,7 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   private subscription: Subscription
 
   saving: boolean = false;
+  loading: boolean = false;
 
   get good_observers(): any[] {
     if (!this._observers || this._observers === null) return [];
@@ -97,14 +98,18 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   *  Retourne une liste des osbervateurs découpés par le pipe
   */
   getObservers() {
+    this.loading = true;
     this.observers = null;
   	this.importS.getObservers(this.field_observer.id)
-  									.subscribe(
-  										observers => {
-  											this.observers = observers;
-  										}, 
-  										error => this.error = error
-  									);
+      .pipe(
+        tap(() => this.loading = false)
+      )
+			.subscribe(
+				observers => {
+					this.observers = observers;
+				}, 
+				error => this.error = error
+			);
   }
 
   selectionChange($event) {

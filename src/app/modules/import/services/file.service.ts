@@ -53,28 +53,34 @@ export class FileDataService {
 
   loadFields(onlyMapped: boolean = false) {
     this.importS.getFields(this.file_id.getValue(), onlyMapped)
-          .subscribe(
-            (fields: any) => this.fields.next(fields),
-            error => { 
-              if (this.file.getValue() !== null){ 
-                this.snackBar('Erreur lors de la récupération des champs');
-                this.router.navigate(['/import', 'fichier', this.file_id])
-              }
-            }
-          );
+      .pipe(
+        map((res) => res['hydra:member'])
+      )
+      .subscribe(
+        (fields: any) => this.fields.next(fields),
+        error => { 
+          if (this.file.getValue() !== null){ 
+            this.snackBar('Erreur lors de la récupération des champs');
+            this.router.navigate(['/import', 'fichier', this.file_id])
+          }
+        }
+      );
   }
 
   private loadFSDFields() {
     this.importS.getFSDFields()
-          .subscribe(
-            (fields: any) => this.FSDFields.next(fields),
-            error => { 
-              if (this.file.getValue() !== null){ 
-                this.snackBar('Erreur lors de la récupération des champs FSD');
-                this.router.navigate(['/import', 'fichier', this.file_id])
-              }
-            }
-          );
+      .pipe(
+        map((res) => res['hydra:member'])
+      )
+      .subscribe(
+        (fields: any) => this.FSDFields.next(fields),
+        error => { 
+          if (this.file.getValue() !== null){ 
+            this.snackBar('Erreur lors de la récupération des champs FSD');
+            this.router.navigate(['/import', 'fichier', this.file_id])
+          }
+        }
+      );
   }
 
   getCountRow() {
