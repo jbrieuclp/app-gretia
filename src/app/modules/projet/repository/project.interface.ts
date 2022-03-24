@@ -22,6 +22,17 @@ export interface ActionAttribution {
   "nbOfDays"?: number;
 }
 
+export interface ActionProgression {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "study"?: any;
+  "action"?: any;
+  "person"?: any;
+  "expectedTime"?: number;
+  "consumedTime"?: number;
+}
+
 export interface Antenne {
   "@id"?: string;
   "@type"?: string;
@@ -62,6 +73,7 @@ export interface ChargeType {
   "label"?: string;
   "description"?: string;
   "unitCost"?: number;
+  "fixedPrice"?: boolean;
   "orderBy"?: number;
   "charges"?: any;
   "createdAt"?: Date;
@@ -130,6 +142,7 @@ export interface Expense {
   "amountExclTax"?: number;
   "vat"?: number;
   "amountInclTax"?: number;
+  "paymentDate"?: any;
   "travel"?: string;
   "proofs"?: any[];
   "expenseDate"?: Date;
@@ -341,19 +354,6 @@ export interface Signatory {
   "updatedBy"?: string;
 }
 
-export interface StudyFunding {
-  "@id"?: string;
-  "@type"?: string;
-  "study"?: any;
-  "project"?: Project|string;
-  "label"?: string;
-  "eligibleFunding"?: number;
-  "createdAt"?: Date;
-  "createdBy"?: string;
-  "updatedAt"?: Date;
-  "updatedBy"?: string;
-}
-
 export interface Study {
   "@id"?: string;
   "@type"?: string;
@@ -396,6 +396,29 @@ export interface StudyDeadline {
   "createdBy"?: string;
   "updatedAt"?: Date;
   "updatedBy"?: string;
+}
+
+export interface StudyFunding {
+  "@id"?: string;
+  "@type"?: string;
+  "study"?: any;
+  "project"?: Project|string;
+  "label"?: string;
+  "eligibleFunding"?: number;
+  "createdAt"?: Date;
+  "createdBy"?: string;
+  "updatedAt"?: Date;
+  "updatedBy"?: string;
+}
+
+export interface StudyProgression {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "study"?: any;
+  "person"?: any;
+  "expectedTime"?: number;
+  "consumedTime"?: number;
 }
 
 export interface Travel {

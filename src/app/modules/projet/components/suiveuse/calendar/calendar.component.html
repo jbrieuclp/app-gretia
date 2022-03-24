@@ -55,65 +55,16 @@
 			<div class="week" *ngFor="let week of (dates|async)">
 				<div class="week-number">{{ week.weekNumber }}</div>
 				<ng-container *ngFor="let date of week.days; let idx = index">
-					<div class="day" 
+					<div class="date"
 						[ngClass]="
-							{
-								'other-month': date.getMonth() !== month.getMonth(), 
-								'weekend': (idx + 1) % 6 === 0 || (idx + 1) % 7 === 0 || getWorkByDate(date)?.notWorked,
-								'today': ((date|date:'y-MM-dd') === (today|date:'y-MM-dd')),
-								'selectedDate': ((date|date:'y-MM-dd') === ((selectedDate|async)|date:'y-MM-dd'))
-							}"
-						(click)="dateSelect(date)">
-						<span class="day-number">
-							{{ date|date:'d' }}
-						</span>
-
-						<div 
-							*ngIf="getWorkByDate(date)?.holiday !== null"
-							class="day-holiday"
-							matTooltip="Prise de congé"
-						>
-							<mat-icon> beach_access </mat-icon>
-							<div>
-								<span *ngIf="getWorkByDate(date).holiday === 'morning'">Matin</span>
-								<span *ngIf="!getWorkByDate(date).holiday === 'evening'">Après-midi</span>
-								<span *ngIf="getWorkByDate(date).holiday === 'all'">Jour</span>
-							</div>
-						</div>
-
-						<div class="day-time">
-							<div 
-								*ngIf="getWorkByDate(date)?.workTime"
-								matTooltip="Temps de travail en journée">
-								<mat-icon inline="true"> light_mode </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.workTime) }}</span>
-							</div>
-
-							<div 
-								*ngIf="getWorkByDate(date)?.workNightTime"
-								[matTooltip]="'Coefficient appliqué la nuit : x' + getWorkByDate(date).coeff_night"
-							>
-								<mat-icon inline="true"> nightlight </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.workNightTime) }}</span>
-							</div>
-
-							<div 
-								*ngIf="getWorkByDate(date)?.travelTime"
-								matTooltip="Temps en déplacement"
-							>
-								<mat-icon inline="true"> directions_car </mat-icon>
-								<span> {{ displayTime(getWorkByDate(date)?.travelTime) }}</span>
-							</div>
-						</div>
-
-						<div 
-							class="working-time"
-							matTooltip="Temps total compté pour la journé"
-						>
-							<span> {{ displayTime(getWorkByDate(date)?.totalTime) }}</span>
-						</div>
-
-
+						{
+							'other-month': date.getMonth() !== month.getMonth(), 
+							'weekend': (idx + 1) % 6 === 0 || (idx + 1) % 7 === 0
+						}"
+						(click)="dateSelect(date)"
+						app-projet-suiveuse-calendar-day
+						[date]="date"
+					>
 					</div>
 				</ng-container>
 			</div>

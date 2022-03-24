@@ -26,6 +26,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
 import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { CalendarComponent } from './components/suiveuse/calendar/calendar.component';
+import { CalendarDayComponent } from './components/suiveuse/calendar/day/day.component';
 //news
 import { EmployeesComponent } from './components/admin/employees/employees.component';
 import { AntennesComponent } from './components/admin/employees/antennes/antennes.component';
@@ -188,6 +189,8 @@ import { TravelsResultComponent } from './components/suiveuse/result/travels-res
 import { ExpensesResultComponent } from './components/suiveuse/result/expenses-result.component';
 import { WorkingTimeResultsComponent } from './components/suiveuse/result/results.component';
 import { WorkingTimeResultsService } from './components/suiveuse/result/results.service';
+import { PlanChargeInfoDialog } from './components/plans-charges/plan-charge-info/plan-charge-info.dialog';
+import { AdminExpensesComponent } from './components/admin/expenses/admin-expenses.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -332,6 +335,9 @@ export const MY_FORMATS = {
     HolidaysComponent,
     HolidayFormDialog,
     FileControlComponent,
+    PlanChargeInfoDialog,
+    CalendarDayComponent,
+    AdminExpensesComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
@@ -355,6 +361,7 @@ export const MY_FORMATS = {
     ExpenseFormDialog,
     WorkFormDialog,
     HolidayFormDialog,
+    PlanChargeInfoDialog,
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},

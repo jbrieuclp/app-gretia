@@ -9,15 +9,22 @@ table {
 }
 
 /* Column Widths */
-.mat-column-study-code {
+.mat-column-person-firstname {
   max-width: 120px;
 }
 
-.mat-column-expectedTime,
-.mat-column-consumedTime,
-.mat-column-usagePercent {
-  max-width: 70px;
-  text-align: center;
+.mat-column-paid,
+.mat-column-unpaid {
+  max-width: 20px;
+  text-align: left;
+}
+
+.mat-column-paid {
+  color: green;
+}
+
+.mat-column-unpaid {
+  color: red;
 }
 
 /* Structure */
@@ -28,7 +35,7 @@ table {
 
 .table-container {
   height: auto;
-  height: calc(100vh - 215px);
+  height: calc(100vh - 100px);
   overflow: overlay;
   padding-bottom: 56px;
 }
@@ -50,10 +57,4 @@ table {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.study-label-text {
-  cursor: pointer;
-  color: rgb(103, 58, 183);
-  font-weight: bold;
 }

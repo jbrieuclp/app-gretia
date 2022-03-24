@@ -32,6 +32,14 @@ export class ChargeTypeControlComponent extends AbstractControl implements OnIni
 
     this.getChargeTypes()
       .subscribe((chargeTypes:ChargeType[]) => this.options = chargeTypes);
+
+    this._subscriptions.push(
+      this.form.valueChanges
+      .pipe(
+        map(val => this.options.find(item => this.value(item) === val))
+      )
+      .subscribe(val => this.changeEmit(val))
+    );
   }
 
   getChargeTypes() {

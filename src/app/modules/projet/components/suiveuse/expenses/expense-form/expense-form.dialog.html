@@ -29,6 +29,7 @@
 		<div class="col-sm-6">
 			<app-projet-control-charge-type 
 				[form]="this.form.get('chargeType')"
+				(changeEvent)="onChargeTypeChange($event)"
 				required
 			></app-projet-control-charge-type>
 		</div>
@@ -44,58 +45,63 @@
 	    formControlName="details">
 	</mat-form-field>
 
-	<div>
-		<div 
-			class="row collapsible"
-			[@collapse]="HTForm_visibility"
-		>
-			<mat-form-field class="col-sm-4">
-				<mat-label> Montant HT </mat-label>
-			  <input 
-			  	id="amountExclTax"
-			  	type="number"
-			  	min="0"
-			  	matInput 
-			    placeholder="Montant hors taxe"
-			    autocomplete="off"
-			    formControlName="amountExclTax"
-			    [required]="HTForm_visibility"
-			  >
-			</mat-form-field>
-			<mat-form-field class="col-sm-4">
-				<mat-label> TVA </mat-label>
-			  <input 
-			  	id="vat"
-			  	type="number"
-			  	min="0"
-			  	matInput 
-			    placeholder="Montant de la TVA"
-			    autocomplete="off"
-			    formControlName="vat"
-			    [required]="HTForm_visibility"
-			  >
-			</mat-form-field>
+	<ng-container *ngIf="!isFixedPrice; else fixedPriceTemplate">
+		<div>
+			<div 
+				class="row collapsible"
+				[@collapse]="HTForm_visibility"
+			>
+				<mat-form-field class="col-sm-4">
+					<mat-label> Montant HT </mat-label>
+				  <input 
+				  	id="amountExclTax"
+				  	type="number"
+				  	min="0"
+				  	matInput 
+				    placeholder="Montant hors taxe"
+				    autocomplete="off"
+				    formControlName="amountExclTax"
+				    [required]="HTForm_visibility"
+				  >
+				</mat-form-field>
+				<mat-form-field class="col-sm-4">
+					<mat-label> TVA </mat-label>
+				  <input 
+				  	id="vat"
+				  	type="number"
+				  	min="0"
+				  	matInput 
+				    placeholder="Montant de la TVA"
+				    autocomplete="off"
+				    formControlName="vat"
+				    [required]="HTForm_visibility"
+				  >
+				</mat-form-field>
+			</div>
+			<div class="row">
+				<mat-form-field class="col-sm-4">
+					<mat-label> Montant TTC </mat-label>
+				  <input 
+				  	id="amountTTCForm"
+				  	type="number"
+				  	min="0"
+				  	matInput 
+				    placeholder="Montant TTC"
+				    autocomplete="off"
+				    [formControl]="amountTTCForm">
+				</mat-form-field>
+				<mat-slide-toggle 
+					style="margin: 20px 15px;"
+					color="primary"
+					[checked]="HTForm_visibility"
+					(change)="sliderChange($event.checked)"
+				> Saisir le montant HT </mat-slide-toggle>
+			</div>
 		</div>
-		<div class="row">
-			<mat-form-field class="col-sm-4">
-				<mat-label> Montant TTC </mat-label>
-			  <input 
-			  	id="amountTTCForm"
-			  	type="number"
-			  	min="0"
-			  	matInput 
-			    placeholder="Montant TTC"
-			    autocomplete="off"
-			    [formControl]="amountTTCForm">
-			</mat-form-field>
-			<mat-slide-toggle 
-				style="margin: 20px 15px;"
-				color="primary"
-				[checked]="HTForm_visibility"
-				(change)="sliderChange($event.checked)"
-			> Saisir le montant HT </mat-slide-toggle>
-		</div>
-	</div>
+	</ng-container>
+	<ng-template #fixedPriceTemplate>
+		<div class="fixed-price">Prix fixé : {{ form.get('amountInclTax').value }}€</div>
+	</ng-template>
 
 	<div>
 

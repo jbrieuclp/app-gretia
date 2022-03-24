@@ -6,7 +6,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Study, Employee, Action, ActionAttribution, Week, Objective } from './project.interface';
+import { Study, Employee, Action, ActionAttribution, Week, Objective, ActionProgression } from './project.interface';
 
 @Injectable()
 export class ActionsRepository extends ApiProjectRepository {
@@ -86,6 +86,18 @@ export class ActionsRepository extends ApiProjectRepository {
     const url = `${this.httpUrlBase}/objectives`;
     const sources = JSON.stringify(data);
     return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+  /** GET list of Localisation **/
+  action_progressions(params = {}): Observable<ActionProgression[]> {
+    const url = `${this.httpUrlBase}/action-progressions`;
+    const options = {params: params};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: ActionProgression[]) => res), 
+        retry(3)
+      );
   }
 
 

@@ -3,6 +3,7 @@
 		<mat-form-field class="col-sm-5">
 			<mat-label>Durée</mat-label>
 	    <input 
+	    	#durationInput
 	    	id="durationForm"
 	    	matInput 
 	    	type="number"
@@ -12,6 +13,7 @@
 		    placeholder="Ex : 1.25 pour 1h15"
 		    autocomplete="off"
 		    [formControl]="durationForm"
+		    [required]="required"
 		  >
 		  <mat-error>Renseignez au quart d'heure (0.25, 0.5 ou 0.75)</mat-error>
 	  </mat-form-field>
@@ -35,6 +37,7 @@
 				    placeholder="Ex: 1" 
 				    formControlName="hour" 
 				    [matAutocomplete]="autoHour"
+				    [required]="required"
 				  >
 			    <mat-autocomplete #autoHour>
 			      <mat-option 
@@ -58,6 +61,7 @@
 				    placeholder="Ex: 15" 
 				    formControlName="minute" 
 				    [matAutocomplete]="autoMinute"
+				    [required]="required"
 				  >
 			    <mat-autocomplete #autoMinute>
 			      <mat-option 

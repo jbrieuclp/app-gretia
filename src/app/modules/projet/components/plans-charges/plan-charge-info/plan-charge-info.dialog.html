@@ -1,0 +1,116 @@
+<h1 mat-dialog-title><small>{{ study.code }}</small> {{ study.label }}</h1>
+<div 
+  mat-dialog-content
+  style="padding-top: 5px; padding-bottom: 10px;"
+>
+
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Repartition par actions du temps travaillé
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table class="table table-bordered">
+
+        <ng-container *ngFor="let objectif of objectives">
+          <ng-container *ngTemplateOutlet="objectifTemplate; context:{objectif:objectif}"></ng-container> 
+        </ng-container>
+        <!-- objectif == null -->
+        <ng-container>
+          <ng-container *ngTemplateOutlet="objectifTemplate; context:{objectif:null}"></ng-container> 
+        </ng-container>
+      </table>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Travaux réalisés
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Travail</th>
+            <th>Temps</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="works.length; else noData">
+            <tr *ngFor="let work of works">
+              <td>
+                <div class="float-right">
+                  <i>{{ work.workingDate | date:'dd/MM/yyyy' }}</i>
+                </div>
+                <div 
+                  *ngIf="work.action">
+                  <span class="categ-label">Action</span>{{ work.action.label }}
+                </div>
+                <div>
+                  <span class="categ-label">Catégorie</span> <i>{{ work.category?.label || '-' }}</i>
+                </div>
+                <div>
+                  <span class="categ-label">Détail</span> 
+                  <div class=work-detail>{{ work.detail != '' ? work.detail : '-' }}</div>
+                </div>
+              </td>
+              <td>
+                <div matTooltip="Temps passé">
+                  {{ displayDuration(work.duration) }}
+                  <small *ngIf="work.timeCoeff !== 1">
+                    x{{ work.timeCoeff }} ({{ work.isWe ? 'Week-end' : 'Nuit' }})
+                  </small>
+                </div>
+                <div 
+                  *ngIf="work.timeCoeff !== 1"
+                  matTooltip="Temps compté"
+                > <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-template #noData>
+            <tr><td colspan="2">Aucun travail pour cette étude</td></tr>
+          </ng-template>
+        </tbody>
+      </table>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</div>
+
+<div mat-dialog-actions>
+  <button 
+  	mat-raised-button 
+  	mat-dialog-close
+  >Fermer</button>
+</div>
+
+
+<ng-template let-objectif="objectif" #objectifTemplate>
+  <ng-container *ngIf="getActionByObjectif(objectif).length">
+    <thead>
+      <tr>
+        <th colspan="4">{{ objectif?.label || 'Objectif non défini' }}</th>
+      </tr>
+      <tr>
+        <th>Action</th>
+        <th>Jours prévu</th>
+        <th>Jours consommé</th>
+        <th>Jours consommé (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let action of getActionByObjectif(objectif)">
+        <td>{{ action.action.label }}</td>
+        <td>{{ action.expectedTime }}</td>
+        <td>{{ action.consumedTime }}</td>
+        <td>{{ action.usagePercent }}</td>
+      </tr>
+    </tbody>
+  </ng-container>
+</ng-template>

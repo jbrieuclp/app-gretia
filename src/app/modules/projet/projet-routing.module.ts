@@ -26,6 +26,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { ProjectComponent } from './components/projects/project/project.component';
 import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
 import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
+import { AdminExpensesComponent } from './components/admin/expenses/admin-expenses.component';
 
 // routes definition
 const routes: Routes = [
@@ -96,6 +97,9 @@ const routes: Routes = [
 				]},
 				{ path: 'suiveuses', children: [
 					{ path: '', component: CumulSuiveusesComponent, pathMatch: 'full' },
+				]},
+				{ path: 'frais', children: [
+					{ path: '', component: AdminExpensesComponent, pathMatch: 'full' },
 				]}
 				// { path: 'organisme', component: OrganismeComponent, pathMatch: 'full' },
 				// { path: 'categorie', component: CategorieComponent, pathMatch: 'full' },

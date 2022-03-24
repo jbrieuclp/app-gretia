@@ -137,4 +137,10 @@ export class PersonRepository {
     return this.http.get(url)
       .pipe(retry(3));
   }
+
+  getPaymentByPersons(params = {}): Observable<any> {
+    const url = `${this.httpUrlBase}/payment-by-people`;
+    const options = {params: params};
+    return this.http.get(url, options);
+  }
 }

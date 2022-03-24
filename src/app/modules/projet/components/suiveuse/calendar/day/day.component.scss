@@ -1,0 +1,100 @@
+.day {
+  width: 100%;
+  height: 100%;
+}
+
+.day:hover {
+	text-decoration: none;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  -webkit-transition: opacity .25s ease-in-out;
+}
+
+.day.not-worked {
+  background-color: #eee;
+  color: #555;
+}
+
+.day .day-number {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 25px;
+}
+
+.day.today span.day-number {
+  font-weight: 500;
+  color: #fff;
+  background-color: rgb(103, 58, 183);
+}
+
+.day.selectedDate span.day-number {
+  font-weight: 500;
+  color: #fff;
+  background-color: #4146e2!important;
+}
+
+.day div.day-holiday {
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  width: 50px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 17px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.day div.day-time {
+  display: block;
+  position: absolute;
+  top: 35px;
+  left: 2px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 17px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.day.selectedDate div.day-time,
+.day.selectedDate div.day-holiday,
+.day.today div.day-time,
+.day.today div.day-holiday,
+.day:hover div.day-time,
+.day:hover div.day-holiday {
+  color: rgba(0, 0, 0, 1);
+  transition: color .25s ease-in-out;
+  -moz-transition: color .25s ease-in-out;
+  -webkit-transition: color .25s ease-in-out;
+}
+
+.day div.day-time mat-icon,
+.day div.day-holiday mat-icon {
+  vertical-align: middle;
+}
+
+.day div.day-time span,
+.day div.day-holiday span {
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.day div.recup-time {
+  position: absolute;
+  bottom: 2px;
+  left: 5px;
+  color: #d20000;
+}
+
+.day div.working-time {
+  position: absolute;
+  bottom: 2px;
+  right: 5px;
+  color: #1421b9;
+  font-weight: 500;
+}

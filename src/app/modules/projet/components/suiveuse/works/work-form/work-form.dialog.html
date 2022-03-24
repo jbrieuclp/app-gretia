@@ -13,14 +13,17 @@
 		<app-projet-control-work-category
 			class="col-sm-4"
 			[form]="form.get('category')"
-			required
+			required="true"
 		>	
 		</app-projet-control-work-category>
 	</div>
 
 	<div class="row">
 		<div class="col-8">
-			<app-projet-time-control [form]="form.get('duration')"></app-projet-time-control>
+			<app-projet-time-control 
+				[form]="form.get('duration')"
+				required="true"
+			></app-projet-time-control>
 		</div>
 
 		<div class="col-4">

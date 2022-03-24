@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { Subscription } from 'rxjs';
 import { filter, tap, map, debounceTime, distinctUntilChanged, switchMap, startWith } from 'rxjs/operators';
@@ -18,6 +18,8 @@ export class AbstractControl implements OnInit, OnDestroy {
   loading: boolean = false;
   //options désactivées
   @Input() optionsDisabled: any[] = [];
+
+  @Output() changeEvent = new EventEmitter<any>();
   
   _subscriptions: Subscription[] = [];
 
@@ -44,6 +46,10 @@ export class AbstractControl implements OnInit, OnDestroy {
 
   isDisabled(option): boolean {
     return this.optionsDisabled.findIndex(e => e['@id'] === option['@id']) !== -1;
+  }
+
+  changeEmit(value: any) {
+    this.changeEvent.emit(value);
   }
 
   ngOnDestroy() {

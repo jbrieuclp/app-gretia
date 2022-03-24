@@ -18,7 +18,6 @@ export class CalendarComponent implements OnInit, OnDestroy  {
   get month(): Date { return this.suiveuseS.displayMonthValue; }
   dates: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   months: Array<string> = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-  today: Date = moment().toDate();
   selectYears: number[] = [moment().year()];
  
   _subscriptions: Subscription[] = [];
@@ -107,16 +106,8 @@ export class CalendarComponent implements OnInit, OnDestroy  {
     this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonthValue).set('year', year).toDate();
   }
 
-  getWorkByDate(date) {
-    return this.suiveuseS.dateWorkTime.find(w => moment(w.date).isSame(moment(date), 'day'));
-  }
-
   dateSelect(date): void {
     this.suiveuseS.selectedDate.next(moment(date).toDate());
-  }
-
-  displayTime(duration) {
-    return duration !== null ? Math.trunc(duration/60) + "h" + (duration%60 !== 0 ? duration%60 :'') : "-";
   }
 
   /**

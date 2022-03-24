@@ -1,43 +1,109 @@
-<table 
-	mat-table 
-	[dataSource]="studies" 
-	class="example-table"
-  matSort 
-  matSortActive="code" 
-  matSortDisableClear 
-  matSortDirection="desc"
->
-  <!-- Code Column -->
-  <ng-container matColumnDef="code">
-    <th mat-header-cell *matHeaderCellDef>Code</th>
-    <td mat-cell *matCellDef="let row">{{row.code}}</td>
-  </ng-container>
+<div class="row">
+  <mat-form-field class="col-sm-6">
+    <input matInput 
+      placeholder="Rechercher..." 
+      [formControl]="filterInput">
+  </mat-form-field>
+</div>
 
-  <!-- Études Column -->
-  <ng-container matColumnDef="label">
-    <th mat-header-cell *matHeaderCellDef>Études</th>
-    <td mat-cell *matCellDef="let row">{{row.label}}</td>
-  </ng-container>
+<div class="list-container mat-elevation-z8">
+  <div 
+    *ngIf="loading"
+    class="loading-shade"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
 
-  <!-- State Column -->
-  <!-- <ng-container matColumnDef="state">
-    <th mat-header-cell *matHeaderCellDef>State</th>
-    <td mat-cell *matCellDef="let row">{{row.state}}</td>
-  </ng-container> -->
+  <div class="table-container">
+		<table 
+			mat-table 
+			[dataSource]="dataSource" 
+		  matSort 
+		  matSortActive="study.label" 
+		  matSortDisableClear 
+		  matSortDirection="asc"
+		>
+		  <!-- Code Column -->
+		  <ng-container matColumnDef="study.code">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Code</th>
+		    <td mat-cell *matCellDef="let row">{{ row.study.code }}</td>
+		  </ng-container>
 
-  <!-- Created Column -->
-  <!-- <ng-container matColumnDef="created">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-      Created
-    </th>
-    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
-  </ng-container> -->
+		  <!-- Études Column -->
+		  <ng-container matColumnDef="study.label">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Études</th>
+		    <td mat-cell *matCellDef="let row">
+		    	<span 
+		    		class="study-label-text"
+		    		(click)="openStudyInfo(row.study)"
+		    	>{{ row.study.label }}</span>
+		    </td>
+		  </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+		  <!-- expectedTime Column -->
+		  <ng-container matColumnDef="expectedTime">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Jours prévu</th>
+		    <td mat-cell *matCellDef="let row">{{ row.expectedTime }}</td>
+		  </ng-container>
 
-<mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+		  <!-- consumedTime Column -->
+		  <ng-container matColumnDef="consumedTime">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Jours consommé</th>
+		    <td mat-cell *matCellDef="let row">{{ row.consumedTime }}</td>
+		  </ng-container>
+
+		  <!-- usagePercent Column -->
+		  <ng-container matColumnDef="usagePercent">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Jours consommé (%)</th>
+		    <td mat-cell *matCellDef="let row">{{ row.usagePercent !== null ? row.usagePercent+"%" : "Non prévu" }}</td>
+		  </ng-container>
+
+		  <!-- State Column -->
+		  <!-- <ng-container matColumnDef="state">
+		    <th mat-header-cell *matHeaderCellDef>State</th>
+		    <td mat-cell *matCellDef="let row">{{row.state}}</td>
+		  </ng-container> -->
+
+		  <!-- Created Column -->
+		  <!-- <ng-container matColumnDef="created">
+		    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+		      Created
+		    </th>
+		    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
+		  </ng-container> -->
+
+		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+
+		<mat-paginator 
+			[length]="resultsLength" 
+			[pageSize]="25"
+			[pageSizeOptions]="[10, 25, 50, 100, 250]"
+		></mat-paginator>
+
+	</div>
+</div>
 
 
 <!-- <div>

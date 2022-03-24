@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
 import { Subscription } from "rxjs";
 import { tap, map, switchMap, distinctUntilChanged, debounceTime, filter } from "rxjs/operators";
@@ -19,6 +19,8 @@ export class TimeControlComponent extends HomeAbstractControl implements OnInit,
   timeFormDisplay: boolean = false;
 
   _subscriptions: Subscription[] = [];
+
+  @ViewChild('durationInput', {static: false}) durationInput: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -57,7 +59,7 @@ export class TimeControlComponent extends HomeAbstractControl implements OnInit,
           filter(duration => duration !== null),
           map((duration) => duration.toString().replace(',', '.').replace(/[^\d\.]/g, '')),
         )
-        .subscribe((duration: string) => this.durationForm.setValue(duration))
+        .subscribe((duration: string) => this.durationForm.setValue(duration, {emitEvent: false}))
     );
 
     this._subscriptions.push(
@@ -105,8 +107,14 @@ export class TimeControlComponent extends HomeAbstractControl implements OnInit,
   }
 
   private setTimeValue(duration) {
-    this.durationForm.setValue(Math.round((+(duration)/60)*100)/100);
-    this.timeForm.setValue({hour: Math.trunc(+(duration)/60), minute: duration%60});
+    this.durationForm.setValue(Math.round((+(duration)/60)*100)/100, {emitEvent: false});
+    this.timeForm.setValue({hour: Math.trunc(+(duration)/60), minute: duration%60}, {emitEvent: false});
+    
+    //regler un problème de focus dans le input
+    if (this.durationInput !== undefined) {
+      this.durationInput.nativeElement.blur();
+      this.durationInput.nativeElement.focus();
+    }
   }
 
   ngOnDestroy() {

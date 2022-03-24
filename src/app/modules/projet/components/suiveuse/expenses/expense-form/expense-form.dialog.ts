@@ -43,6 +43,7 @@ export class ExpenseFormDialog implements OnInit, DoCheck  {
 
   iterableDiffer;
   uploading: boolean = false;
+  isFixedPrice: boolean = false;
 
   get selectedDate() { return this.suiveuseS.selectedDate.getValue(); };
   //fichiers sauvegardé
@@ -161,6 +162,13 @@ export class ExpenseFormDialog implements OnInit, DoCheck  {
       this.form.get('vat').setValidators([Validators.required]);
     }
     this.form.updateValueAndValidity();
+  }
+
+  onChargeTypeChange(chargeTypeSelected) {
+    this.isFixedPrice = chargeTypeSelected.fixedPrice;
+    if (chargeTypeSelected.fixedPrice) {
+      this.form.get('amountInclTax').setValue(chargeTypeSelected.unitCost);
+    }
   }
 
   save() {

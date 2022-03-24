@@ -1,0 +1,64 @@
+<div class="day" 
+	[ngClass]="
+		{
+			'not-worked': work?.notWorked,
+			'today': ((date|date:'y-MM-dd') === (today|date:'y-MM-dd')),
+			'selectedDate': ((date|date:'y-MM-dd') === ((selectedDate|async)|date:'y-MM-dd'))
+		}"
+>
+	<span 
+		class="day-number"
+		[ngClass]="
+			{
+				'today': ((date|date:'y-MM-dd') === (today|date:'y-MM-dd')),
+				'selectedDate': ((date|date:'y-MM-dd') === ((selectedDate|async)|date:'y-MM-dd'))
+			}"
+	>
+		{{ date|date:'d' }}
+	</span>
+
+	<div 
+		*ngIf="work?.holiday !== null"
+		class="day-holiday"
+		matTooltip="Prise de congé"
+	>
+		<mat-icon> beach_access </mat-icon>
+		<div>
+			<span *ngIf="work.holiday === 'morning'">Matin</span>
+			<span *ngIf="!work.holiday === 'evening'">Après-midi</span>
+			<span *ngIf="work.holiday === 'all'">Jour</span>
+		</div>
+	</div>
+
+	<div class="day-time">
+		<div 
+			*ngIf="work?.workTime"
+			matTooltip="Temps de travail en journée">
+			<mat-icon inline="true"> light_mode </mat-icon>
+			<span> {{ displayTime(work?.workTime) }}</span>
+		</div>
+
+		<div 
+			*ngIf="work?.workNightTime"
+			[matTooltip]="'Coefficient appliqué la nuit : x' + work.coeff_night"
+		>
+			<mat-icon inline="true"> nightlight </mat-icon>
+			<span> {{ displayTime(work?.workNightTime) }}</span>
+		</div>
+
+		<div 
+			*ngIf="work?.travelTime"
+			matTooltip="Temps en déplacement"
+		>
+			<mat-icon inline="true"> directions_car </mat-icon>
+			<span> {{ displayTime(work?.travelTime) }}</span>
+		</div>
+	</div>
+
+	<div 
+		class="working-time"
+		matTooltip="Temps total compté pour la journé"
+	>
+		<span> {{ displayTime(work?.totalTime) }}</span>
+	</div>
+</div>

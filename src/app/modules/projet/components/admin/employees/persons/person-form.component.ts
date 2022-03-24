@@ -31,7 +31,7 @@ export class PersonFormComponent implements OnInit {
     this.personS.moveStepper(0);
   }
 
-  get salarieControls() {
+  get employeeControls() {
     return (this.form.get("employees") as FormArray)
       .controls;
   }

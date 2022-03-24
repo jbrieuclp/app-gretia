@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective, StudyDeadline } from './project.interface';
+import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective, StudyDeadline, StudyProgression } from './project.interface';
 
 @Injectable()
 export class StudiesRepository extends ApiProjectRepository {
@@ -70,14 +70,13 @@ export class StudiesRepository extends ApiProjectRepository {
   }
 
   /** GET list of Localisation **/
-  studies_progression(params = {}): Observable<Study[]> {
-    const url = `${this.httpUrlBase}/studies/progression`;
+  study_progressions(params = {}): Observable<StudyProgression[]> {
+    const url = `${this.httpUrlBase}/study-progressions`;
     const options = {params: params};
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Study[]) => res), 
-        retry(3)
+        map((res: StudyProgression[]) => res)
       );
   }
 

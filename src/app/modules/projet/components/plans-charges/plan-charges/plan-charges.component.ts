@@ -1,12 +1,16 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { merge, Observable, of as observableOf, combineLatest } from 'rxjs';
-import { catchError, map, startWith, switchMap, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap, distinctUntilChanged, filter, tap, debounceTime } from 'rxjs/operators';
 
 import { Person, Study } from '@projet/repository/project.interface';
 import { PlansChargesService } from '../plans-charges.service';
 import { StudiesRepository } from '@projet/repository/studies.repository';
+import { PlanChargeInfoDialog } from '../plan-charge-info/plan-charge-info.dialog';
 
 @Component({
   selector: 'app-projet-plan-charges',
@@ -17,134 +21,117 @@ export class PlanChargesComponent implements AfterViewInit {
 
   studies: Study[] = [];
   get person(): Person { return this.plansChargesS.person; };
+
+  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  filterInput: FormControl = new FormControl('', []);
   loading: boolean = false;
+
+  navigation: any;
   resultsLength: number = null;
-  displayedColumns: string[] = ['code', 'label'];
-  view: any;
+  displayedColumns: string[] = ['study.code', 'study.label', 'expectedTime', 'consumedTime', 'usagePercent'];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
+    public dialog: MatDialog,
     private studyR: StudiesRepository,
     private plansChargesS: PlansChargesService, 
   ) { }
 
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    combineLatest(
-      this.plansChargesS.$person.pipe(
-        distinctUntilChanged(),
-        filter(val => val !== null)
-      ),
-      this.plansChargesS.$year.pipe(
-        distinctUntilChanged(),
-        filter(val => val !== null)
-      ),
+    merge(
+      this.sort.sortChange,
+      this.filterInput.valueChanges
+        .pipe(
+          debounceTime(300),
+          distinctUntilChanged()
+        ),
+      combineLatest(
+        this.plansChargesS.$person.pipe(
+          distinctUntilChanged(),
+          filter(val => val !== null)
+        ),
+        this.plansChargesS.$year.pipe(
+          distinctUntilChanged(),
+          filter(val => val !== null)
+        )
+      )
+    ).subscribe(() => this.paginator.pageIndex = 0);
+
+    merge(
+      this.sort.sortChange, 
+      this.paginator.page,
+      this.filterInput.valueChanges
+        .pipe(
+          debounceTime(300),
+          distinctUntilChanged()
+        ),
+      combineLatest(
+        this.plansChargesS.$person.pipe(
+          distinctUntilChanged(),
+          filter(val => val !== null)
+        ),
+        this.plansChargesS.$year.pipe(
+          distinctUntilChanged(),
+          filter(val => val !== null)
+        )
+      )
     )
       .pipe(
-        tap((val) => console.log(val)),
-        switchMap(([person, year]) => this.getStudies(person, year)),
-        // this.sort.active, this.sort.direction, this.paginator.pageIndex);
-        catchError(() => {
-          this.loading = false;
-          return observableOf([]);
-        })
-      ).subscribe(data => this.studies = data);
-
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        switchMap((param: any): Observable<any> => {
-          this.loading = true;
-          if (param.previousPageIndex < param.pageIndex) {
-            return this.studyR.get(this.view['hydra:next']);
-          } else {
-            return this.studyR.get(this.view['hydra:previous']);
+        // startWith({}),
+        map((val) => {
+          let params = {
+            itemsPerPage: this.paginator.pageSize,
+            page: this.paginator.pageIndex + 1,
+            'person.id': this.plansChargesS.person.id, 
+            'dateStart[lte]': `${this.plansChargesS.year}`,
+            'dateEnd[gte]': `${this.plansChargesS.year}`
+          };
+          if (this.filterInput.value && this.filterInput.value !== '') {
+            params['table'] = this.filterInput.value;
           }
+          if (this.sort.active === undefined) {
+            params["_order[study.label]"] = "asc";
+          } else {
+            params[`_order[${this.sort.active}]`] = this.sort.direction;
+          }
+
+          return params;
         }),
-        tap((res) => {
-          this.resultsLength = res['hydra:totalItems']
-          this.view = res['hydra:view']
-        }),
-        map((res): Study[] => Object.values(res['hydra:member'])),
-        tap(() => this.loading = false)
-      )
-      .subscribe(data => this.studies = data);
+        switchMap((params) => this.getStudies(params)),
+      ).subscribe(datasource => {
+        this.dataSource.data = datasource;
+      });
   }
 
-  getStudies(person, year): Observable<Study[]> {
+  getStudies(params: any = {}): Observable<Study[]> {
+    console.log("plop");
+    console.log(params);
     this.loading = true;
-    return this.studyR.studies_progression({
-      'actions.attributions.employee.person.id': person.id, 
-      'dateEnd[after]': `${year}-01-01`,
-      'dateStart[before]': `${year}-12-31`,
-    })
+    return this.studyR.study_progressions(params)
       .pipe(
         tap((res) => {
-          this.resultsLength = res['hydra:totalItems']
-          this.view = res['hydra:view']
+          this.navigation = res['hydra:view'];
+          this.resultsLength = res['hydra:totalItems'];
         }),
         map((res): Study[] => Object.values(res['hydra:member'])),
         tap(() => this.loading = false)
       )
   }
 
+  openStudyInfo(study) {
+    const dialogConfig = new MatDialogConfig();
 
+    dialogConfig.data = study;
+    dialogConfig.width = '750px';
+    dialogConfig.position = {top: '70px'};
+    dialogConfig.disableClose = false;
+    dialogConfig.panelClass = 'dialog-95';
 
-
-
-
-
-
-
-
-
-
-
-  // ngOnInit() {
-
-  // }
-
-
-  // getPDC(person_id): Observable<any> {
-  //   return of(person_id)
-  // }
-
-  // getScheduledDays(study) {
-  //   let time = 0;
-  //   study.actions.forEach(t => {
-  //     if ( t.attributions && this.plansChargesS.person) {
-  //       const personAttributions = t.attributions
-  //         .filter(attribution => attribution.employee.person === this.plansChargesS.person['@id'])
-  //         .map(attribution => attribution.nbOfDays);
-
-  //       if ( personAttributions.length ) {
-  //         time += personAttributions.reduce((a, b) => a+b)
-  //       }
-  //     }
-  //   });
-
-  //   return time;
-  // }
-
-  // getUsedDays(study) {
-  //   let time = 0;
-  //   study.actions.forEach(t => {
-
-  //     if ( t.works && this.plansChargesS.person) {
-  //       const personWorks = t.works
-  //         .filter(work => work.employee.person === this.plansChargesS.person['@id'])
-  //         .map(work => work.duration);
-
-  //       if ( personWorks.length ) {
-  //         time += personWorks.reduce((a, b) => a+b)
-  //       }
-  //     }
-  //   });
-
-  //   return time / 60 / 7;
-  // }
+    const dialogRef = this.dialog.open(PlanChargeInfoDialog, dialogConfig);
+  }
 
 }
