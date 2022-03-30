@@ -9,6 +9,7 @@ const layout = {title: 'Suivis Études',
                   {title: 'Plan de charge', url: '/projet/plan-de-charges', img: 'fact_check', tooltip: 'Plan de charge'},
                   // {title: 'Projets/Études', url: '/projet/projets', img: 'folder', tooltip: 'Consulter les projets'},
                   {title: 'Suiveuse', url: '/projet/suiveuse', img: 'today', tooltip: 'Remplir la suiveuse'},
+                  {title: 'Mes frais', url: '/projet/frais', img: 'euro_symbol', tooltip: 'Suivre mes frais'},
                   {title: 'Administration', url: '/projet/admin', img: 'build', tooltip: 'Administration', role: 'ROLE_PROJET_ADMIN'}
                 ]};
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription, combineLatest } from 'rxjs';
+import { map, tap, filter, startWith } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
 
@@ -24,11 +24,21 @@ export class CalendarDayComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.$sub = this.suiveuseS.$dateWorkTime.asObservable()
-      .pipe(
-        map(works => works.find(w => moment(w.date).isSame(moment(this.date), 'day')))
-      )
-      .subscribe(work => this.work = work);
+    // this.$sub = this.suiveuseS.$dateWorkTime.asObservable()
+    this.$sub = 
+      combineLatest(
+        this.suiveuseS.$dateWorkTime
+          .pipe(filter(val => val.length > 0)),
+        this.suiveuseS.lastRefreshDay
+          .pipe(
+            startWith(this.date),
+            filter(date => moment(date).isSame(this.date, 'day')),
+          )
+        )
+          .pipe(
+            map(works => this.suiveuseS.dateWorkTime.find(w => moment(w.date).isSame(moment(this.date), 'day'))),
+          )
+          .subscribe(work => this.work = work);
   }
 
   displayTime(duration) {

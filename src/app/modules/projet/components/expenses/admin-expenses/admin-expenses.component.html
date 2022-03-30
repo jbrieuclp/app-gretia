@@ -22,7 +22,12 @@
 		    	*matHeaderCellDef
 		    	mat-sort-header
 		    > Salarié </th>
-		    <td mat-cell *matCellDef="let row">{{ row.person.firstname }} {{ row.person.name }}</td>
+		    <td mat-cell *matCellDef="let row">
+		    	<a 
+		    		[routerLink]="['/projet/frais']"
+		    		[queryParams]="{person: row.person.id}"
+		    	>{{ row.person.firstname }} {{ row.person.name }}</a>
+		    </td>
 		  </ng-container>
 
 		  <!-- Études Column -->

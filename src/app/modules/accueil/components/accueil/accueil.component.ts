@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../../../../shared/models/user.model';
-import { AuthService } from '../../../../shared/auth/authentication.service';
+import { User } from '@shared/models/user.model';
+import { AuthService } from '@shared/auth/authentication.service';
 
 @Component({
   selector: 'app-accueil',

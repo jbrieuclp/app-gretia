@@ -1,0 +1,288 @@
+<h4>Mes frais</h4>
+<ng-container *ngIf="user.hasRole('ROLE_PROJET_ADMIN')">
+	<div class="row">
+		<mat-form-field class="col-md-3">
+		  <mat-label>Personne</mat-label>
+		  <mat-select
+		  	[formControl]="personControl"
+		  >
+		    <mat-option *ngFor="let person of (persons|async)| sortBy:'asc':'firstname'" [value]="person.id">
+		      {{ person.firstname }} {{ person.name }}
+		    </mat-option>
+		  </mat-select>
+		</mat-form-field>
+	</div>
+</ng-container>
+
+<div class="row">
+  <div class="col-sm-11">
+  	<button 
+  		mat-fab 
+  		class="float-left"
+  		color="primary" 
+  		matTooltip="Filtres complémentaires"
+  		(click)="collapsed = !collapsed"
+  	>
+	    <mat-icon>filter_alt</mat-icon>
+	  </button>
+  	<div class="row">
+		  <mat-form-field class="col-sm-6">
+		  	<mat-icon matPrefix>search</mat-icon>
+		    <input 
+		    	matInput
+		      placeholder="Rechercher..." 
+		      [formControl]="filtersForm.get('search')">
+		    <mat-icon 
+		    	matSuffix
+		    	(click)="filterInput.setValue('')"
+		    >clear</mat-icon>
+		  </mat-form-field>
+		</div>
+		<div 
+			class="collapsible" 
+			[@collapse]="collapsed"
+		>
+			<div class="row">
+			  <mat-form-field class="col-sm-3">
+			  	<mat-label>Date de début</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="startP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	[formControl]="filtersForm.get('expenseDate[after]')"
+				  	required>
+				  <mat-datepicker-toggle matSuffix [for]="startP"></mat-datepicker-toggle>
+				  <mat-datepicker #startP></mat-datepicker>
+				</mat-form-field>
+
+			  <mat-form-field class="col-sm-3">
+			  	<mat-label>Date de fin</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="endP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	[formControl]="filtersForm.get('expenseDate[before]')">
+				  <mat-datepicker-toggle matSuffix [for]="endP"></mat-datepicker-toggle>
+				  <mat-datepicker #endP></mat-datepicker>
+				</mat-form-field>
+			</div>
+
+			<div class="row">
+				<mat-checkbox
+					class="col-sm-3"
+					color="primary"
+					[formControl]="filtersForm.get('paid')"
+				>Payé</mat-checkbox>
+
+				<mat-checkbox
+					class="col-sm-3"
+					color="primary"
+					[formControl]="filtersForm.get('unpaid')"
+				>Non payé</mat-checkbox>
+
+			</div>
+
+		</div>
+	</div>
+
+
+  <div 
+  	*ngIf="user.hasRole('ROLE_PROJET_ADMIN')"
+  	class="float-right"
+  >
+  	<button 
+  		mat-fab 
+  		color="primary" 
+  		[matTooltip]="'Indiquer ces '+selectedRows.length+' elements selectionnés comme étant payés'"
+  		[disabled]="selectedRows.length === 0"
+  		(click)="paidItems()"
+  	>
+	    <mat-icon>credit_score</mat-icon>
+	  </button>
+  </div>
+</div>
+
+<div class="list-container mat-elevation-z8">
+  <div 
+    *ngIf="loading"
+    class="loading-shade"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="table-container">
+		<table 
+			mat-table 
+			[dataSource]="expenseDataSource" 
+		  matSort 
+		  matSortActive="expenseDate" 
+		  matSortDisableClear 
+		  matSortDirection="desc"
+		>
+		  	<!-- Code Column -->
+		  <ng-container 
+		  	*ngIf="user.hasRole('ROLE_PROJET_ADMIN')"
+		  	matColumnDef="checkbox"
+		  >
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    >
+		    	<mat-checkbox 
+		    		(change)="onSelectAll($event)"
+		    		[indeterminate]="checkboxIndeterminateStatus()" 
+		    		color="primary"
+		    	></mat-checkbox>
+		    </th>
+		    <td mat-cell *matCellDef="let row">
+		    	<mat-checkbox 
+		    		(change)="onSelectRow($event)" 
+		    		color="primary"
+		    		[checked]="selectedRows.includes(row['@id'])"
+		    		[value]="row['@id']"
+		    	></mat-checkbox>
+		    </td>
+		  </ng-container>
+
+		  <!-- Code Column -->
+		  <ng-container matColumnDef="expenseDate">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Date dépense</th>
+		    <td mat-cell *matCellDef="let row">{{ row.expenseDate|date:'dd/MM/yyyy' }}</td>
+		  </ng-container>
+
+		  <!-- Études Column -->
+		  <ng-container matColumnDef="chargeType.label">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    > Type </th>
+		    <td mat-cell *matCellDef="let row">
+		    	<span 
+		    		class="study-label-text"
+		    		(click)="openStudyInfo(row.study)"
+		    	>{{ row.chargeType.label }}</span>
+		    </td>
+		  </ng-container>
+
+		  <!-- expectedTime Column -->
+		  <ng-container matColumnDef="study.label">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    > Étude </th>
+		    <td mat-cell *matCellDef="let row">{{ row.study.code }} - {{ row.study.label }}</td>
+		  </ng-container>
+
+		  <!-- consumedTime Column -->
+		  <ng-container matColumnDef="provider">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    >Frounisseur</th>
+		    <td mat-cell *matCellDef="let row">
+		    	{{ row.provider }}
+		    	<mat-icon 
+		    		class="expense-details"
+		    		*ngIf="row.details !== ''"
+		    		[matTooltip]="row.details"
+		    	>help_outline</mat-icon>
+		    </td>
+		  </ng-container>
+
+		  <!-- usagePercent Column -->
+		  <ng-container matColumnDef="amountInclTax">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    > Coût (€) </th>
+		    <td mat-cell *matCellDef="let row">{{ row.amountInclTax | currency:'EUR':'symbol':'1.2-2':'fr' }}</td>
+		  </ng-container>
+
+		  <!-- usagePercent Column -->
+		  <ng-container matColumnDef="paymentDate">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    	mat-sort-header
+		    > État</th>
+		    <td 
+		    	mat-cell 
+		    	*matCellDef="let row"
+		    	[matTooltip]="row.paymentDate !== null ? 'Payé le '+(row.paymentDate|date:'dd/MM/yyyy') : 'Non payé'"
+		    >
+		    	<ng-container *ngIf="!dataLoading.includes(row['@id']); else loadingTpl">
+			    	<span 
+			    		class="paid-status"
+			    		[ngClass]="{
+			    			'button': user.hasRole('ROLE_PROJET_ADMIN'),
+			    			'paid' : row.paymentDate !== null,
+			    			'unpaid': row.paymentDate === null
+			    		}"
+			    		[matMenuTriggerFor]="menu"
+			    	>{{ row.paymentDate !== null ? 'Payé' : 'Non payé' }}</span>
+			    	<mat-menu
+			    		#menu="matMenu"
+			    	>
+						  <button 
+						  	mat-menu-item 
+						  	matTooltip="Changer l'état"
+						  	(click)="paid(row['@id'], row.paymentDate === null)"
+						  >{{ row.paymentDate === null ? 'Payé' : 'Non payé' }}</button>
+						</mat-menu>
+					</ng-container>
+					<ng-template #loadingTpl>
+						<span 
+			    		class="paid-status disabled"
+			    	>Modification...</span>
+					</ng-template>
+		    </td>
+		  </ng-container>
+
+		  <!-- State Column -->
+		  <!-- <ng-container matColumnDef="state">
+		    <th mat-header-cell *matHeaderCellDef>State</th>
+		    <td mat-cell *matCellDef="let row">{{row.state}}</td>
+		  </ng-container> -->
+
+		  <!-- Created Column -->
+		  <!-- <ng-container matColumnDef="created">
+		    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+		      Created
+		    </th>
+		    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
+		  </ng-container> -->
+
+		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+
+		<mat-paginator 
+			[length]="resultsLength" 
+			[pageSize]="25"
+			[pageSizeOptions]="[10, 25, 50, 100, 250]"
+		></mat-paginator>
+
+	</div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    Coucou
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>

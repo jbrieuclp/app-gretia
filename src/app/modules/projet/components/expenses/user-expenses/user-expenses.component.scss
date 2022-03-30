@@ -1,0 +1,130 @@
+table {
+  width: 100%;
+}
+
+.example-rate-limit-reached {
+  color: #980000;
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Column Widths */
+.mat-column-checkbox {
+  width: 55px;
+}
+
+.mat-column-expenseDate {
+  width: 110px;
+}
+
+.mat-column-chargeType-label {
+  width: 120px;
+}
+
+.mat-column-provider {
+  width: 300px;
+}
+
+.mat-column-amountInclTax {
+  width: 70px;
+}
+
+.mat-column-paymentDate {
+  width: 140px;
+}
+td.mat-column-paymentDate,
+td.mat-column-amountInclTax {
+  text-align: center;
+}
+
+/* Structure */
+.list-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.table-container {
+  height: auto;
+  max-height: calc(100vh - 235px);
+  overflow: overlay;
+  padding-bottom: 56px;
+}
+
+.table-container .mat-paginator  {
+  position: absolute; 
+  width: 100%;
+  bottom: 0;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+span.paid-status {
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+
+span.paid-status.button {
+  cursor: pointer;
+}
+
+span.paid-status.button:hover {
+  transition: background .4s,
+              box-shadow 280ms;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 
+              0 6px 10px 0 rgba(0, 0, 0, 0.14), 
+              0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+span.paid-status.disabled {
+  background-color: #d7d7d7;
+  color: #383838;
+  cursor: not-allowed;
+}
+
+span.paid-status.paid {
+  background-color: #9ee59e;  
+  color: #035606;
+  cursor: pointer;
+}
+span.paid-status.unpaid {
+  background-color: #ffa2a2;
+  color: #5e0101;
+}
+
+::ng-deep .mat-form-field-prefix > mat-icon.mat-icon {
+  color: #673ab7;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+::ng-deep .mat-form-field-suffix > mat-icon.mat-icon {
+  color: #a3a3a3;
+  vertical-align: middle;
+  font-size: 16px;
+  line-height: 32px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.collapsible {
+  overflow: hidden;
+  padding-left: 70px;
+  padding-bottom: 20px;
+}
+
+::ng-deep .expense-details {
+  color: #7c7c7c;
+  vertical-align: bottom;
+  margin-left: 5px;
+}

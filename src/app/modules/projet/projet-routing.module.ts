@@ -26,7 +26,8 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { ProjectComponent } from './components/projects/project/project.component';
 import { PlansChargesComponent } from './components/plans-charges/plans-charges.component';
 import { CumulSuiveusesComponent } from './components/admin/syntheses/cumul-suiveuses/cumul-suiveuses.component';
-import { AdminExpensesComponent } from './components/admin/expenses/admin-expenses.component';
+import { AdminExpensesComponent } from './components/expenses/admin-expenses/admin-expenses.component';
+import { UserExpensesComponent } from './components/expenses/user-expenses/user-expenses.component';
 
 // routes definition
 const routes: Routes = [
@@ -46,27 +47,13 @@ const routes: Routes = [
 				{ path: ':person', component: PlansChargesComponent, pathMatch: 'full' },
 				{ path: ':person/:year', component: PlansChargesComponent, pathMatch: 'full' },
 			]},
-			// { path: 'mission', children: [
-			// //	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail
-			// 	{ path: ':mission', component: MissionFormComponent, pathMatch: 'full' }
-			// ]},
-			// { path: 'suiveuses', component: SListUserComponent, pathMatch: 'full'},
-			{ path: 'suiveuse', children: [
-				{ path: '', component: SuiveusesComponent, pathMatch: 'full' },
-			// 	{ path: 'user/:person', children: [
-			// 		{ path: '', component: CalendarComponent, pathMatch: 'full' },
-			// 	//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
-				// ]}
-			]},
+			{ path: 'suiveuse', component: SuiveusesComponent, pathMatch: 'full'},
+			{ path: 'frais', component: UserExpensesComponent, pathMatch: 'full'},
 			{ path: 'projets', children: [
 				{ path: '', component: ProjectsComponent, pathMatch: 'full' },
 				{ path: 'nouveau', component: ProjectComponent, pathMatch: 'full' },
 				{ path: ':project', redirectTo: ':project/', pathMatch: 'full' },
 				{ path: ':project/:onglet', component: ProjectComponent, pathMatch: 'full' },
-			// 	{ path: 'user/:person', children: [
-			// 		{ path: '', component: CalendarComponent, pathMatch: 'full' },
-			// 	//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
-				// ]}
 			]},
 			{ path: 'admin', children: [
 				{ path: '', component: AdminComponent, pathMatch: 'full' },
@@ -101,9 +88,6 @@ const routes: Routes = [
 				{ path: 'frais', children: [
 					{ path: '', component: AdminExpensesComponent, pathMatch: 'full' },
 				]}
-				// { path: 'organisme', component: OrganismeComponent, pathMatch: 'full' },
-				// { path: 'categorie', component: CategorieComponent, pathMatch: 'full' },
-				// { path: 'etat', component: EtatComponent, pathMatch: 'full' },
 			]}
 		]
 	}

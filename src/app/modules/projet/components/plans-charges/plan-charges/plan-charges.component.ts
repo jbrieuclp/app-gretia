@@ -26,7 +26,6 @@ export class PlanChargesComponent implements AfterViewInit {
   filterInput: FormControl = new FormControl('', []);
   loading: boolean = false;
 
-  navigation: any;
   resultsLength: number = null;
   displayedColumns: string[] = ['study.code', 'study.label', 'expectedTime', 'consumedTime', 'usagePercent'];
 
@@ -108,15 +107,10 @@ export class PlanChargesComponent implements AfterViewInit {
   }
 
   getStudies(params: any = {}): Observable<Study[]> {
-    console.log("plop");
-    console.log(params);
     this.loading = true;
     return this.studyR.study_progressions(params)
       .pipe(
-        tap((res) => {
-          this.navigation = res['hydra:view'];
-          this.resultsLength = res['hydra:totalItems'];
-        }),
+        tap((res) => this.resultsLength = res['hydra:totalItems']),
         map((res): Study[] => Object.values(res['hydra:member'])),
         tap(() => this.loading = false)
       )

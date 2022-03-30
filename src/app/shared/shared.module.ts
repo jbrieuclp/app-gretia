@@ -33,6 +33,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
@@ -92,6 +94,7 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     MatSliderModule,
     MatSlideToggleModule,
     MatRippleModule,
+    NgbModule,
     LayoutModule,
   ],
   declarations: [
@@ -147,6 +150,7 @@ import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component'
     MatMenuModule,
     MatSliderModule,
     MatSlideToggleModule,
+    NgbModule,
     LayoutModule,
     ConfirmationDialogComponent,
     KeysPipe,

@@ -52,7 +52,14 @@
 		    	</button>
 				</ng-template>
 			</td>
-			<td>{{ expense.amountInclTax }} €</td>
+			<td>
+				{{ expense.amountInclTax | currency:'EUR':'symbol':'1.2-2':'fr' }}
+				<mat-icon 
+					*ngIf="expense.paymentDate !== null"
+					class="expense-paid"
+					[matTooltip]="'Payé le '+ (expense.paymentDate|date:'dd/MM/yyyy')"
+				>check</mat-icon>
+			</td>
 			<td>
 				<button 
 	        mat-icon-button

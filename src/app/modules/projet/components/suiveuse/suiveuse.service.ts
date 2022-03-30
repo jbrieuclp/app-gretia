@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, NavigationStart, RoutesRecognized, NavigationEnd } from '@angular/router';
-import { BehaviorSubject, Observable, forkJoin, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, combineLatest, Subject } from 'rxjs';
 import { filter, map, distinctUntilChanged, tap, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import 'moment/locale/fr'  // without this line it didn't work
@@ -12,7 +12,6 @@ import { EmployeeRepository } from '@projet/repository/employee.repository';
 import { SuiveuseRepository } from '@projet/repository/suiveuse.repository';
 import { WorksRepository } from '@projet/repository/works.repository';
 import { Work, Travel, Holiday } from '@projet/repository/project.interface';
-import { DateWorkTime } from './date-work-time';
 
 @Injectable()
 export class SuiveuseService {
@@ -28,10 +27,12 @@ export class SuiveuseService {
 
   personForm: FormControl = new FormControl();
 
+  //dernier jours rafraichie pour permettre la mise à jours de la vue
+  lastRefreshDay: Subject<Date> = new Subject();
   _dateWorkTime: BehaviorSubject<any[]> = new BehaviorSubject([]);
   set dateWorkTime(value) { this._dateWorkTime.next(value); };
   get dateWorkTime() { return this._dateWorkTime.value; };
-  get $dateWorkTime() { return this._dateWorkTime; };
+  get $dateWorkTime() { return this._dateWorkTime.asObservable(); };
   loading: boolean = false;
 
   get isAuthUserData(): boolean { return this.personForm.value === this.authService.getUser().getValue().id };
@@ -72,7 +73,7 @@ export class SuiveuseService {
 
     combineLatest(
       this.selectedDate.asObservable(),
-      this.$dateWorkTime.asObservable()
+      this.$dateWorkTime
     )
       .pipe(
         map(([date, dateWorkTime]: [Date, any[]]): any => dateWorkTime.find(e => moment(e.date).isSame(moment(date), 'day')))
@@ -111,9 +112,10 @@ export class SuiveuseService {
     )
       .pipe(
         map((res: any[]): any => res[0]),
-        tap((res) => this.dateWorkTime.push(res))
+        tap((res) => this.dateWorkTime.push(res)),
+        tap(() => this.loading = false)
       )
-      .subscribe(() => this.loading = false);
+      .subscribe(() => this.lastRefreshDay.next(day));
   }
 
   getWorks(params): Observable<Work[]> {

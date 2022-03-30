@@ -43,12 +43,12 @@
 				<td>
 					<div matTooltip="Temps passé">
 						{{ displayDuration(work.duration) }}
-						<small *ngIf="work.timeCoeff !== 1">
+						<small *ngIf="work.timeCoeff && work.timeCoeff !== 1 && (work.isNight || work.isWe)">
 							x{{ work.timeCoeff }} ({{ work.isWe ? 'Week-end' : 'Nuit' }})
 						</small>
 					</div>
 					<div 
-						*ngIf="work.timeCoeff !== 1"
+						*ngIf="work.timeCoeff && work.timeCoeff !== 1"
 						matTooltip="Temps compté"
 					> <b>{{ displayDuration(work.duration * work.timeCoeff) }}</b> </div>
 				</td>

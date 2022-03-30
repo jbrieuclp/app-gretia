@@ -190,7 +190,8 @@ import { ExpensesResultComponent } from './components/suiveuse/result/expenses-r
 import { WorkingTimeResultsComponent } from './components/suiveuse/result/results.component';
 import { WorkingTimeResultsService } from './components/suiveuse/result/results.service';
 import { PlanChargeInfoDialog } from './components/plans-charges/plan-charge-info/plan-charge-info.dialog';
-import { AdminExpensesComponent } from './components/admin/expenses/admin-expenses.component';
+import { AdminExpensesComponent } from './components/expenses/admin-expenses/admin-expenses.component';
+import { UserExpensesComponent } from './components/expenses/user-expenses/user-expenses.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -338,6 +339,7 @@ export const MY_FORMATS = {
     PlanChargeInfoDialog,
     CalendarDayComponent,
     AdminExpensesComponent,
+    UserExpensesComponent,
   ],
   entryComponents: [
     // MissionTravailleurFormComponent,
