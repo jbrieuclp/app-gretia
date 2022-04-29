@@ -21,8 +21,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action[]) => res), 
-        retry(3)
+        map((res: Action[]) => res)
       );
   }
 
@@ -33,8 +32,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action[]) => res), 
-        retry(3)
+        map((res: Action[]) => res)
       );
   }
 
@@ -45,8 +43,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action[]) => res), 
-        retry(3)
+        map((res: Action[]) => res)
       );
   }
 
@@ -57,8 +54,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action[]) => res), 
-        retry(3)
+        map((res: Action[]) => res)
       );
   }
 
@@ -69,8 +65,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action) => res), 
-        retry(3)
+        map((res: Action) => res)
       );
   }
 
@@ -89,14 +84,13 @@ export class ActionsRepository extends ApiProjectRepository {
   }
 
   /** GET list of Localisation **/
-  action_progressions(params = {}): Observable<ActionProgression[]> {
-    const url = `${this.httpUrlBase}/action-progressions`;
+  user_action_progressions(params = {}): Observable<ActionProgression[]> {
+    const url = `${this.httpUrlBase}/user-action-progressions`;
     const options = {params: params};
     return this.http
       .get(url, options)
       .pipe(
-        map((res: ActionProgression[]) => res), 
-        retry(3)
+        map((res: ActionProgression[]) => res)
       );
   }
 
@@ -111,8 +105,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: ActionAttribution[]) => res), 
-        retry(3)
+        map((res: ActionAttribution[]) => res)
       );
   }
 
@@ -134,8 +127,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Week[]) => res), 
-        retry(3)
+        map((res: Week[]) => res)
       );
   }
 
@@ -153,8 +145,7 @@ export class ActionsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Week[]) => res), 
-        retry(3)
+        map((res: Week[]) => res)
       );
   } 
 }

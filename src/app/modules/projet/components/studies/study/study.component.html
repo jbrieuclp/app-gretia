@@ -1,44 +1,12 @@
-<a mat-raised-button 
-	routerLink="/projet/projets?project="
-	aria-label="Icon d'une fleche vers la gauche" 
-	matTooltip="Retourner aux projets"
->
-  <mat-icon>arrow_back</mat-icon> Précédent
-</a>
-
-<mat-card>
-	<ng-container *ngIf="!loading; else loadingTemplate">
-		<mat-card-title>
-			<h5> <span style="color: #aaa;">Étude #</span>{{ study.code }} - {{ study.label }} </h5>
-		</mat-card-title>
-
-		<mat-card-content>
-
-			<nav mat-tab-nav-bar *ngIf="(routeParams|async).study">
-			  <a 
-			  	mat-tab-link 
-			  	*ngFor="let tab of tabs; let index = index;"
-			  	[routerLink]="['/projet/etudes', (route.params|async).study, tab.url]"
-			  	[active]="(routeParams|async).onglet == tab.url || ((routeParams|async).onglet === '' && index == 0)"
-			  > {{ tab.label }} </a>
-			</nav>
-
-			<div style="padding: 10px 15px 5px 15px;">
-				<ng-container [ngSwitch]="(routeParams|async).onglet">
-
-					<app-projet-study-display *ngSwitchCase="''"></app-projet-study-display>
-					<app-projet-study-display *ngSwitchCase="'details'"></app-projet-study-display>
-					<app-projet-study-fundings *ngSwitchCase="'financements'"></app-projet-study-fundings>
-					<app-project-study-charges *ngSwitchCase="'charges'"></app-project-study-charges>
-					<app-projet-study-actions *ngSwitchCase="'actions'"></app-projet-study-actions>
-					<app-project-study-results *ngSwitchCase="'bilan'"></app-project-study-results>
-					<app-project-study-deadlines *ngSwitchCase="'deadlines'"></app-project-study-deadlines>
-
-				</ng-container>
-			</div>
-		</mat-card-content>
+<ng-container *ngIf="!loading; else loadingTemplate">
+	<ng-container *ngIf="displayForm else displayTemplate">
+		<app-projet-study-form></app-projet-study-form>
 	</ng-container>
-	<ng-template #loadingTemplate>
-		<app-loader message="Chargement en cours"></app-loader>
+	<ng-template #displayTemplate>
+		<app-projet-study-display></app-projet-study-display>
 	</ng-template>
-</mat-card>
+
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Chargement en cours"></app-loader>
+</ng-template>

@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { combineLatest, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { filter, map, startWith, tap, distinctUntilChanged, debounceTime, skip, take } from 'rxjs/operators';
 
 @Injectable()
-export class AutocompleteService {
+export class AutocompleteService implements OnDestroy{
 
   formSubject: Subject<FormControl> = new Subject();
   inputTerm: FormControl = new FormControl();
@@ -14,7 +14,9 @@ export class AutocompleteService {
   options: BehaviorSubject<any[]> = new BehaviorSubject([]);
   displayOptions: BehaviorSubject<any[]> = new BehaviorSubject(null);
 
-  subscription: Subscription = new Subscription();
+  formSubscription: Subscription = new Subscription();
+  formSubjectSubscription: Subscription = new Subscription();
+  inputSubscription: Subscription = new Subscription();
 
   constructor () { 
   	this.setObservables();
@@ -22,34 +24,37 @@ export class AutocompleteService {
 
   private setObservables(): void {
     //Gestion du filtre sur la liste de l'autocomplete
-    combineLatest(
-      this.inputTerm.valueChanges
-        .pipe(
-          startWith(''), 
-          debounceTime(300),
-          distinctUntilChanged(),
-        ), 
-      this.options.asObservable()
-    )
-      .pipe(
-        map(([term, options]: [string, any[]]): any[] => this._filter(term, options)),
+    this.inputSubscription =
+      combineLatest(
+        this.inputTerm.valueChanges
+          .pipe(
+            startWith(''), 
+            debounceTime(300),
+            distinctUntilChanged(),
+          ), 
+        this.options.asObservable()
       )
-      .subscribe((options: any[]) => this.displayOptions.next(options));
+        .pipe(
+          map(([term, options]: [string, any[]]): any[] => this._filter(term, options)),
+        )
+        .subscribe((options: any[]) => this.displayOptions.next(options));
     
     //Set term input with form value
-    this.formSubject
-      .pipe(
-        tap(() => this.subscription.unsubscribe())
-      )
-      .subscribe(form => this.setFormSub(form))
+    this.formSubjectSubscription = 
+      this.formSubject
+        .pipe(
+          tap(() => this.formSubscription.unsubscribe())
+        )
+        .subscribe(form => this.setFormSub(form))
   }
 
   private setFormSub(form: FormControl): void {
-    this.subscription = 
+    this.formSubscription = 
       combineLatest(
         form.valueChanges
           .pipe(
             startWith(form.value),
+            distinctUntilChanged(),
             map((val) => val === null ? '' : val),
           ),
         this.options.asObservable()
@@ -77,6 +82,12 @@ export class AutocompleteService {
     if ( typeof value === 'number') { value = value.toString(); }
 
     return ((value.toLowerCase()).trim()).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  }
+
+  ngOnDestroy(): void {
+    this.formSubscription.unsubscribe();
+    this.formSubjectSubscription.unsubscribe();
+    this.inputSubscription.unsubscribe();
   }
 
 }

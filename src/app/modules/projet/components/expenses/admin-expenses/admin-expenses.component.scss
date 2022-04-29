@@ -1,7 +1,3 @@
-table {
-  width: 100%;
-}
-
 .example-rate-limit-reached {
   color: #980000;
   max-width: 360px;
@@ -35,15 +31,8 @@ table {
 
 .table-container {
   height: auto;
-  height: calc(100vh - 100px);
-  overflow: overlay;
-  padding-bottom: 56px;
-}
-
-.table-container .mat-paginator  {
-  position: absolute; 
-  width: 100%;
-  bottom: 0;
+  height: calc(100vh - 180px);
+  overflow: auto;
 }
 
 .loading-shade {

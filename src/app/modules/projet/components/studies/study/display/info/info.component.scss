@@ -1,0 +1,27 @@
+.element {
+	margin-bottom: 15px;
+}
+
+.element .title {
+	font-size: 1.2em !important;
+  padding-left: 0px;
+  color: rgba(0,0,0,.54);
+	font-weight: 400;
+}
+
+.element div {
+	font-size: 1.1em;
+  padding-left: 40px;
+}
+
+.sub-bloc {
+	padding: 15px 10px;
+	margin-bottom: 20px;
+  background-color: #fbfbfb;
+  border-radius: 3px;
+}
+
+.sub-bloc > h6 {
+	color: rgba(0,0,0,.54);
+	font-weight: 400;
+}

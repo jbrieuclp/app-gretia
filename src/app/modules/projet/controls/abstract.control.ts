@@ -31,7 +31,7 @@ export class AbstractControl implements OnInit, OnDestroy {
     }
 
     if ( this.form.value !== null && typeof this.form.value === 'object' && this.form.value['@id'] !== undefined) {
-      this.form.setValue(this.form.value['@id'])
+      this.form.setValue(this.form.value['@id'], {emitEvent: false})
     }
 
     this._subscriptions.push(
@@ -40,7 +40,7 @@ export class AbstractControl implements OnInit, OnDestroy {
           filter((val: any) => val !== null && typeof val === 'object' && val['@id'] !== undefined),
           map((val: any): string => val['@id']),
         )
-        .subscribe(val => this.form.setValue(val))
+        .subscribe(val => this.form.setValue(val, {emitEvent: false}))
     );
   }
 

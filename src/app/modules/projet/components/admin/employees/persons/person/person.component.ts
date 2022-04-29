@@ -1,69 +1,66 @@
-import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription, Observable } from 'rxjs';
-import { switchMap, filter, distinctUntilChanged, tap } from 'rxjs/operators';
+import { switchMap, filter, distinctUntilChanged, tap, map } from 'rxjs/operators';
 
-import { GlobalsService } from '../../../../../../../shared';
+import { GlobalsService } from '../../../../../../../shared/';
 import { PersonService } from '../person.service';
 import { EmployeeService } from './employee.service';
-import { EmployeeRepository } from '../../../../../repository/employee.repository';
-import { Person } from '../../../../../repository/project.interface';
-import { ConfirmationDialogComponent } from '../../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { EmployeeRepository } from '@projet/repository/employee.repository';
+import { PersonRepository } from '@projet/repository/person.repository';
+import { Person } from '@projet/repository/project.interface';
+import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-projet-admin-person',
   templateUrl: './person.component.html',
-  styles: ['table .mat-icon-button { height: 24px; line-height: 24px; }']
+  styleUrls: ['./person.component.scss']
 })
-export class PersonneComponent implements OnInit, AfterViewChecked {
+export class PersonComponent implements OnInit {
 
   private _subscriptions: Subscription[] = [];
 	public person: Person = null;
 	public loading: boolean = false;
-  public displayForm: boolean = false;
-
-  @ViewChild('stepper', { static: false }) private stepper: MatStepper;
 
   constructor(
     private personS: PersonService,
     private employeeR: EmployeeRepository,
+    private personR: PersonRepository,
     private employeeS: EmployeeService,
     private globalsS: GlobalsService,
     public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
 
   	/**
-    * Permet de passer une date dans l'URL
-    * La vérification que le parametre date est bien une Date est effectué
+    * Permet de passer une person dans l'URL
+    * La vérification que le parametre person est bien un nombre est effectué
     **/
-    this._subscriptions.push(
-      this.personS.person.asObservable()
-        .pipe(
-          distinctUntilChanged(),
-          tap(() => {
-            this.person = null;
-            this.displayForm = false;
-          }),
-          filter((person: Person) => person !== null),
-          switchMap((person: Person) => this.getPerson(person))
-        )
-        .subscribe((person: Person) => this.person = person)
-    );
+    this.route.params
+      .pipe(
+        map(param => {
+          if ( isNaN(Number(param.person)) ) {
+            throw new Error("Not Found");
+          }
+          return param.person;
+        }),
+        switchMap(id => this.getPerson(id))
+      )
+      .subscribe(
+        person => this.person = person,
+        err => this.router.navigate(['../'], { relativeTo: this.route })
+      );
 
   }
 
-  ngAfterViewChecked() {
-    if (this.stepper !== undefined) {
-      this.employeeS.stepper = this.stepper;
-    }
-  }
-
-  getPerson(person): Observable<Person> {
+  getPerson(person_id): Observable<Person> {
   	this.loading = true;
-  	return this.employeeR.get(person['@id'])
+  	return this.personR.get(person_id)
   		.pipe(
   			tap(() => this.loading = false)
   		);
@@ -79,11 +76,6 @@ export class PersonneComponent implements OnInit, AfterViewChecked {
         this.personS.delete(person);
       }
     }); 
-  }
-
-  refreshPerson() {
-    this.getPerson(this.person)
-      .subscribe((person: Person) => this.person = person);
   }
 
   addEmployee() {
@@ -107,7 +99,7 @@ export class PersonneComponent implements OnInit, AfterViewChecked {
           .pipe(
             tap(() => this.globalsS.snackBar({msg: "Suppression effectuée"}))
           )
-          .subscribe(() => this.refreshPerson());
+          .subscribe(() => {return;});
       }
     });
   }

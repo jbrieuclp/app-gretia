@@ -6,7 +6,7 @@ import 'moment/locale/fr'  // without this line it didn't work
 
 import { StudiesRepository } from '../../repository/studies.repository';
 import { Week, Study } from '../../repository/project.interface';
-import { WeeksService } from '../studies/study/actions/action/weeks/weeks.service';
+import { WeeksService } from '../studies/study/display/actions/action/weeks/weeks.service';
 
 @Component({
   selector: 'app-accueil',

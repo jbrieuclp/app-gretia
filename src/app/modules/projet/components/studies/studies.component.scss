@@ -2,14 +2,58 @@ table {
   width: 100%;
 }
 
-.done {
-	color: #31B404;
+.example-rate-limit-reached {
+  color: #980000;
+  max-width: 360px;
+  text-align: center;
 }
 
-.pending {
-	color: #FF0000;
+/* Column Widths */
+.mat-column-study-code {
+  max-width: 120px;
 }
 
-.checkbox-filter {
-	display: block;
+.mat-column-expectedTime,
+.mat-column-consumedTime,
+.mat-column-usagePercent {
+  max-width: 70px;
+  text-align: center;
+}
+
+/* Structure */
+.list-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.table-container {
+  height: auto;
+  height: calc(100vh - 215px);
+  overflow: overlay;
+  padding-bottom: 56px;
+}
+
+.table-container .mat-paginator  {
+  position: absolute; 
+  width: 100%;
+  bottom: 0;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.study-label-text {
+  cursor: pointer;
+  color: rgb(103, 58, 183);
+  font-weight: bold;
 }

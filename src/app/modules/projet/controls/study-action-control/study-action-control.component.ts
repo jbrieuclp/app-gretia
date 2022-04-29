@@ -6,6 +6,7 @@ import { filter, map, startWith, tap, distinctUntilChanged, debounceTime, skip, 
 
 import { AuthService } from '../../../../shared/auth/authentication.service';
 import { ActionsRepository } from '../../repository/actions.repository';
+import { StudiesRepository } from '../../repository/studies.repository';
 import { Study, Action } from '../../repository/project.interface';
 
 @Component({
@@ -18,11 +19,10 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
 	@Input() actionForm: FormControl = new FormControl();
   @Input() studyForm: FormControl = new FormControl();
   @Input() required: boolean = false;
-  @Input() onlyStudy: boolean = false;
+  @Input() onlyStudy: boolean = true;
   get user() { return this.authService.getUser().getValue(); };
-  actions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
+  studies: BehaviorSubject<Study[]> = new BehaviorSubject([]);
   displayStudies: BehaviorSubject<Study[]> = new BehaviorSubject([]);
-  displayActions: BehaviorSubject<Action[]> = new BehaviorSubject([]);
   loading: boolean = false;
   selectStudySwitcher: boolean = false;
 
@@ -41,6 +41,7 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
   	private actionR: ActionsRepository,
+    private studiesR: StudiesRepository,
   ) {}
 
   ngOnInit() {  
@@ -48,8 +49,8 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
     // this.setObservable();
 
     this.setObservable();
-    this.getActions()
-      .subscribe((actions: Action[]) => this.actions.next(actions));
+    this.getStudies()
+      .subscribe((studies: Study[]) => this.studies.next(studies));
 
     if (this.onlyStudy) {
       this.onChangeStudySwitcher(true);
@@ -64,7 +65,14 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
 
     this.inputTerm.valueChanges
       .pipe(
-        filter(term => term !== this.actionForm.value && term !== this.studyForm.value)
+        map((value: any): string => {
+          if (typeof value === 'object') {
+            return value.action !== null ? value.action : value.study
+          }
+          return value;
+        }),
+        filter(value => value !== this.actionForm.value && value !== this.studyForm.value
+        )
       )
       .subscribe(() => {
         this.actionForm.setValue(null, { emitEvent: false })
@@ -79,20 +87,21 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
   				startWith(''), 
           debounceTime(300),
           distinctUntilChanged(),
+          map((value: any): string => {
+            if (typeof value === 'object') {
+              return value.action !== null ? value.action : value.study
+            }
+            return value;
+          })
   			), 
-  		this.actions.asObservable().pipe(skip(1)),
+  		this.studies.asObservable().pipe(skip(1)),
       this._displayAll.asObservable()
         .pipe(
           distinctUntilChanged()
         ),
   	)
       .pipe(
-        map(([term, actions, displayAll]: [string, Action[], boolean]): Action[] => this._filter(term, actions, displayAll)),
-        tap((actions: Action[]) => this.displayActions.next(actions)),
-        map((actions: Action[]): Study[] => {
-          return actions.map(elem => elem.study)
-                        .filter((elem, index, self) =>index === self.findIndex((t) => t['@id'] === elem['@id']))
-        }),
+        map(([term, studies, displayAll]: [string, Study[], boolean]): Study[] => this._filter(term, studies, displayAll)),
       )
         .subscribe((studies: Study[]) => this.displayStudies.next(studies));
 
@@ -100,39 +109,39 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
     combineLatest(
       this.actionForm.valueChanges.pipe(startWith(this.actionForm.value)),
       this.studyForm.valueChanges.pipe(startWith(this.studyForm.value)),
-      this.actions.asObservable().pipe(skip(1)),
+      this.studies.asObservable().pipe(skip(1)),
     )
       .pipe(
-        tap(([action, study, actions]) => {
+        tap(([action, study, studies]) => {
           //si on laisse le choix d'afficher action ou étude
           if (!this.onlyStudy) {
             this.selectStudySwitcher = !(action !== null || study === null)
           }
         }),
-        map(([action, study, actions]) => action !== null ? action : study),
-        map((val) => val === null ? '' : val),
+        map(([action, study, studies]): any => {
+          if (action !== null || study !== null) {
+            return {'action': action, 'study': study};
+          }
+          return '';
+        })
       )
       .subscribe((val) => this.inputTerm.setValue(val));
 
 
-    this.actionForm.valueChanges
-      .pipe(
-        filter((action_id) => action_id !== null),
-        map((action_id) => {
-          const elem = this.actions.getValue().find(elem => elem['@id'] === action_id);
-          return elem !== undefined ? elem.study['@id'] : null;
-        })
-      )
-      .subscribe((study_id) => this.studyForm.setValue(study_id, { emitEvent: false }));
+    // this.actionForm.valueChanges
+    //   .pipe(
+    //     filter((action_id) => action_id !== null),
+    //     map((action_id) => {
+    //       const elem = this.actions.getValue().find(elem => elem['@id'] === action_id);
+    //       return elem !== undefined ? elem.study['@id'] : null;
+    //     })
+    //   )
+    //   .subscribe((study_id) => this.studyForm.setValue(study_id, { emitEvent: false }));
   }
 
   onSelectOption(value) {
-    if (!this.selectStudySwitcher) {
-      this.actionForm.setValue(value);
-    } else {
-      this.actionForm.setValue(null)
-      this.studyForm.setValue(value);
-    }
+    this.actionForm.setValue(value.action)
+    this.studyForm.setValue(value.study);
   }
 
   onClick(event: Event) {
@@ -155,57 +164,104 @@ export class StudyActionControlComponent implements OnInit, AfterViewInit {
     return template.replace('${element}', this.element);
   }
 
-  private getActions(): Observable<Action[]> {
+  private getStudies(): Observable<Study[]> {
     this.loading = true;
-    return this.actionR.actions_select()
+    return this.studiesR.studies_select({"isActive": "true"})
       .pipe(
-        map((data: any): Action[]=>data["hydra:member"]),
+        map((data: any): Study[]=>data["hydra:member"]),
         tap(() => this.loading = false),
       );
     
   }
 
-  getListActions(study: Study) {
-    return this.displayActions.getValue().filter(elem => elem.study['@id'] === study['@id'])
-  }
-
-
-  private _filter(value: string, actions: Action[], displayAll: boolean = true): Action[] {
+  private _filter(value: string, studies: Study[], displayAll: boolean = true): Study[] {
     const filterValue = this._removeAccent(value);
 
-    actions = actions.filter(action => 
-                    action['@id'] === filterValue || 
-                      action.study['@id'] === filterValue ||
-                        this._removeAccent(action.label).includes(filterValue) || 
-                          this._removeAccent(action.study.label).includes(filterValue) || 
-                            this._removeAccent(action.study.code).includes(filterValue)
-                  );
+    let filteredStudies = JSON.parse(JSON.stringify(studies));
+
+    filteredStudies = filteredStudies.filter(study => {
+      //si la study est directement concernée par le filtre on retourne tout en l'état (avec l'ensemble des actions)
+      if (
+        study['@id'] === filterValue || 
+          this._removeAccent(study.label).includes(filterValue) ||
+            this._removeAccent(study.code).includes(filterValue)
+      ) {
+        return true;
+      }
+
+      //on recherche au niveau des actions si ca correspond au filtre ou pas
+      //on filtre les actions 
+      study.actions = study.actions.filter(action => 
+                            action['@id'] === filterValue ||
+                              this._removeAccent(action.label).includes(filterValue)
+                      );
+
+      return study.actions.length > 0;
+
+    });
 
     if (displayAll === false) {
       const user = this.user;
-      actions = actions.filter(action => (action.attributions.map(attr => attr.employee.person.compteId).includes(user.id) ||
-                                            action['@id'] === filterValue)
-      );
+      //on conserve la study si jamais : 
+      filteredStudies = filteredStudies.filter(study => {
+        // - l'utilisateur est associé par une action : isAssociatedUser:boolean = true;
+        const isAssociatedUser =  study.actions
+                                    .filter(action => action.attributions.map(attr => attr.employee.person.compteId).includes(user.id))
+                                    .length > 0;
+
+        // - si une action de la study correspond à la valeur filtrée : isSelectedAction:boolean = true;
+        const isSelectedAction =  study.actions
+                                    .filter(action => action['@id'] === filterValue)
+                                    .length > 0;
+
+        // - si le formulaire correspond à l'étude
+        const isSelectedStudy =  study['@id'] === filterValue;
+
+        //si le formulaire correspond à une action non associé à l'utilisateur on switch le bouton
+        if (!isAssociatedUser && (isSelectedAction || isSelectedStudy)) {
+          this.displayAll = true;
+        }
+
+        // Dans le cas où ce n'est pas l'étude qui est selectionnée par le formulaire
+        // - on filtre les actions selon la valeur du form ou alors selon l'association de l'action à l'user
+        if (!isSelectedStudy) {
+          study.actions = study.actions.filter(action => action.attributions.map(attr => attr.employee.person.compteId).includes(user.id) ||
+                                                              action['@id'] === filterValue);
+        } 
+
+        //on filtre les studies qui ont au moins une action ou qui sont disponible pour tout le monde
+        return study.actions.length > 0 || study.availableForAll;
+      });
     }
 
-    return actions;
+    return filteredStudies;
 
   }
 
   private _removeAccent(value): string {
-  	return ((value.toLowerCase()).trim()).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  	return value !== null ? ((value.toLowerCase()).trim()).normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
   }
 
-  displayFn(id) {
-  	if (id) {
-      if (!this.selectStudySwitcher) {
+  displayFn(value) {
+  	if (value && typeof value === 'object') {
+      if (value.action !== null) {
         //action
-    		const elem = this.actions.getValue().find(action => action['@id'] === id);
-    		return elem !== undefined ? `${elem.label} - ${elem.study.label}` : '';   
+        let select_action;
+        let select_study;
+        (this.studies.getValue()).forEach(study => {
+          const idx = study.actions.findIndex(action => action['@id'] === value.action);
+          if (idx !== -1) {
+            select_study = study;
+            select_action = study.actions[idx];
+            return;
+          }
+        });
+    		// const elem = (this.studies.getValue()).actions.find(action => action['@id'] === id);
+    		return select_action !== undefined ? `${select_action.label} - (${select_study.code} - ${select_study.label})` : '';   
       } else {
         //study
-        const elem = this.displayStudies.getValue().find(study => study['@id'] === id);
-        return elem !== undefined ? `${elem.code} ${elem.label}` : '';  
+        const elem = this.studies.getValue().find(study => study['@id'] === value.study);
+        return elem !== undefined ? `${elem.code} - ${elem.label}` : '';  
       }
   	}
 	}

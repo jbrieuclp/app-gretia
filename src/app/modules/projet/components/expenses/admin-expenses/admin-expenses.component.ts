@@ -1,9 +1,12 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { merge, Observable } from 'rxjs';
 import { map, tap, switchMap, startWith } from 'rxjs/operators';
+import * as moment from 'moment';
+import 'moment/locale/fr'  // without this line it didn't work
 
 import { PersonRepository } from '@projet/repository/person.repository';
 
@@ -12,13 +15,15 @@ import { PersonRepository } from '@projet/repository/person.repository';
   templateUrl: './admin-expenses.component.html',
   styleUrls: ['./admin-expenses.component.scss']
 })
-export class AdminExpensesComponent implements AfterViewInit {
+export class AdminExpensesComponent implements OnInit, AfterViewInit {
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   navigation: any;
   resultsLength: number = null;
   displayedColumns: string[] = ['person.firstname', 'paid', 'unpaid'];
-  loading: boolean = false;
+  loading: boolean = true;
+  yearForm: FormControl = new FormControl(moment().year())
+  selectYears: number[] = [moment().year()];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -27,6 +32,9 @@ export class AdminExpensesComponent implements AfterViewInit {
     private personR: PersonRepository,
   ) { }
 
+  ngOnInit() {
+    this.setSelectYears();
+  }
 
   ngAfterViewInit() {
 
@@ -35,14 +43,16 @@ export class AdminExpensesComponent implements AfterViewInit {
 
     merge(
       this.sort.sortChange, 
-      this.paginator.page
+      this.paginator.page,
+      this.yearForm.valueChanges
     )
       .pipe(
         startWith({}),
-        map((val) => {
+        map(() => {
           let params = {
             itemsPerPage: this.paginator.pageSize,
-            page: this.paginator.pageIndex + 1
+            page: this.paginator.pageIndex + 1,
+            year: this.yearForm.value
           };
           if (this.sort.active === undefined) {
             params["_order[person.firstname]"] = "asc";
@@ -59,8 +69,6 @@ export class AdminExpensesComponent implements AfterViewInit {
   }
 
   getPayment(params: any = {}): Observable<any[]> {
-    console.log("plop");
-    console.log(params);
     this.loading = true;
     return this.personR.getPaymentByPersons(params)
       .pipe(
@@ -71,5 +79,13 @@ export class AdminExpensesComponent implements AfterViewInit {
         map((res): any[] => Object.values(res['hydra:member'])),
         tap(() => this.loading = false)
       )
+  }
+
+  private setSelectYears() {
+    const year = this.selectYears[0];
+
+    for (let i = 1; i <= 20; i++) {
+      this.selectYears.push(year-i);
+    }
   }
 }

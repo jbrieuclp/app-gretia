@@ -12,11 +12,11 @@
           mat-menu-item
           (click)="openProjectFormDialog()"
         >Projet</button>
-        <button 
+        <a 
           mat-menu-item
           color="primary"
-          (click)="openStudyFormDialog()"
-        >Étude</button>
+          [routerLink]="['../etudes/form']"
+        >Étude</a>
       </mat-menu>
     </div> 
 

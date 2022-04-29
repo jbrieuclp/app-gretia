@@ -1,42 +1,42 @@
-import { Component } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { StudyService } from '../study.service';
-import { StudyFormDialog } from '../form/study-form.dialog';
+import { Study } from '@projet/repository/project.interface';
 
 @Component({
   selector: 'app-projet-study-display',
   templateUrl: './display.component.html',
   styleUrls: ['./display.component.scss']
 })
-export class StudyDisplayComponent {
+export class StudyDisplayComponent implements OnInit, OnDestroy {
 
-	get study() {
-		return this.studyS.study.getValue();
-	}
+  tabs: any[] = [
+    {url: "details", label: "Détails"}, 
+    {url: "actions", label: "Actions"},
+    {url: "charges", label: "Matériels & frais"}, 
+    {url: "deadlines", label: "Échéances"}, 
+    {url: "financements", label: "Financements"}, 
+    {url: "bilan", label: "Bilan"}, 
+  ];
+  private _subscriptions: Subscription[] = [];
 
-  get loading(): boolean {
-    return this.studyS.loadingStudy;
-  }
+  currentTab: string;
+  get study(): Study { return this.studyS.study.getValue(); };
+  get loading(): boolean { return this.studyS.loadingStudy; };
 
   constructor(
-  	private studyS: StudyService,
-    public dialog: MatDialog,
+    private studyS: StudyService,
   ) { }
 
-  openFormDialog() {
-    const dialogConfig = new MatDialogConfig();
+  ngOnInit() {
+    this._subscriptions.push(
+      this.studyS.currentTab.asObservable()
+        .subscribe(tab => this.currentTab = tab)
+    );
+  }
 
-    dialogConfig.width = '750px';
-    // dialogConfig.position = {top: '70px'};
-    dialogConfig.disableClose = true;
-
-    const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
-
-    // dialogRef.afterClosed()
-    //   .pipe(
-    //     filter((res: boolean) => res)
-    //   )
-    //   .subscribe((val) => this.studyS.refreshCharges());
+  ngOnDestroy() {
+    this._subscriptions.forEach(sub => {sub.unsubscribe();});
   }
 }

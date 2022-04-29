@@ -144,6 +144,32 @@ export const layers = [
         layers: [
             new TileLayer({
                 opacity: 1,
+                title: 'Administratif',
+                visible: false,
+                'displayInLayerSwitcher' : true,
+                'order': 0,
+                extent: epsg3857.getExtent(),
+                source: new WMTS({
+                    attributions: [attributionIGN],
+                    url: `https://wxs.ign.fr/administratif/geoportail/wmts`,
+                    layer: 'LIMITES_ADMINISTRATIVES_EXPRESS.LATEST',
+                    matrixSet: 'PM',
+                    format: 'image/png',
+                    name: "IGN - Administratif",
+                    style: "normal",
+                    numZoomLevels: 19,
+                    group : 'IGN',
+                    territory:'FXX',
+                    projection: epsg3857,
+                    tileGrid: new WMTSTileGrid({
+                        origin: extent.getTopLeft(epsg3857.getExtent()),
+                        resolutions: resolutions,
+                        matrixIds: matrixIds
+                    })
+                })
+            }),
+            new TileLayer({
+                opacity: 1,
                 title: 'Parcs Naturels Régionaux',
                 visible: false,
                 'displayInLayerSwitcher' : true,

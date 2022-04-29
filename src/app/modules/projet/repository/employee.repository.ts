@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
 import { AppConfig } from '../../../shared/app.config';
-import { Antenne, Person, Function, Employee, EmployeeParameter } from './project.interface';
+import { Antenne, Person, Function, Employee, EmployeeParameter, Local } from './project.interface';
 
 @Injectable()
 export class EmployeeRepository extends ApiProjectRepository {
@@ -24,6 +24,16 @@ export class EmployeeRepository extends ApiProjectRepository {
       .pipe(
         map((res: Antenne[]) => res), 
         retry(3)
+      );
+  }
+
+  /** GET list of Antenne **/
+  locals(): Observable<Local[]> {
+    const url = `${this.httpUrlBase}/locals`;
+    const options = {};
+    return this.http.get(url, options)
+      .pipe(
+        map((res: Local[]) => res)
       );
   }
 

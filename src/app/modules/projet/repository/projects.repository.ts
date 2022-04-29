@@ -23,8 +23,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Project[]) => res), 
-        retry(3)
+        map((res: Project[]) => res)
       );
   }
 
@@ -35,8 +34,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Project) => res), 
-        retry(3)
+        map((res: Project) => res)
       );
   }
 
@@ -47,8 +45,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Funder[]) => res), 
-        retry(3)
+        map((res: Funder[]) => res)
       );
   }
 
@@ -59,8 +56,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Signatory[]) => res), 
-        retry(3)
+        map((res: Signatory[]) => res)
       );
   }
 
@@ -71,8 +67,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Signatory[]) => res), 
-        retry(3)
+        map((res: Signatory[]) => res)
       );
   }
 
@@ -83,8 +78,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Signatory[]) => res), 
-        retry(3)
+        map((res: Signatory[]) => res)
       );
   }
 
@@ -106,8 +100,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Funder[]) => res), 
-        retry(3)
+        map((res: Funder[]) => res)
       );
   }
 
@@ -128,8 +121,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Signatory[]) => res), 
-        retry(3)
+        map((res: Signatory[]) => res)
       );
   }
 
@@ -150,8 +142,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: ProjectDeadline[]) => res), 
-        retry(3)
+        map((res: ProjectDeadline[]) => res)
       );
   }
 
@@ -169,8 +160,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: DeadlineType[]) => res), 
-        retry(3)
+        map((res: DeadlineType[]) => res)
       );
   }
 
@@ -191,8 +181,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: ProjectType[]) => res), 
-        retry(3)
+        map((res: ProjectType[]) => res)
       );
   }
 
@@ -203,8 +192,7 @@ export class ProjectsRepository extends ApiProjectRepository {
     return this.http
       .get(url, http_options)
       .pipe(
-        map((res: RefDay[]) => res),
-        retry(3)
+        map((res: RefDay[]) => res)
        );
   }
 }

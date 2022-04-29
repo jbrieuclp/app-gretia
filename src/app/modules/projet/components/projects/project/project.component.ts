@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable, of, BehaviorSubject, combineLatest, Subscription } from 'rxjs';
-import { map, tap, filter, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { map, tap, filter, switchMap, distinctUntilChanged, catchError } from 'rxjs/operators';
 
 import { ProjectsRepository } from '../../../repository/projects.repository';
 import { Project } from '../../../repository/project.interface';
@@ -10,6 +10,7 @@ import { ProjectService } from './project.service';
 import { ProjectStudiesFundingsService } from './studies-fundings/studies-fundings.service';
 import { ProjectFundersService } from './funders/funders.service';
 import { ProjectSignatoriesService } from './signatories/signatories.service';
+import { GlobalsService } from '@shared/services/globals.service';
 
 @Component({
   selector: 'app-project',
@@ -33,7 +34,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
+    private globalsS: GlobalsService,
     private projectS: ProjectService,
     private projectStudiesFundingsS: ProjectStudiesFundingsService,
     private projectFundersS: ProjectFundersService,
@@ -45,10 +48,21 @@ export class ProjectComponent implements OnInit, OnDestroy {
       this.route.params
         .pipe(
           filter((params) => params.project),
-          map((params): number => params.project),
-          distinctUntilChanged(),
+          map((params): number => {
+            if (isNaN(Number(params.project))) {
+              throw new Error('404 - Projet non trouvé') 
+            }
+            return Number(params.project)
+          }),
+          distinctUntilChanged()
         )
-        .subscribe((id) => this.projectS.project_id.next(Number(id)))
+        .subscribe(
+          (id) => this.projectS.project_id.next(Number(id)),
+          (err) => {
+            this.globalsS.snackBar({msg: err, color: 'red'});
+            this.router.navigate(['/projet/projets']);
+          }
+        )
     );
 
     this._subscriptions.push(

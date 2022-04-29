@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatFooterRowDef } from '@angular/material/table';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { merge, Observable, of as observableOf, combineLatest } from 'rxjs';
 import { catchError, map, startWith, switchMap, distinctUntilChanged, filter, tap, debounceTime } from 'rxjs/operators';
@@ -24,10 +24,10 @@ export class PlanChargesComponent implements AfterViewInit {
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   filterInput: FormControl = new FormControl('', []);
-  loading: boolean = false;
+  loading: boolean = true;
 
   resultsLength: number = null;
-  displayedColumns: string[] = ['study.code', 'study.label', 'expectedTime', 'consumedTime', 'usagePercent'];
+  displayedColumns: string[] = ['study.code', 'study.label', 'info','expectedTime', 'consumedTime', 'usagePercent'];
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -37,7 +37,6 @@ export class PlanChargesComponent implements AfterViewInit {
     private studyR: StudiesRepository,
     private plansChargesS: PlansChargesService, 
   ) { }
-
 
   ngAfterViewInit() {
 
@@ -90,7 +89,7 @@ export class PlanChargesComponent implements AfterViewInit {
             'dateEnd[gte]': `${this.plansChargesS.year}`
           };
           if (this.filterInput.value && this.filterInput.value !== '') {
-            params['table'] = this.filterInput.value;
+            params['search'] = this.filterInput.value;
           }
           if (this.sort.active === undefined) {
             params["_order[study.label]"] = "asc";
@@ -108,7 +107,7 @@ export class PlanChargesComponent implements AfterViewInit {
 
   getStudies(params: any = {}): Observable<Study[]> {
     this.loading = true;
-    return this.studyR.study_progressions(params)
+    return this.studyR.user_study_progressions(params)
       .pipe(
         tap((res) => this.resultsLength = res['hydra:totalItems']),
         map((res): Study[] => Object.values(res['hydra:member'])),

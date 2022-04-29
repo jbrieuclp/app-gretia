@@ -234,6 +234,15 @@ export interface LoadPlan {
   "nbOfDays"?: number;
 }
 
+export interface Local {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "code"?: string;
+  "name"?: string;
+  "employees"?: Employee[]|number[];
+}
+
 export interface Localisation {
   "@id"?: string;
   "@type"?: string;
@@ -376,6 +385,8 @@ export interface Study {
   "type"?: string;
   "cost"?: number;
   "dailyCost"?: number;
+  "availableForAll"?: boolean;
+  "isActive"?: boolean;
   "funding"?: number;
   "createdAt"?: Date;
   "createdBy"?: string;
@@ -416,7 +427,6 @@ export interface StudyProgression {
   "@type"?: string;
   "id"?: number;
   "study"?: any;
-  "person"?: any;
   "expectedTime"?: number;
   "consumedTime"?: number;
 }
@@ -435,6 +445,16 @@ export interface Travel {
   "createdBy"?: string;
   "updatedAt"?: Date;
   "updatedBy"?: string;
+}
+
+export interface UserStudyProgression {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "study"?: any;
+  "person"?: any;
+  "expectedTime"?: number;
+  "consumedTime"?: number;
 }
 
 export interface Week {

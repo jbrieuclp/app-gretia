@@ -1,10 +1,37 @@
-<h5> {{ selectedDate|date:'EEEE d MMMM yyyy':undefined:'fr' }} </h5>
 <form [formGroup]="form">
+	<ng-container *ngIf="oldDateSaveBeforeUpdate === null; else workingDateFormTemplate">
+		<h5> 
+			<span> {{ selectedDate|date:'EEEE d MMMM yyyy':undefined:'fr' }} </span>
+			<button 
+				*ngIf="work !== null"
+				mat-icon-button
+				color="primary"
+				matTooltip="Changer la date"
+				(click)="oldDateSaveBeforeUpdate = work.workingDate"
+			><mat-icon>edit</mat-icon></button>
+		</h5> 
+	</ng-container>
+	<ng-template #workingDateFormTemplate>
+		<div class="row">
+			<mat-form-field class="col-md-6">
+		  	<mat-label>Date du travail</mat-label>
+			  <input 
+			  	matInput 
+					[max]="today"
+			  	[matDatepicker]="dateP" 
+			  	placeholder="jj/mm/aaaa" 
+			  	formControlName="workingDate"
+			  	required>
+			  <mat-datepicker-toggle matSuffix [for]="dateP"></mat-datepicker-toggle>
+			  <mat-datepicker #dateP></mat-datepicker>
+			</mat-form-field>
+		</div>
+	</ng-template>
+
 	<div>
 		<app-projet-action-control 
 			[actionForm]="form.get('action')"
 			[studyForm]="form.get('study')"
-			onlyStudy="true"
 			required="true"
 		></app-projet-action-control>
 	</div>

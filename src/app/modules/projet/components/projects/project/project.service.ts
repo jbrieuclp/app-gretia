@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
-import { Location } from '@angular/common'; 
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { filter, tap, map, switchMap, skip, catchError, distinctUntilChanged } from 'rxjs/operators';
 
 import { ProjectsRepository } from '../../../repository/projects.repository';
 import { Project } from '../../../repository/project.interface';
+import { GlobalsService } from '@shared/services/globals.service';
 
 @Injectable()
 export class ProjectService {
@@ -19,8 +20,9 @@ export class ProjectService {
 
   constructor(
   	// private fb: FormBuilder,
-  	// private location: Location,
+    private router: Router,
   	private projectR: ProjectsRepository,
+    private globalsS: GlobalsService,
   ) { 
   	// this.initForm();
   	this.setObservables();
@@ -34,7 +36,13 @@ export class ProjectService {
         filter((id) => this.project.getValue() === null || id !== this.project.getValue().id),
         switchMap((id: number) => this.getProject(id)),
       )
-      .subscribe((project: Project) => this.project.next(project));
+      .subscribe(
+        (project: Project) => this.project.next(project),
+        (err) => {
+          this.globalsS.snackBar({msg: `${err.status} - ${err.statusText}`, color: 'red'});
+          this.router.navigate(['/projet/projets']);
+        }
+      );
   }
 
   getProject(id): Observable<Project> {
@@ -42,10 +50,6 @@ export class ProjectService {
     return this.projectR.project(id)
       .pipe(
         tap(() => this.loadingProject = false),
-        catchError(err => {
-            console.log('caught mapping error and rethrowing', err);
-            return throwError(err);
-        })
       )
   }
 

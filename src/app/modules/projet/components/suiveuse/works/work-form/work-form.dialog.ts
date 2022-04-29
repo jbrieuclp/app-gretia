@@ -25,6 +25,8 @@ export class WorkFormDialog implements OnInit, OnDestroy {
 	$date: Observable<Date>
 	$dateSub: Subscription;
   saving: boolean = false;
+  oldDateSaveBeforeUpdate: Date = null;
+  today: Date = new Date();
   get work(): Work { return this.workFormS.work.getValue(); };
 
   get selectedDate() { return this.suiveuseS.selectedDate.getValue(); };
@@ -81,6 +83,12 @@ export class WorkFormDialog implements OnInit, OnDestroy {
           Object.assign(this.work, work);
         } else {
           this.workingTimeResultsS.works.push(work);
+        }
+      }),
+      tap(() => {
+        //si la date a été changé on refresh la calendrier pour l'ancienne date
+        if (this.oldDateSaveBeforeUpdate !== null) {
+          this.suiveuseS.refreshDayData(moment(this.oldDateSaveBeforeUpdate).format('YYYY-MM-DD'));
         }
       }),
       tap((work) => this.suiveuseS.refreshDayData(work.workingDate)),

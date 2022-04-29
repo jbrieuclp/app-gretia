@@ -1,14 +1,23 @@
-.element {
-	margin-bottom: 15px;
+.go-to-list {
+	font-size: 0.8em;
+	color: rgb(103, 58, 183);
 }
 
-.element .title {
-	font-size: 1.3em !important;
-  padding-left: 0px;
-  color: #444;
+::ng-deep .go-to-list > mat-icon {
+	vertical-align: -2px;
 }
 
-.element div {
-	font-size: 1.1em;
-  padding-left: 40px;
+.study-title {
+	color: #333;
+	margin-bottom: 0px;
+}
+
+.study-title > small {
+	margin-right: 10px;
+	color: #000;
+}
+
+.study-title > .code {
+	color: #aaa;
+	font-style: italic;
 }

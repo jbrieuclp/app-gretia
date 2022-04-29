@@ -13,7 +13,6 @@ import { GlobalProjectService } from '../global-project.service';
 import { ProjectsRepository } from '../../repository/projects.repository';
 import { Project, Study } from '../../repository/project.interface';
 import { ProjectFormDialog } from './project/project-form/project-form.dialog';
-import { StudyFormDialog } from '../studies/study/form/study-form.dialog';
 
 @Component({
   selector: 'app-projects',
@@ -119,22 +118,6 @@ export class ProjectsComponent implements OnInit {
         map((project: Project): number => project.id)
       )
       .subscribe((id: number) => this.location.replaceState(`/projet/projets/${id}`));
-  }
-
-  openStudyFormDialog() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.width = '750px';
-    dialogConfig.position = {top: '70px'};
-    dialogConfig.disableClose = true;
-
-    const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
-
-    dialogRef.afterClosed()
-      .pipe(
-        filter((study: Study) => study !== null)
-      )
-      .subscribe((study) => this.router.navigate(['studies', study.id]));
   }
 
 }

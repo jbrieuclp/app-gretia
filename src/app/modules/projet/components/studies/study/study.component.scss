@@ -1,0 +1,23 @@
+.go-to-list {
+	font-size: 0.8em;
+	color: rgb(103, 58, 183);
+}
+
+::ng-deep .go-to-list > mat-icon {
+	vertical-align: -2px;
+}
+
+.study-title {
+	color: #333;
+	margin-bottom: 0px;
+}
+
+.study-title > small {
+	margin-right: 10px;
+	color: #000;
+}
+
+.study-title > .code {
+	color: #aaa;
+	font-style: italic;
+}

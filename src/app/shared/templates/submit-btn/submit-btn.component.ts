@@ -10,6 +10,7 @@ export class SubmitBtnComponent {
 	@Input() color:string = 'primary'
 	@Input() text:string = '';
 	@Input() type:string = 'button';
+	@Input() matType:string = 'mat-raised-button';
 	@Input() disabled:boolean = false;
 	@Input() waiting:boolean = false;
 	@Output() onClick = new EventEmitter();

@@ -9,7 +9,7 @@ import { StudiesRepository } from '../../../../../repository/studies.repository'
 import { Study, StudyFunding } from '../../../../../repository/project.interface';
 import { ProjectService } from '../../project.service';
 import { ProjectStudiesFundingsService } from '../studies-fundings.service';
-import { StudyFormDialog } from '../../../../studies/study/form/study-form.dialog';
+// import { StudyFormDialog } from '../../../../studies/study/form/study-form.dialog';
 
 @Component({
   selector: 'app-projet-project-study-funding-form-dialog',
@@ -90,21 +90,21 @@ export class StudyFundingFormDialog implements OnInit {
   }
 
   createStudy() {
-    const dialogConfig = new MatDialogConfig();
+    // const dialogConfig = new MatDialogConfig();
 
-    dialogConfig.width = '750px';
-    dialogConfig.position = {top: '70px'};
-    dialogConfig.disableClose = true;
+    // dialogConfig.width = '750px';
+    // dialogConfig.position = {top: '70px'};
+    // dialogConfig.disableClose = true;
 
-    const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
+    // const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
 
-    dialogRef.afterClosed()
-      .pipe(
-        filter((study: Study) => study !== null),
-        tap((study: Study) => this.form.get('study').setValue(study)),
-        switchMap(() => this.studiesR.studies_select()),
-        map((data: any): Study[]=>data["hydra:member"])
-      )
-      .subscribe((studies) => this.studiesOptions = studies);
+    // dialogRef.afterClosed()
+    //   .pipe(
+    //     filter((study: Study) => study !== null),
+    //     tap((study: Study) => this.form.get('study').setValue(study)),
+    //     switchMap(() => this.studiesR.studies_select()),
+    //     map((data: any): Study[]=>data["hydra:member"])
+    //   )
+    //   .subscribe((studies) => this.studiesOptions = studies);
   }
 }

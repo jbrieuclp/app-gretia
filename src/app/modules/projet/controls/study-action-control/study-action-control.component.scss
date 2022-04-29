@@ -1,5 +1,25 @@
+input {
+  font-size: 80%;
+}
+
+.mat-optgroup {
+  background-color: red;
+}
+
+.mat-optgroup .mat-option {
+  margin-left: 32px;
+  padding-left: 10px;
+  border-left: 4px solid rgb(103, 58, 183);
+  line-height: 32px;
+  height: 32px;
+}
+
+.mat-divider {
+  margin-top: 10px!important;
+}
+
 .mat-optgroup:hover {
-  background-color: aliceblue;
+  background-color: #f7f7f7;
   display: block;
 }
 
@@ -14,3 +34,18 @@
   color: #673ab7 !important;
 }
 
+
+::ng-deep .mat-optgroup-label {
+  font-weight: normal;
+  font-size: 80%;
+}
+
+::ng-deep .mat-optgroup-label .study-code {
+  font-weight: normal;
+  color: #999;
+}
+
+::ng-deep .mat-optgroup-label .study-label {
+  font-weight: normal;
+  color: rgba(0,0,0,.87);
+}

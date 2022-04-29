@@ -32,28 +32,31 @@
   	[displayWith]="displayFn.bind(this)"
   	(optionSelected)="onSelectOption($event.option.value)"
   >
-  	<ng-container *ngIf="!selectStudySwitcher; else optionStudies">
-	  	<mat-optgroup 
-	  		*ngFor="let study of (displayStudies | async)" 
-	  		label="{{ study.code }} {{ study.label }}">
-		    <mat-option 
-		    	*ngFor="let action of getListActions(study)" 
-		    	[class.mat-selected] = "actionForm.value === action['@id']"
-		    	[value]="action['@id']"
-		    >
-		      <small>{{ action.label }}</small>
-		    </mat-option>
-		  </mat-optgroup>
+  	<!-- Affichage des études avec selection des actions -->
+		<ng-container *ngFor="let study of (displayStudies | async)|sortBy:'asc':'label'">
+			<ng-container *ngIf="selectStudySwitcher || study.availableForAll; else optGroupTemplate">
+			  <mat-option 
+			  	[class.mat-selected] = "studyForm.value === study['@id']"
+			  	[value]="{'study': study['@id'], action: null}"
+			  >
+			    <small><span style="color: #999;">{{ study.code }} - </span> {{ study.label }}</small>
+			  </mat-option>
+			</ng-container>
+			<ng-template #optGroupTemplate>
+				<mat-optgroup style="font-weight: normal;">
+					<span class="study-code">{{ study.code }} - </span> <span class="study-label">{{ study.label }}</span>
+			    <mat-option 
+			    	*ngFor="let action of study.actions" 
+			    	[class.mat-selected] = "actionForm.value === action['@id']"
+			    	[value]="{'study': study['@id'], action: action['@id']}"
+			    >
+			      <small>{{ action.label }}</small>
+			    </mat-option>
+			  </mat-optgroup>
+			  <mat-divider></mat-divider>
+			</ng-template>
+
 		</ng-container>
-		<ng-template #optionStudies>
-			<mat-option 
-	    	*ngFor="let study of (displayStudies | async)" 
-	    	[class.mat-selected] = "studyForm.value === study['@id']"
-	    	[value]="study['@id']"
-	    >
-	      <small><span style="color: #999;">{{ study.code }} - </span> {{ study.label }}</small>
-	    </mat-option>
-		</ng-template>
   </mat-autocomplete>
   <mat-slide-toggle
   	*ngIf="!onlyStudy"
@@ -64,3 +67,7 @@
 		(change)="onChangeStudySwitcher($event.checked)"
   >Selection d'une étude</mat-slide-toggle>
 </mat-form-field>
+
+<ng-template let-study="study" #studyOptionTemplate>  
+
+</ng-template>

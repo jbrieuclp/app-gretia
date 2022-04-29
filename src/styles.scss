@@ -109,3 +109,12 @@ mat-error.mat-error {
 .setting-button {
   color: #555!important;
 }
+
+table.mat-table {
+  width: 100%;
+  height: 100%;
+}
+
+table.mat-table  tfoot.mat-table-sticky tr:last-child td {
+  border-bottom-width: 0!important;
+}

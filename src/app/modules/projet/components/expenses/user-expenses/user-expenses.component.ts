@@ -24,8 +24,6 @@ import { EmployeeRepository } from '@projet/repository/employee.repository';
 import { WorksRepository } from '@projet/repository/works.repository';
 import { Person, Expense } from '@projet/repository/project.interface';
 
-const DEFAULT_DURATION = 300;
-
 @Component({
   selector: 'app-user-expenses',
   templateUrl: './user-expenses.component.html',
@@ -34,8 +32,8 @@ const DEFAULT_DURATION = 300;
     trigger('collapse', [
       state('false', style({ height: AUTO_STYLE, visibility: AUTO_STYLE })),
       state('true', style({ height: '0', visibility: 'hidden' })),
-      transition('false => true', animate(DEFAULT_DURATION + 'ms ease-in')),
-      transition('true => false', animate(DEFAULT_DURATION + 'ms ease-out'))
+      transition('false => true', animate(300 + 'ms ease-in')),
+      transition('true => false', animate(300 + 'ms ease-out'))
     ])
   ]
 })

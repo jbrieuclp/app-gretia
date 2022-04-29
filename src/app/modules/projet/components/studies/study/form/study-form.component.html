@@ -1,0 +1,208 @@
+<form 
+	[formGroup]="form" 
+	autocomplete="off"
+>
+	<div 
+		class="float-right"
+		style="margin-right: 20px;"
+	>
+		<app-submit-btn
+			matType="mat-fab"
+			type="button"
+			style="margin-right: 10px;"
+    	[disabled]="form.invalid"
+    	[waiting]="saving"
+    	matTooltip="Enregistrer"
+    	(onClick)="save()"
+    >
+    	<mat-icon>save</mat-icon>
+    </app-submit-btn>
+
+		<a 
+			[routerLink]="['../']"
+			mat-mini-fab
+			color="warn"
+			matTooltip="Annuler toute mofication et revenir au détail"
+		>
+			<mat-icon>clear</mat-icon>
+		</a>
+	</div>
+
+	<div>
+		<span style="margin-right: 10px;">Etude #</span>
+		<mat-form-field style="width: 70%;">
+			<mat-label>Intitulé</mat-label>
+		  <input 
+		    matInput 
+		    placeholder="Intitulé"  
+				required
+				formControlName="label">
+			<mat-error *ngIf="form.get('label').errors">{{ form.get('label').errors.message }}</mat-error>
+		</mat-form-field>
+	</div>
+
+	<mat-card>
+
+		<div class="row">
+			<div class="col-md-6">
+
+			  <div style="margin-top: 10px;">
+			  	<mat-slide-toggle
+			  		color="primary"
+			  		formControlName="availableForAll"
+			  	> Ligne administrative, ouverte à tous et sans temps affilié </mat-slide-toggle>
+			  </div>
+
+				<div class="row">
+
+					<mat-form-field class="col-md-6">
+				  	<mat-label>Date de commencement</mat-label>
+					  <input 
+					  	id="dateStart"
+					  	matInput 
+					  	type="text"
+					  	[matDatepicker]="dateStartP" 
+					  	placeholder="jj/mm/aaaa" 
+					  	formControlName="dateStart"
+					  	required>
+					  <mat-datepicker-toggle matSuffix [for]="dateStartP"></mat-datepicker-toggle>
+					  <mat-datepicker #dateStartP></mat-datepicker>
+					</mat-form-field>
+
+				  <mat-form-field class="col-md-6">
+				  	<mat-label>Date de fin</mat-label>
+					  <input 
+					  	matInput 
+					  	id="dateEnd"
+					  	type="text"
+					  	[matDatepicker]="dateEndP" 
+					  	placeholder="jj/mm/aaaa" 
+					  	autocomplete="off" 
+					  	formControlName="dateEnd"
+					  >
+					  <mat-datepicker-toggle matSuffix [for]="dateEndP"></mat-datepicker-toggle>
+					  <mat-datepicker #dateEndP></mat-datepicker>
+					</mat-form-field>
+				</div>
+
+				<app-projet-control-local 
+					[form]="form.get('localAttachment')"
+					label="Local de rattachement"
+					required="true"
+					clearable="false"
+				></app-projet-control-local>
+
+				<mat-form-field *ngIf="!this.form.get('availableForAll').value">
+					<mat-label>Groupe taxonomique</mat-label>
+			    <input 
+				    matInput
+				    id="groupeTaxo"
+				    placeholder="Groupe étudié"  
+		  			formControlName="groupeTaxo"
+		  		>
+			  </mat-form-field>
+
+			  <mat-form-field *ngIf="!this.form.get('availableForAll').value">
+					<mat-label>Milieu</mat-label>
+			    <input 
+				    matInput
+				    id="milieu"
+				    placeholder="Milieu étudié"  
+		  			formControlName="milieu"
+		  		>
+			  </mat-form-field>
+
+			  <h6 class="tinymce-label"> {{ this.form.get('availableForAll').value ? 'Objectif' : 'Description'}} </h6>
+				<editor 
+					class="mat-elevation-z3"
+					[init]="{
+			    	base_url: '/tinymce',
+			    	suffix: '.min',
+			    	plugins: [
+				     'lists link image paste help wordcount'
+				    ],
+			    	toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | help'
+			  	}"
+			  	formControlName="objectif"
+			  	outputFormat="html"
+			  ></editor>
+
+			</div>
+
+			<div class="col-md-6" *ngIf="!this.form.get('availableForAll').value">
+				<div class="subform-bloc mat-elevation-z2">
+					<h6 class="tinymce-label"> Responsable(s) </h6>
+					<div *ngFor="let manager of form.get('managers').controls; index as i">
+						<button 
+							mat-icon-button
+							color="warn"
+							(click)="removeManager(i)"
+						>
+							<mat-icon>clear</mat-icon>
+						</button> 
+						<div class="subform">
+						  <app-projet-control-person 
+						  	[form]="manager"
+						  	required="true"
+						  	label="Responsable"
+						  ></app-projet-control-person>
+							
+						</div>
+
+					</div>
+					<div style="padding-left: 40px;">
+						Ajouter un responsable à cette étude
+						<button 
+							mat-mini-fab
+							style="margin-left: 5px;"
+							color="primary"
+							(click)="addManager()"
+							[disabled]="form.get('managers').invalid"
+						>
+							<mat-icon>add</mat-icon>
+						</button> 
+					</div>
+				</div>
+
+				<div class="subform-bloc mat-elevation-z2">
+					<h6 class="tinymce-label"> Localisation(s) </h6>
+					<div *ngFor="let localisation of form.get('localisations').controls; index as i">
+						<button 
+							mat-icon-button
+							color="warn"
+							(click)="removeLocalisation(i)"
+						>
+							<mat-icon>clear</mat-icon>
+						</button> 
+						<div class="subform">
+							<mat-form-field>
+								<mat-label>Localisation</mat-label>
+						    <input 
+							    matInput
+							    [attr.id]="'localisation-'+i"
+							    required="true"
+							    placeholder="Localisation"  
+					  			[formControl]="localisation"
+					  		>
+						  </mat-form-field>						
+						</div>
+
+					</div>
+					<div style="padding-left: 40px;">
+						Ajouter une localisation
+						<button 
+							mat-mini-fab
+							style="margin-left: 5px;"
+							color="primary"
+							(click)="addLocalisation()"
+							[disabled]="form.get('localisations').invalid"
+						>
+							<mat-icon>add</mat-icon>
+						</button> 
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</mat-card>
+</form>

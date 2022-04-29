@@ -13,7 +13,7 @@ import { Person } from '../../repository/project.interface';
 export class PersonControlComponent extends AbstractControl implements OnInit, OnDestroy {
 
   @Input() id: '@id'|'compteId' = '@id';
-  label = "Personnes";
+  @Input() label = "Personnes";
   optionDisplayFn = (option) => `${option.firstname} ${option.name}`;
   value = (option) => option[this.id] || option['@id'];
   options: any[] = [];

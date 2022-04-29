@@ -1,66 +1,46 @@
-<div class="row">
-
-	<ng-container *ngIf="study; else loadingElement">
-		<div class="col-md-6">
-			<div class="float-right">
-				<button 
-			  	mat-stroked-button
-			  	color="primary"
-			  	(click)="openFormDialog()"
-			  >
-			    <mat-icon>edit</mat-icon> Éditer
-			  </button>
-			  <!-- <button 
-			  	mat-mini-fab
-			  	color="warn"
-			  >
-			    <mat-icon>delete</mat-icon>
-			  </button> -->
-			</div>
-
-			<div class="element">
-				<div 
-					class="font-weight-bold title"
-					matTooltip="= coût journalier le plus bas parmi les projets financeurs"
-				> Coût jour </div>
-				<div> {{ study.dailyCost }} €/j </div>
-			</div>
-
-			<div class="element">
-				<div class="font-weight-bold title"> Date de début </div>
-				<div> {{ study.dateStart | date:'dd/MM/yyyy' }} </div>
-			</div>
-
-			<div class="element">
-				<div class="font-weight-bold title"> Date de fin </div>
-				<div> {{ (study.dateEnd | date:'dd/MM/yyyy') || '-' }} </div>
-			</div>
-
-			<div class="element">
-				<div class="font-weight-bold title"> Groupe taxonomique </div>
-				<div> {{ study.groupeTaxo || '-' }} </div>
-			</div>
-
-			<div class="element">
-				<div class="font-weight-bold title"> Milieu </div>
-				<div> {{ study.milieu || '-' }} </div>
-			</div>
-
-			<div class="element">
-				<div class="font-weight-bold title"> Objectif </div>
-				<div [innerHTML]="study.objectif"></div>
-			</div>
-
-		</div>
-
-		<div class="col-md-6">
-
-			<app-projet-study-managers></app-projet-study-managers>
-			<app-projet-study-localisations></app-projet-study-localisations>
-
-		</div>
-	</ng-container>
-	<ng-template #loadingElement>
-		<app-loader message="Chargement en cours"></app-loader>
-	</ng-template>
+<div class="float-right">
+	<a 
+		[routerLink]="['../form']"
+		mat-mini-fab
+		color="primary"
+		matTooltip="Modifier le détail de l'étude"
+	>
+		<mat-icon>edit</mat-icon>
+	</a>
 </div>
+<h5 class="study-title"> <small>Étude #</small> <span class="code">{{ study.code }}</span> {{ study.label }} </h5>
+<a 
+	class="go-to-list"
+	[routerLink]="['../../']"
+>
+  <mat-icon inline="true">arrow_back</mat-icon> Retour à la liste des études
+</a>
+
+
+<mat-card>
+
+	<mat-card-content>
+
+		<nav mat-tab-nav-bar>
+		  <a 
+		  	mat-tab-link 
+		  	*ngFor="let tab of tabs; let index = index;"
+		  	[routerLink]="['../', tab.url]"
+		  	[active]="currentTab == tab.url || (currentTab === null && index == 0)"
+		  > {{ tab.label }} </a>
+		</nav>
+		<div style="padding: 10px 15px 5px 15px;">
+			<ng-container [ngSwitch]="currentTab">
+
+				<app-projet-study-info *ngSwitchCase="null"></app-projet-study-info>
+				<app-projet-study-info *ngSwitchCase="'details'"></app-projet-study-info>
+				<app-projet-study-fundings *ngSwitchCase="'financements'"></app-projet-study-fundings>
+				<app-project-study-charges *ngSwitchCase="'charges'"></app-project-study-charges>
+				<app-projet-study-actions *ngSwitchCase="'actions'"></app-projet-study-actions>
+				<app-project-study-results *ngSwitchCase="'bilan'"></app-project-study-results>
+				<app-project-study-deadlines *ngSwitchCase="'deadlines'"></app-project-study-deadlines>
+
+			</ng-container>
+		</div>
+	</mat-card-content>
+</mat-card>

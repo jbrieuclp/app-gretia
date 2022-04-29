@@ -34,7 +34,7 @@
 		      [formControl]="filtersForm.get('search')">
 		    <mat-icon 
 		    	matSuffix
-		    	(click)="filterInput.setValue('')"
+		    	(click)="filtersForm.get('search').setValue('')"
 		    >clear</mat-icon>
 		  </mat-form-field>
 		</div>
@@ -190,7 +190,7 @@
 		    	{{ row.provider }}
 		    	<mat-icon 
 		    		class="expense-details"
-		    		*ngIf="row.details !== ''"
+		    		*ngIf="row.details !== null"
 		    		[matTooltip]="row.details"
 		    	>help_outline</mat-icon>
 		    </td>

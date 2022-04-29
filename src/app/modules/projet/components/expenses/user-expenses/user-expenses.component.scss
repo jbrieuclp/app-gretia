@@ -46,7 +46,7 @@ td.mat-column-amountInclTax {
 .table-container {
   height: auto;
   max-height: calc(100vh - 235px);
-  overflow: overlay;
+  overflow: auto;
   padding-bottom: 56px;
 }
 

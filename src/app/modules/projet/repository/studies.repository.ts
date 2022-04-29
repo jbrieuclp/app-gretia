@@ -7,7 +7,7 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { AppConfig } from '../../../shared/app.config';
 import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
-import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective, StudyDeadline, StudyProgression } from './project.interface';
+import { Project, StudyFunding, ChargeType, Employee, Action, Localisation, Study, Charge, Objective, StudyDeadline, StudyProgression, UserStudyProgression } from './project.interface';
 
 @Injectable()
 export class StudiesRepository extends ApiProjectRepository {
@@ -29,8 +29,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Localisation[]) => res), 
-        retry(3)
+        map((res: Localisation[]) => res)
       );
   }
 
@@ -64,8 +63,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Study[]) => res), 
-        retry(3)
+        map((res: Study[]) => res)
       );
   }
 
@@ -81,14 +79,22 @@ export class StudiesRepository extends ApiProjectRepository {
   }
 
   /** GET list of Localisation **/
-  studies_select(): Observable<Study[]> {
-    const url = `${this.httpUrlBase}/studies/select`;
-    const options = {};
-    return this.http
-      .get(url, options)
+  user_study_progressions(params = {}): Observable<UserStudyProgression[]> {
+    const url = `${this.httpUrlBase}/user-study-progressions`;
+    const options = {params: params};
+    return this.http.get(url, options)
       .pipe(
-        map((res: Study[]) => res), 
-        retry(3)
+        map((res: StudyProgression[]) => res)
+      );
+  }
+
+  /** GET list of Localisation **/
+  studies_select(params = {}): Observable<Study[]> {
+    const url = `${this.httpUrlBase}/studies/select`;
+    const options = {params: params};
+    return this.http.get(url, options)
+      .pipe(
+        map((res: Study[]) => res)
       );
   }
 
@@ -99,8 +105,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Study[]) => res), 
-        retry(3)
+        map((res: Study[]) => res)
       );
   }
 
@@ -111,8 +116,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Study) => res), 
-        retry(3)
+        map((res: Study) => res)
       );
   }
 
@@ -130,8 +134,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Action[]) => res), 
-        retry(3)
+        map((res: Action[]) => res)
       );
   }
 
@@ -142,8 +145,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Objective[]) => res), 
-        retry(3)
+        map((res: Objective[]) => res)
       );
   }
 
@@ -154,8 +156,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: StudyDeadline[]) => res), 
-        retry(3)
+        map((res: StudyDeadline[]) => res)
       );
   }
 
@@ -169,8 +170,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Charge[]) => res), 
-        retry(3)
+        map((res: Charge[]) => res)
       );
   }
 
@@ -204,8 +204,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: StudyFunding[]) => res), 
-        retry(3)
+        map((res: StudyFunding[]) => res)
       );
   }
 
@@ -219,8 +218,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Localisation[]) => res), 
-        retry(3)
+        map((res: Localisation[]) => res)
       );
   }
 
@@ -231,8 +229,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: Employee[]) => res), 
-        retry(3)
+        map((res: Employee[]) => res)
       );
   }
 
@@ -246,8 +243,7 @@ export class StudiesRepository extends ApiProjectRepository {
     return this.http
       .get(url, options)
       .pipe(
-        map((res: StudyDeadline[]) => res), 
-        retry(3)
+        map((res: StudyDeadline[]) => res)
       );
   }
 }

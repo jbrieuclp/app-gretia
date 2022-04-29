@@ -66,7 +66,7 @@ export class PlanChargeInfoDialog implements OnInit {
       'study.id': this.study.id,
       'person.id': this.plansChargesS.person.id,
     }
-    this.actionsR.action_progressions(params)
+    this.actionsR.user_action_progressions(params)
       .pipe(
         map((res): ActionProgression[] => Object.values(res['hydra:member'])),
       )

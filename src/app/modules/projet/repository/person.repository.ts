@@ -46,7 +46,7 @@ export class PersonRepository {
 
   /** GET personnes par ID (cd_nom) **/
   get(id: number): Observable<Person> {
-    const url = this.httpUrlBase + '/person/'+id;
+    const url = this.httpUrlBase + '/persons/'+id;
     const options = {};
     return this.http
       .get(url, options)

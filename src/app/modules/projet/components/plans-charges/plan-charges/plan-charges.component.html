@@ -7,16 +7,17 @@
 </div>
 
 <div class="list-container mat-elevation-z8">
-  <div 
-    *ngIf="loading"
-    class="loading-shade"
-  >
+  
+ 	<div
+ 		*ngIf="loading" 
+ 		class="loading-shade"
+ 	>
     <mat-spinner></mat-spinner>
   </div>
 
   <div class="table-container">
 		<table 
-			mat-table 
+			mat-table
 			[dataSource]="dataSource" 
 		  matSort 
 		  matSortActive="study.label" 
@@ -41,10 +42,23 @@
 		    	mat-sort-header
 		    >Études</th>
 		    <td mat-cell *matCellDef="let row">
-		    	<span 
+		    	<a 
 		    		class="study-label-text"
-		    		(click)="openStudyInfo(row.study)"
-		    	>{{ row.study.label }}</span>
+		    		[routerLink]="['/projet/etudes', row.study.id]"
+		    	>{{ row.study.label }}</a>
+		    </td>
+		  </ng-container>
+
+		  <!-- Études Column -->
+		  <ng-container matColumnDef="info">
+		    <th 
+		    	mat-header-cell 
+		    	*matHeaderCellDef
+		    ></th>
+		    <td mat-cell *matCellDef="let row">
+		    	<mat-icon 
+		    		class="study-label-text"
+		    		(click)="openStudyInfo(row.study)">list</mat-icon>
 		    </td>
 		  </ng-container>
 
@@ -78,6 +92,22 @@
 		    <td mat-cell *matCellDef="let row">{{ row.usagePercent !== null ? row.usagePercent+"%" : "Non prévu" }}</td>
 		  </ng-container>
 
+      <ng-container matColumnDef="noData">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+					Aucune données
+        </td>
+      </ng-container>
+
+		  <ng-container matColumnDef="paginator">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+					<mat-paginator 
+						[length]="resultsLength" 
+						[pageSize]="25"
+						[pageSizeOptions]="[10, 25, 50, 100, 250]"
+					></mat-paginator>
+        </td>
+      </ng-container>
+
 		  <!-- State Column -->
 		  <!-- <ng-container matColumnDef="state">
 		    <th mat-header-cell *matHeaderCellDef>State</th>
@@ -92,15 +122,15 @@
 		    <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>
 		  </ng-container> -->
 
-		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 		  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+		  <tr 
+		  	mat-footer-row 
+		  	*matFooterRowDef="['paginator']; sticky: true"
+		 	></tr>
 		</table>
 
-		<mat-paginator 
-			[length]="resultsLength" 
-			[pageSize]="25"
-			[pageSizeOptions]="[10, 25, 50, 100, 250]"
-		></mat-paginator>
 
 	</div>
 </div>

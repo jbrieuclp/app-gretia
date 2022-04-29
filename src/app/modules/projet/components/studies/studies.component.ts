@@ -1,30 +1,41 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { AUTO_STYLE, animate, state, style, transition, trigger } from '@angular/animations';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { tap, map, startWith, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { Observable, combineLatest, BehaviorSubject, merge } from 'rxjs';
+import { tap, map, startWith, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 
 import { StudiesRepository } from '../../repository/studies.repository';
 import { Study } from '../../repository/project.interface';
-import { StudyFormDialog } from './study/form/study-form.dialog';
 
 @Component({
   selector: 'app-projet-studies',
   templateUrl: './studies.component.html',
-  styleUrls: ['./studies.component.scss']
+  styleUrls: ['./studies.component.scss'],
+  animations: [
+    trigger('collapse', [
+      state('false', style({ height: AUTO_STYLE, visibility: AUTO_STYLE })),
+      state('true', style({ height: '0', visibility: 'hidden' })),
+      transition('false => true', animate(300 + 'ms ease-in')),
+      transition('true => false', animate(300 + 'ms ease-out'))
+    ])
+  ]
 })
-export class StudiesComponent implements OnInit {
+export class StudiesComponent implements AfterViewInit {
 
   public dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  public displayedColumns: string[] = ['code', 'label', 'dateStart', 'dateEnd', 'clos'];
-  public filterInput: FormControl;
-  public totalItems: number = 0;
-  public loading: boolean = false;
+  public resultsLength: number = null;
+  public displayedColumns: string[] = ['study.code', 'study.label', 'locals', 'dateStart', 'dateEnd', 'nbOfDays', 'consumedTime', 'usagePercent'];
+  public filterInput: FormControl = new FormControl('', []);
+  public loading: boolean = true;
+  public collapsed = true;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
     public dialog: MatDialog,
@@ -32,52 +43,57 @@ export class StudiesComponent implements OnInit {
     private studiesR: StudiesRepository,
   ) { }
 
-  ngOnInit() {
-    this.filterInput = new FormControl('', []);
+  ngAfterViewInit() {
 
-    combineLatest(
-      this.getStudies(), 
+    merge(
+      this.sort.sortChange,
       this.filterInput.valueChanges
         .pipe(
-          startWith(''),
-          debounceTime(300), 
-          distinctUntilChanged(),
+          debounceTime(300),
+          distinctUntilChanged()
+        )
+    ).subscribe(() => this.paginator.pageIndex = 0);
+
+    merge(
+      this.sort.sortChange, 
+      this.paginator.page,
+      this.filterInput.valueChanges
+        .pipe(
+          debounceTime(300),
+          distinctUntilChanged()
         )
     )
-    .pipe(
-      map(([dataSource, filteredValue]: [Study[], string]): Study[] => {
-        return dataSource.filter(study => study.label.toLowerCase().includes(filteredValue.toLowerCase()));
-      })
-    )
-    .subscribe((datasource: Study[]) => {
-      this.dataSource.data = datasource;
-      this.dataSource.sort = this.sort;
-    });
+      .pipe(
+        startWith({}),
+        map((val) => {
+          let params = {
+            itemsPerPage: this.paginator.pageSize,
+            page: this.paginator.pageIndex + 1
+          };
+          if (this.filterInput.value && this.filterInput.value !== '') {
+            params['search'] = this.filterInput.value;
+          }
+          if (this.sort.active === undefined) {
+            params["_order[study.label]"] = "asc";
+          } else {
+            params[`_order[${this.sort.active}]`] = this.sort.direction;
+          }
+
+          return params;
+        }),
+        switchMap((params) => this.getStudies(params)),
+      ).subscribe(datasource => {
+        this.dataSource.data = datasource;
+      });
   }
 
-  getStudies(): Observable<Study[]> {
+  getStudies(params): Observable<Study[]> {
     this.loading = true;
-    return this.studiesR.studies()
+    return this.studiesR.study_progressions(params)
       .pipe(
         tap(()=>this.loading = false),
-        tap((data: any) => this.totalItems = data["hydra:totalItems"]),
+        tap((data: any) => this.resultsLength = data["hydra:totalItems"]),
         map((data: any): Study[]=>data["hydra:member"])
       );
-  }
-
-  createStudy() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.width = '750px';
-    dialogConfig.position = {top: '70px'};
-    dialogConfig.disableClose = true;
-
-    const dialogRef = this.dialog.open(StudyFormDialog, dialogConfig);
-
-    dialogRef.afterClosed()
-      .pipe(
-        filter((study: Study) => study !== null)
-      )
-      .subscribe((study) => this.router.navigate(['studies', study.id]));
   }
 }
